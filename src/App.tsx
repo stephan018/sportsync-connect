@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import TeacherDashboard from "./pages/teacher/Dashboard";
 import TeacherAvailability from "./pages/teacher/Availability";
+import TeacherCalendar from "./pages/teacher/Calendar";
 import BrowseTeachers from "./pages/student/BrowseTeachers";
 import BookingPage from "./pages/student/BookingPage";
 import MyBookings from "./pages/student/MyBookings";
@@ -68,6 +69,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['teacher']}>
             <TeacherAvailability />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/calendar"
+        element={
+          <ProtectedRoute allowedRoles={['teacher']}>
+            <TeacherCalendar />
           </ProtectedRoute>
         }
       />

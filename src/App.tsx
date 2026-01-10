@@ -11,6 +11,7 @@ import TeacherAvailability from "./pages/teacher/Availability";
 import BrowseTeachers from "./pages/student/BrowseTeachers";
 import BookingPage from "./pages/student/BookingPage";
 import MyBookings from "./pages/student/MyBookings";
+import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 import { Loader2 } from "lucide-react";
 
@@ -93,6 +94,24 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['student']}>
             <MyBookings />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Shared Routes */}
+      <Route
+        path="/messages"
+        element={
+          <ProtectedRoute>
+            <Messages />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/messages"
+        element={
+          <ProtectedRoute>
+            <Messages />
           </ProtectedRoute>
         }
       />

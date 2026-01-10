@@ -2,18 +2,30 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/types/database';
+import { useAuth } from '@/hooks/useAuth';
+import { useChat } from '@/hooks/useChat';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Star, DollarSign, Calendar, Users } from 'lucide-react';
+import { Search, Star, DollarSign, Calendar, Users, MessageSquare } from 'lucide-react';
 
 export default function BrowseTeachers() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
+  const { getOrCreateChatRoom } = useChat();
   const [teachers, setTeachers] = useState<Profile[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const handleMessageTeacher = async (teacherId: string) => {
+    if (!profile) return;
+    const roomId = await getOrCreateChatRoom(teacherId, profile.id);
+    if (roomId) {
+      navigate('/messages');
+    }
+  };
 
   useEffect(() => {
     fetchTeachers();
@@ -114,13 +126,22 @@ export default function BrowseTeachers() {
                       {teacher.bio || 'Professional sports coach ready to help you achieve your fitness goals.'}
                     </p>
                     
-                    <Button 
-                      className="w-full gradient-primary"
-                      onClick={() => navigate(`/book/${teacher.id}`)}
-                    >
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Book a Session
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        className="flex-1 gradient-primary"
+                        onClick={() => navigate(`/book/${teacher.id}`)}
+                      >
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Book
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleMessageTeacher(teacher.id)}
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

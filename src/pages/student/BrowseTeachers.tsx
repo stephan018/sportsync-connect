@@ -18,11 +18,16 @@ import {
 } from '@/components/ui/select';
 import { Search, Star, DollarSign, Calendar, Users, MessageSquare, Dumbbell } from 'lucide-react';
 
+interface TeacherWithRating extends Profile {
+  avgRating: number;
+  reviewCount: number;
+}
+
 export default function BrowseTeachers() {
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { getOrCreateChatRoom } = useChat();
-  const [teachers, setTeachers] = useState<Profile[]>([]);
+  const [teachers, setTeachers] = useState<TeacherWithRating[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sportFilter, setSportFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
@@ -41,14 +46,44 @@ export default function BrowseTeachers() {
 
   const fetchTeachers = async () => {
     try {
-      const { data, error } = await supabase
+      // Fetch teachers
+      const { data: teachersData, error: teachersError } = await supabase
         .from('profiles')
         .select('*')
         .eq('role', 'teacher')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setTeachers(data as Profile[]);
+      if (teachersError) throw teachersError;
+
+      // Fetch all reviews to calculate averages
+      const { data: reviewsData, error: reviewsError } = await supabase
+        .from('reviews')
+        .select('teacher_id, rating');
+
+      if (reviewsError) throw reviewsError;
+
+      // Calculate average ratings per teacher
+      const ratingsByTeacher: Record<string, { total: number; count: number }> = {};
+      reviewsData?.forEach((review) => {
+        if (!ratingsByTeacher[review.teacher_id]) {
+          ratingsByTeacher[review.teacher_id] = { total: 0, count: 0 };
+        }
+        ratingsByTeacher[review.teacher_id].total += review.rating;
+        ratingsByTeacher[review.teacher_id].count += 1;
+      });
+
+      const teachersWithRatings: TeacherWithRating[] = (teachersData as Profile[]).map(
+        (teacher) => {
+          const stats = ratingsByTeacher[teacher.id];
+          return {
+            ...teacher,
+            avgRating: stats ? stats.total / stats.count : 0,
+            reviewCount: stats?.count || 0,
+          };
+        }
+      );
+
+      setTeachers(teachersWithRatings);
     } catch (error) {
       console.error('Error fetching teachers:', error);
     } finally {
@@ -58,9 +93,7 @@ export default function BrowseTeachers() {
 
   // Get unique sports from teachers for filter dropdown
   const availableSports = useMemo(() => {
-    const sports = teachers
-      .map((t) => t.sport)
-      .filter((s): s is string => !!s);
+    const sports = teachers.map((t) => t.sport).filter((s): s is string => !!s);
     return [...new Set(sports)].sort();
   }, [teachers]);
 
@@ -69,9 +102,9 @@ export default function BrowseTeachers() {
       teacher.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       teacher.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       teacher.sport?.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const matchesSport = sportFilter === 'all' || teacher.sport === sportFilter;
-    
+
     return matchesSearch && matchesSport;
   });
 
@@ -147,17 +180,31 @@ export default function BrowseTeachers() {
                       </Badge>
                     )}
                   </div>
-                  
+
                   {/* Content */}
                   <div className="pt-12 px-6 pb-6">
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <h3 className="font-semibold text-lg">{teacher.full_name}</h3>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Star className="w-4 h-4 text-warning fill-warning" />
-                          <span>4.9</span>
-                          <span className="mx-1">•</span>
-                          <span>12 reviews</span>
+                          <Star
+                            className={`w-4 h-4 ${
+                              teacher.avgRating > 0
+                                ? 'text-warning fill-warning'
+                                : 'text-muted-foreground'
+                            }`}
+                          />
+                          <span>
+                            {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'New'}
+                          </span>
+                          {teacher.reviewCount > 0 && (
+                            <>
+                              <span className="mx-1">•</span>
+                              <span>
+                                {teacher.reviewCount} review{teacher.reviewCount !== 1 ? 's' : ''}
+                              </span>
+                            </>
+                          )}
                         </div>
                       </div>
                       <Badge variant="secondary" className="flex items-center gap-1">
@@ -165,20 +212,21 @@ export default function BrowseTeachers() {
                         {Number(teacher.hourly_rate)}/hr
                       </Badge>
                     </div>
-                    
+
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                      {teacher.bio || 'Professional sports coach ready to help you achieve your fitness goals.'}
+                      {teacher.bio ||
+                        'Professional sports coach ready to help you achieve your fitness goals.'}
                     </p>
-                    
+
                     <div className="flex gap-2">
-                      <Button 
+                      <Button
                         className="flex-1 gradient-primary"
                         onClick={() => navigate(`/book/${teacher.id}`)}
                       >
                         <Calendar className="w-4 h-4 mr-2" />
                         Book
                       </Button>
-                      <Button 
+                      <Button
                         variant="outline"
                         size="icon"
                         onClick={() => handleMessageTeacher(teacher.id)}

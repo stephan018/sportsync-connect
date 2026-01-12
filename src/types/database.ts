@@ -53,6 +53,20 @@ export interface Message {
   created_at: string;
 }
 
+export interface Review {
+  id: string;
+  booking_id: string;
+  student_id: string;
+  teacher_id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+}
+
+export interface ReviewWithStudent extends Review {
+  student: Profile;
+}
+
 // Extended types with relations
 export interface BookingWithProfiles extends Booking {
   student: Profile;

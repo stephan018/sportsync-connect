@@ -12,6 +12,7 @@ import TeacherCalendar from "./pages/teacher/Calendar";
 import TeacherEarnings from "./pages/teacher/Earnings";
 import TeacherSettings from "./pages/teacher/Settings";
 import BrowseTeachers from "./pages/student/BrowseTeachers";
+import TeacherProfile from "./pages/student/TeacherProfile";
 import BookingPage from "./pages/student/BookingPage";
 import MyBookings from "./pages/student/MyBookings";
 import Messages from "./pages/Messages";
@@ -105,6 +106,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['student']}>
             <BrowseTeachers />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/teacher/:teacherId"
+        element={
+          <ProtectedRoute allowedRoles={['student']}>
+            <TeacherProfile />
           </ProtectedRoute>
         }
       />

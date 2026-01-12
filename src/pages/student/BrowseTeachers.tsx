@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Star, DollarSign, Calendar, Users, MessageSquare, Dumbbell } from 'lucide-react';
+import { Search, Star, DollarSign, Calendar, Users, MessageSquare, Dumbbell, User } from 'lucide-react';
 
 interface TeacherWithRating extends Profile {
   avgRating: number;
@@ -220,18 +220,19 @@ export default function BrowseTeachers() {
 
                     <div className="flex gap-2">
                       <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => navigate(`/teacher/${teacher.id}`)}
+                      >
+                        <User className="w-4 h-4 mr-2" />
+                        View Profile
+                      </Button>
+                      <Button
                         className="flex-1 gradient-primary"
                         onClick={() => navigate(`/book/${teacher.id}`)}
                       >
                         <Calendar className="w-4 h-4 mr-2" />
                         Book
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleMessageTeacher(teacher.id)}
-                      >
-                        <MessageSquare className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>

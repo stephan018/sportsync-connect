@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/types/database';
@@ -9,7 +9,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Star, DollarSign, Calendar, Users, MessageSquare } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Search, Star, DollarSign, Calendar, Users, MessageSquare, Dumbbell } from 'lucide-react';
 
 export default function BrowseTeachers() {
   const navigate = useNavigate();
@@ -17,6 +24,7 @@ export default function BrowseTeachers() {
   const { getOrCreateChatRoom } = useChat();
   const [teachers, setTeachers] = useState<Profile[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sportFilter, setSportFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
 
   const handleMessageTeacher = async (teacherId: string) => {
@@ -48,10 +56,24 @@ export default function BrowseTeachers() {
     }
   };
 
-  const filteredTeachers = teachers.filter(teacher =>
-    teacher.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    teacher.bio?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Get unique sports from teachers for filter dropdown
+  const availableSports = useMemo(() => {
+    const sports = teachers
+      .map((t) => t.sport)
+      .filter((s): s is string => !!s);
+    return [...new Set(sports)].sort();
+  }, [teachers]);
+
+  const filteredTeachers = teachers.filter((teacher) => {
+    const matchesSearch =
+      teacher.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      teacher.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      teacher.sport?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesSport = sportFilter === 'all' || teacher.sport === sportFilter;
+    
+    return matchesSearch && matchesSport;
+  });
 
   return (
     <DashboardLayout>
@@ -64,15 +86,31 @@ export default function BrowseTeachers() {
           </p>
         </div>
 
-        {/* Search */}
-        <div className="relative mb-8">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input
-            placeholder="Search by name or specialty..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-12 h-12 text-lg"
-          />
+        {/* Search & Filter */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, sport or specialty..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 h-12 text-lg"
+            />
+          </div>
+          <Select value={sportFilter} onValueChange={setSportFilter}>
+            <SelectTrigger className="w-full sm:w-48 h-12">
+              <Dumbbell className="w-4 h-4 mr-2 text-muted-foreground" />
+              <SelectValue placeholder="All Sports" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Sports</SelectItem>
+              {availableSports.map((sport) => (
+                <SelectItem key={sport} value={sport}>
+                  {sport}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Teachers Grid */}
@@ -102,6 +140,12 @@ export default function BrowseTeachers() {
                         {teacher.full_name.charAt(0)}
                       </div>
                     </div>
+                    {teacher.sport && (
+                      <Badge className="absolute top-4 right-4 bg-background/90 text-foreground hover:bg-background">
+                        <Dumbbell className="w-3 h-3 mr-1" />
+                        {teacher.sport}
+                      </Badge>
+                    )}
                   </div>
                   
                   {/* Content */}

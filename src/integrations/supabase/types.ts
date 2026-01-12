@@ -193,6 +193,7 @@ export type Database = {
           hourly_rate: number | null
           id: string
           role: Database["public"]["Enums"]["app_role"]
+          sport: string | null
           updated_at: string
           user_id: string
         }
@@ -204,6 +205,7 @@ export type Database = {
           hourly_rate?: number | null
           id?: string
           role: Database["public"]["Enums"]["app_role"]
+          sport?: string | null
           updated_at?: string
           user_id: string
         }
@@ -215,6 +217,7 @@ export type Database = {
           hourly_rate?: number | null
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          sport?: string | null
           updated_at?: string
           user_id?: string
         }

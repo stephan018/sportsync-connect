@@ -10,6 +10,7 @@ import TeacherDashboard from "./pages/teacher/Dashboard";
 import TeacherAvailability from "./pages/teacher/Availability";
 import TeacherCalendar from "./pages/teacher/Calendar";
 import TeacherEarnings from "./pages/teacher/Earnings";
+import TeacherSettings from "./pages/teacher/Settings";
 import BrowseTeachers from "./pages/student/BrowseTeachers";
 import BookingPage from "./pages/student/BookingPage";
 import MyBookings from "./pages/student/MyBookings";
@@ -86,6 +87,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['teacher']}>
             <TeacherEarnings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/settings"
+        element={
+          <ProtectedRoute allowedRoles={['teacher']}>
+            <TeacherSettings />
           </ProtectedRoute>
         }
       />

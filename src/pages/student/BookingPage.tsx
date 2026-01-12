@@ -295,34 +295,54 @@ export default function BookingPage() {
                 <CardDescription>Choose which days of the week you want to attend</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-7 gap-2">
-                  {DAYS_OF_WEEK.map((day) => {
-                    const isAvailable = availability.some(a => a.day_of_week === day.value);
-                    const isSelected = selectedDays.includes(day.value);
-                    
-                    return (
-                      <button
-                        key={day.value}
-                        onClick={() => toggleDay(day.value)}
-                        disabled={!isAvailable}
-                        className={`
-                          p-3 rounded-lg border-2 text-center transition-all
-                          ${isSelected 
-                            ? 'border-primary bg-primary text-primary-foreground' 
-                            : isAvailable
-                              ? 'border-border hover:border-primary/50'
-                              : 'border-border bg-muted opacity-50 cursor-not-allowed'
-                          }
-                        `}
-                      >
-                        <span className="text-sm font-medium">{day.short}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <p className="text-sm text-muted-foreground mt-4">
-                  Greyed out days are not available for this teacher
-                </p>
+                {availability.length === 0 ? (
+                  <div className="text-center py-8 bg-muted/50 rounded-lg">
+                    <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                    <h3 className="font-semibold text-lg mb-2">No Availability Set</h3>
+                    <p className="text-muted-foreground text-sm max-w-md mx-auto">
+                      This teacher hasn't configured their available time slots yet. 
+                      Please contact them via message or check back later.
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="mt-4"
+                      onClick={() => navigate(`/teacher/${teacherId}`)}
+                    >
+                      View Teacher Profile
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-7 gap-2">
+                      {DAYS_OF_WEEK.map((day) => {
+                        const isAvailable = availability.some(a => a.day_of_week === day.value);
+                        const isSelected = selectedDays.includes(day.value);
+                        
+                        return (
+                          <button
+                            key={day.value}
+                            onClick={() => toggleDay(day.value)}
+                            disabled={!isAvailable}
+                            className={`
+                              p-3 rounded-lg border-2 text-center transition-all
+                              ${isSelected 
+                                ? 'border-primary bg-primary text-primary-foreground' 
+                                : isAvailable
+                                  ? 'border-border hover:border-primary/50'
+                                  : 'border-border bg-muted opacity-50 cursor-not-allowed'
+                              }
+                            `}
+                          >
+                            <span className="text-sm font-medium">{day.short}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-4">
+                      Greyed out days are not available for this teacher
+                    </p>
+                  </>
+                )}
               </CardContent>
             </Card>
 

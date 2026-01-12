@@ -108,16 +108,24 @@ export default function TeacherAvailability() {
   };
 
   const saveAvailability = async () => {
-    if (!profile?.id) return;
+    if (!profile?.id) {
+      toast.error('Profile not loaded. Please refresh the page.');
+      return;
+    }
     
     setSaving(true);
     
     try {
       // Delete existing availability
-      await supabase
+      const { error: deleteError } = await supabase
         .from('availability')
         .delete()
         .eq('teacher_id', profile.id);
+
+      if (deleteError) {
+        console.error('Delete error:', deleteError);
+        throw deleteError;
+      }
 
       // Insert new availability
       const slotsToInsert = availability.map(slot => ({
@@ -128,17 +136,24 @@ export default function TeacherAvailability() {
         is_available: slot.is_available,
       }));
 
-      const { error } = await supabase
+      console.log('Inserting slots:', slotsToInsert);
+
+      const { data, error } = await supabase
         .from('availability')
-        .insert(slotsToInsert);
+        .insert(slotsToInsert)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Insert error:', error);
+        throw error;
+      }
 
+      console.log('Inserted data:', data);
       toast.success('Availability saved successfully!');
       fetchAvailability();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving availability:', error);
-      toast.error('Failed to save availability');
+      toast.error('Failed to save availability: ' + (error.message || 'Unknown error'));
     } finally {
       setSaving(false);
     }

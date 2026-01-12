@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Booking, Profile } from '@/types/database';
+import { sendBookingNotification } from '@/lib/notifications';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -57,6 +58,9 @@ export default function MyBookings() {
         .eq('id', bookingId);
 
       if (error) throw error;
+      
+      // Send cancellation notification
+      sendBookingNotification(bookingId, 'cancelled');
       
       toast.success('Booking cancelled');
       fetchBookings();

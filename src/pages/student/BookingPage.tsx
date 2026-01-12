@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { sendBookingNotification } from '@/lib/notifications';
 import { Profile, Availability, DAYS_OF_WEEK } from '@/types/database';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -184,11 +185,19 @@ export default function BookingPage() {
         total_price: hourlyRate,
       }));
 
-      const { error } = await supabase
+      const { data: insertedBookings, error } = await supabase
         .from('bookings')
-        .insert(bookingsToInsert);
+        .insert(bookingsToInsert)
+        .select('id');
 
       if (error) throw error;
+
+      // Send email notifications for each created booking (fire and forget)
+      if (insertedBookings) {
+        insertedBookings.forEach((booking) => {
+          sendBookingNotification(booking.id, 'created');
+        });
+      }
 
       toast.success(`Successfully booked ${validDates.length} sessions!`);
       navigate('/bookings');

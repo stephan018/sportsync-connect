@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Booking, Profile } from '@/types/database';
+import { sendBookingNotification } from '@/lib/notifications';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -199,6 +200,7 @@ export default function TeacherCalendar() {
           <BookingDetailModal 
             booking={selectedBooking} 
             onClose={() => setSelectedBooking(null)}
+            onRefresh={fetchBookings}
             getStatusColor={getStatusColor}
           />
         )}
@@ -386,10 +388,57 @@ function MonthView({ days, currentDate, getBookingsForDay, getStatusColor, onSel
 interface BookingDetailModalProps {
   booking: BookingWithStudent;
   onClose: () => void;
+  onRefresh: () => void;
   getStatusColor: (status: string) => string;
 }
 
-function BookingDetailModal({ booking, onClose, getStatusColor }: BookingDetailModalProps) {
+function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor }: BookingDetailModalProps) {
+  const [updating, setUpdating] = useState(false);
+
+  const handleConfirm = async () => {
+    setUpdating(true);
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ status: 'confirmed' })
+        .eq('id', booking.id);
+
+      if (error) throw error;
+
+      // Send confirmation notification
+      sendBookingNotification(booking.id, 'confirmed');
+      
+      onRefresh();
+      onClose();
+    } catch (error) {
+      console.error('Error confirming booking:', error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleCancel = async () => {
+    setUpdating(true);
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ status: 'cancelled' })
+        .eq('id', booking.id);
+
+      if (error) throw error;
+
+      // Send cancellation notification
+      sendBookingNotification(booking.id, 'cancelled');
+      
+      onRefresh();
+      onClose();
+    } catch (error) {
+      console.error('Error cancelling booking:', error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
       <Card className="w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
@@ -437,9 +486,40 @@ function BookingDetailModal({ booking, onClose, getStatusColor }: BookingDetailM
             </div>
           )}
 
-          <Button variant="outline" className="w-full" onClick={onClose}>
-            Close
-          </Button>
+          <div className="flex gap-2 pt-4">
+            {booking.status === 'pending' && (
+              <>
+                <Button 
+                  className="flex-1 gradient-primary" 
+                  onClick={handleConfirm}
+                  disabled={updating}
+                >
+                  {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm'}
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  className="flex-1"
+                  onClick={handleCancel}
+                  disabled={updating}
+                >
+                  Cancel
+                </Button>
+              </>
+            )}
+            {booking.status === 'confirmed' && (
+              <Button 
+                variant="destructive" 
+                className="flex-1"
+                onClick={handleCancel}
+                disabled={updating}
+              >
+                Cancel Booking
+              </Button>
+            )}
+            <Button variant="outline" className="flex-1" onClick={onClose}>
+              Close
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, CalendarDays, Clock, DollarSign, Loader2, Check, X } from 'lucide-react';
+import { ArrowLeft, CalendarDays, Clock, DollarSign, Loader2, Check, X, Users } from 'lucide-react';
 import { format, addDays, addMonths, getDay, isSameDay, isAfter, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
@@ -52,6 +52,9 @@ export default function BookingPage() {
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [duration, setDuration] = useState<DurationOption>('1_month');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('');
+  
+  // Number of attendees
+  const [numberOfPeople, setNumberOfPeople] = useState<number>(1);
   
   // Calculated dates
   const [calculatedDates, setCalculatedDates] = useState<Date[]>([]);
@@ -167,7 +170,20 @@ export default function BookingPage() {
     return Array.from(slots);
   };
 
-  const totalPrice = calculatedDates.length * (Number(teacher?.hourly_rate) || 0);
+  // Calculate price based on number of people
+  // Individual: multiply sessions by hourly rate
+  // Group (2+ people): fixed group rate per session
+  const getPricePerSession = () => {
+    if (numberOfPeople === 1) {
+      return Number(teacher?.hourly_rate) || 0;
+    }
+    return Number(teacher?.group_hourly_rate) || Number(teacher?.hourly_rate) || 0;
+  };
+
+  const pricePerSession = getPricePerSession();
+  const validSessionsCount = calculatedDates.length - conflictDates.length;
+  const totalPrice = validSessionsCount * pricePerSession;
+  const maxStudents = teacher?.max_students_per_session || 4;
 
   const handleBooking = async () => {
     if (!profile?.id || !teacherId || calculatedDates.length === 0 || !selectedTimeSlot) {
@@ -193,7 +209,8 @@ export default function BookingPage() {
         start_time: startTime,
         end_time: endTime,
         status: 'pending' as const,
-        total_price: hourlyRate,
+        total_price: pricePerSession,
+        notes: numberOfPeople > 1 ? `Clase grupal: ${numberOfPeople} personas` : null,
       }));
 
       const { data: insertedBookings, error } = await supabase
@@ -267,10 +284,18 @@ export default function BookingPage() {
                     <p className="text-muted-foreground">
                       {teacher.bio || 'Entrenador deportivo profesional'}
                     </p>
-                    <Badge className="mt-2 gradient-primary">
-                      <DollarSign className="w-3 h-3 mr-1" />
-                      ${Number(teacher.hourly_rate)}/hora
-                    </Badge>
+                    <div className="flex gap-2 mt-2 flex-wrap">
+                      <Badge className="gradient-primary">
+                        <DollarSign className="w-3 h-3 mr-1" />
+                        ${Number(teacher.hourly_rate)}/individual
+                      </Badge>
+                      {teacher.group_hourly_rate && Number(teacher.group_hourly_rate) > 0 && (
+                        <Badge variant="secondary">
+                          <Users className="w-3 h-3 mr-1" />
+                          ${Number(teacher.group_hourly_rate)}/grupal
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -354,6 +379,65 @@ export default function BookingPage() {
                       Los días en gris no están disponibles para este profesor
                     </p>
                   </>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Number of People */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-primary" />
+                  Cantidad de Personas
+                </CardTitle>
+                <CardDescription>
+                  ¿Cuántas personas asistirán a las clases?
+                  {numberOfPeople > 1 && teacher?.group_hourly_rate && Number(teacher.group_hourly_rate) > 0 && (
+                    <span className="block mt-1 text-primary font-medium">
+                      Se aplicará tarifa grupal fija de ${Number(teacher.group_hourly_rate)} por sesión
+                    </span>
+                  )}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center border rounded-lg">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setNumberOfPeople(Math.max(1, numberOfPeople - 1))}
+                      disabled={numberOfPeople <= 1}
+                      className="px-3"
+                    >
+                      -
+                    </Button>
+                    <span className="px-4 py-2 font-semibold text-lg min-w-[60px] text-center">
+                      {numberOfPeople}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setNumberOfPeople(Math.min(maxStudents, numberOfPeople + 1))}
+                      disabled={numberOfPeople >= maxStudents}
+                      className="px-3"
+                    >
+                      +
+                    </Button>
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    Máximo {maxStudents} persona{maxStudents > 1 ? 's' : ''} por sesión
+                  </span>
+                </div>
+                {numberOfPeople === 1 ? (
+                  <p className="text-sm text-muted-foreground mt-3">
+                    💰 Tarifa individual: <span className="font-semibold">${Number(teacher?.hourly_rate)}</span> por sesión
+                  </p>
+                ) : (
+                  <p className="text-sm text-primary mt-3 font-medium">
+                    👥 Tarifa grupal fija: <span className="font-semibold">${Number(teacher?.group_hourly_rate) || Number(teacher?.hourly_rate)}</span> por sesión (sin importar cantidad de personas)
+                  </p>
                 )}
               </CardContent>
             </Card>
@@ -457,19 +541,30 @@ export default function BookingPage() {
                 {/* Price Breakdown */}
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-sm mb-2">
+                    <span>Tipo de clase</span>
+                    <span className="font-medium">
+                      {numberOfPeople === 1 ? 'Individual' : `Grupal (${numberOfPeople} personas)`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm mb-2">
                     <span>Precio por sesión</span>
-                    <span>${Number(teacher.hourly_rate)}</span>
+                    <span>${pricePerSession}</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
                     <span>Número de sesiones</span>
-                    <span>{calculatedDates.length - conflictDates.length}</span>
+                    <span>{validSessionsCount}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg border-t pt-2">
                     <span>Total</span>
                     <span className="text-primary">
-                      ${(totalPrice - (conflictDates.length * (Number(teacher.hourly_rate) || 0))).toLocaleString()}
+                      ${totalPrice.toLocaleString()}
                     </span>
                   </div>
+                  {numberOfPeople > 1 && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      La tarifa grupal es fija sin importar la cantidad de personas
+                    </p>
+                  )}
                 </div>
 
                 {conflictDates.length > 0 && (

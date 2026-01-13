@@ -8,6 +8,9 @@ export interface Profile {
   full_name: string;
   bio: string | null;
   hourly_rate: number;
+  group_hourly_rate: number | null;
+  max_students_per_session: number | null;
+  session_duration: number | null;
   avatar_url: string | null;
   sport: string | null;
   created_at: string;

@@ -190,9 +190,12 @@ export type Database = {
           bio: string | null
           created_at: string
           full_name: string
+          group_hourly_rate: number | null
           hourly_rate: number | null
           id: string
+          max_students_per_session: number | null
           role: Database["public"]["Enums"]["app_role"]
+          session_duration: number | null
           sport: string | null
           updated_at: string
           user_id: string
@@ -202,9 +205,12 @@ export type Database = {
           bio?: string | null
           created_at?: string
           full_name: string
+          group_hourly_rate?: number | null
           hourly_rate?: number | null
           id?: string
+          max_students_per_session?: number | null
           role: Database["public"]["Enums"]["app_role"]
+          session_duration?: number | null
           sport?: string | null
           updated_at?: string
           user_id: string
@@ -214,9 +220,12 @@ export type Database = {
           bio?: string | null
           created_at?: string
           full_name?: string
+          group_hourly_rate?: number | null
           hourly_rate?: number | null
           id?: string
+          max_students_per_session?: number | null
           role?: Database["public"]["Enums"]["app_role"]
+          session_duration?: number | null
           sport?: string | null
           updated_at?: string
           user_id?: string

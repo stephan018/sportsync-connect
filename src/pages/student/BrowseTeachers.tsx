@@ -5,23 +5,55 @@ import { Profile } from '@/types/database';
 import { useAuth } from '@/hooks/useAuth';
 import { useChat } from '@/hooks/useChat';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Search, Star, DollarSign, Calendar, Users, MessageSquare, Dumbbell, User } from 'lucide-react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { 
+  Search, 
+  Star, 
+  Users, 
+  Dumbbell,
+  Trophy,
+  Target,
+  Bike,
+  Waves,
+  Mountain,
+  Swords,
+  Heart,
+  Footprints,
+  SlidersHorizontal,
+  Grid3X3
+} from 'lucide-react';
 
 interface TeacherWithRating extends Profile {
   avgRating: number;
   reviewCount: number;
 }
+
+// Sport categories with icons
+const SPORT_CATEGORIES = [
+  { id: 'all', label: 'Todos', icon: Grid3X3 },
+  { id: 'Fútbol', label: 'Fútbol', icon: Trophy },
+  { id: 'Tenis', label: 'Tenis', icon: Target },
+  { id: 'Natación', label: 'Natación', icon: Waves },
+  { id: 'Ciclismo', label: 'Ciclismo', icon: Bike },
+  { id: 'Yoga', label: 'Yoga', icon: Heart },
+  { id: 'Crossfit', label: 'Crossfit', icon: Dumbbell },
+  { id: 'Running', label: 'Running', icon: Footprints },
+  { id: 'Escalada', label: 'Escalada', icon: Mountain },
+  { id: 'Artes Marciales', label: 'Artes Marciales', icon: Swords },
+];
+
+// Placeholder images for teachers (sports themed)
+const PLACEHOLDER_IMAGES = [
+  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop',
+];
 
 export default function BrowseTeachers() {
   const navigate = useNavigate();
@@ -46,7 +78,6 @@ export default function BrowseTeachers() {
 
   const fetchTeachers = async () => {
     try {
-      // Fetch teachers
       const { data: teachersData, error: teachersError } = await supabase
         .from('profiles')
         .select('*')
@@ -55,14 +86,12 @@ export default function BrowseTeachers() {
 
       if (teachersError) throw teachersError;
 
-      // Fetch all reviews to calculate averages
       const { data: reviewsData, error: reviewsError } = await supabase
         .from('reviews')
         .select('teacher_id, rating');
 
       if (reviewsError) throw reviewsError;
 
-      // Calculate average ratings per teacher
       const ratingsByTeacher: Record<string, { total: number; count: number }> = {};
       reviewsData?.forEach((review) => {
         if (!ratingsByTeacher[review.teacher_id]) {
@@ -91,12 +120,6 @@ export default function BrowseTeachers() {
     }
   };
 
-  // Get unique sports from teachers for filter dropdown
-  const availableSports = useMemo(() => {
-    const sports = teachers.map((t) => t.sport).filter((s): s is string => !!s);
-    return [...new Set(sports)].sort();
-  }, [teachers]);
-
   const filteredTeachers = teachers.filter((teacher) => {
     const matchesSearch =
       teacher.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -108,139 +131,178 @@ export default function BrowseTeachers() {
     return matchesSearch && matchesSport;
   });
 
+  // Get image for teacher (use avatar or placeholder)
+  const getTeacherImage = (teacher: TeacherWithRating, index: number) => {
+    return teacher.avatar_url || PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length];
+  };
+
   return (
     <DashboardLayout>
-      <div className="p-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Encuentra tu Profesor</h1>
-          <p className="text-muted-foreground mt-1">
-            Busca y reserva sesiones con profesores profesionales de deportes
-          </p>
+      <div className="min-h-screen bg-background">
+        {/* Hero Search Section */}
+        <div className="bg-gradient-to-b from-muted/50 to-background px-4 pt-6 pb-4">
+          <div className="max-w-4xl mx-auto">
+            {/* Search Bar */}
+            <div className="bg-card rounded-full shadow-lg border border-border/50 p-2 flex items-center gap-2">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar profesores, deportes..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-12 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-12 text-base"
+                />
+              </div>
+              <Button className="rounded-full h-12 px-8 gradient-primary text-primary-foreground font-semibold">
+                <Search className="w-4 h-4 mr-2" />
+                Buscar
+              </Button>
+            </div>
+          </div>
         </div>
 
-        {/* Search & Filter */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <Input
-              placeholder="Buscar por nombre, deporte o especialidad..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 text-lg"
-            />
+        {/* Category Pills */}
+        <div className="px-4 py-4 border-b border-border/50">
+          <ScrollArea className="w-full">
+            <div className="flex gap-2 pb-2 max-w-6xl mx-auto">
+              {SPORT_CATEGORIES.map((category) => {
+                const Icon = category.icon;
+                const isActive = sportFilter === category.id;
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setSportFilter(category.id)}
+                    className={`
+                      flex flex-col items-center gap-1.5 px-5 py-3 rounded-xl transition-all duration-200 whitespace-nowrap min-w-[80px]
+                      ${isActive 
+                        ? 'bg-primary text-primary-foreground shadow-md' 
+                        : 'bg-card hover:bg-muted text-muted-foreground hover:text-foreground border border-border/50'
+                      }
+                    `}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="text-xs font-medium">{category.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
+
+        {/* Results Header */}
+        <div className="px-4 py-4 max-w-6xl mx-auto">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">
+                {sportFilter === 'all' ? 'Todos los profesores' : sportFilter}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {filteredTeachers.length} profesor{filteredTeachers.length !== 1 ? 'es' : ''} disponible{filteredTeachers.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+            <Button variant="outline" className="rounded-full gap-2">
+              <SlidersHorizontal className="w-4 h-4" />
+              Filtros
+            </Button>
           </div>
-          <Select value={sportFilter} onValueChange={setSportFilter}>
-            <SelectTrigger className="w-full sm:w-48 h-12">
-              <Dumbbell className="w-4 h-4 mr-2 text-muted-foreground" />
-              <SelectValue placeholder="Todos los Deportes" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos los Deportes</SelectItem>
-              {availableSports.map((sport) => (
-                <SelectItem key={sport} value={sport}>
-                  {sport}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
 
         {/* Teachers Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-64 bg-muted animate-pulse rounded-lg" />
-            ))}
-          </div>
-        ) : filteredTeachers.length === 0 ? (
-          <div className="text-center py-16">
-            <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No se encontraron profesores</h3>
-            <p className="text-muted-foreground">
-              Intenta ajustar tu búsqueda o vuelve más tarde
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTeachers.map((teacher) => (
-              <Card key={teacher.id} className="card-hover overflow-hidden">
-                <CardContent className="p-0">
-                  {/* Avatar/Header */}
-                  <div className="h-32 gradient-primary relative">
-                    <div className="absolute -bottom-8 left-6">
-                      <div className="w-16 h-16 rounded-full bg-background border-4 border-background flex items-center justify-center text-2xl font-bold text-primary">
-                        {teacher.full_name.charAt(0)}
-                      </div>
-                    </div>
+        <div className="px-4 pb-8 max-w-6xl mx-auto">
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[4/3] bg-muted rounded-2xl mb-3" />
+                  <div className="h-5 bg-muted rounded w-3/4 mb-2" />
+                  <div className="h-4 bg-muted rounded w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : filteredTeachers.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                <Users className="w-10 h-10 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-foreground">No se encontraron profesores</h3>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Intenta ajustar tu búsqueda o explora otras categorías de deportes
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTeachers.map((teacher, index) => (
+                <article
+                  key={teacher.id}
+                  className="group cursor-pointer"
+                  onClick={() => navigate(`/teacher/${teacher.id}`)}
+                >
+                  {/* Image */}
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-3">
+                    <img
+                      src={getTeacherImage(teacher, index)}
+                      alt={teacher.full_name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      onError={(e) => {
+                        e.currentTarget.src = PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length];
+                      }}
+                    />
+                    {/* Overlay gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    
+                    {/* Sport Badge */}
                     {teacher.sport && (
-                      <Badge className="absolute top-4 right-4 bg-background/90 text-foreground hover:bg-background">
-                        <Dumbbell className="w-3 h-3 mr-1" />
+                      <Badge 
+                        variant="secondary" 
+                        className="absolute top-3 right-3 bg-card/95 backdrop-blur-sm text-foreground border-0 font-medium"
+                      >
                         {teacher.sport}
                       </Badge>
                     )}
+
+                    {/* Quick Book Button - appears on hover */}
+                    <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                      <Button 
+                        className="w-full gradient-primary text-primary-foreground font-semibold shadow-lg"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/book/${teacher.id}`);
+                        }}
+                      >
+                        Reservar Sesión
+                      </Button>
+                    </div>
                   </div>
 
                   {/* Content */}
-                  <div className="pt-12 px-6 pb-6">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="font-semibold text-lg">{teacher.full_name}</h3>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Star
-                            className={`w-4 h-4 ${
-                              teacher.avgRating > 0
-                                ? 'text-warning fill-warning'
-                                : 'text-muted-foreground'
-                            }`}
-                          />
-                          <span>
-                            {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'New'}
-                          </span>
-                          {teacher.reviewCount > 0 && (
-                            <>
-                              <span className="mx-1">•</span>
-                              <span>
-                                {teacher.reviewCount} reseña{teacher.reviewCount !== 1 ? 's' : ''}
-                              </span>
-                            </>
-                          )}
-                        </div>
+                  <div className="space-y-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                        {teacher.full_name}
+                      </h3>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Star className={`w-4 h-4 ${teacher.avgRating > 0 ? 'text-warning fill-warning' : 'text-muted-foreground'}`} />
+                        <span className="text-sm font-medium">
+                          {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'Nuevo'}
+                        </span>
                       </div>
-                      <Badge variant="secondary" className="flex items-center gap-1">
-                        <DollarSign className="w-3 h-3" />
-                        {Number(teacher.hourly_rate)}/hr
-                      </Badge>
                     </div>
-
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                      {teacher.bio ||
-                        'Profesor profesional listo para ayudarte a alcanzar tus metas fitness.'}
+                    
+                    <p className="text-sm text-muted-foreground line-clamp-1">
+                      {teacher.bio || 'Profesor profesional de deportes'}
                     </p>
-
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1"
-                        onClick={() => navigate(`/teacher/${teacher.id}`)}
-                      >
-                        <User className="w-4 h-4 mr-2" />
-                        Ver Perfil
-                      </Button>
-                      <Button
-                        className="flex-1 gradient-primary"
-                        onClick={() => navigate(`/book/${teacher.id}`)}
-                      >
-                        <Calendar className="w-4 h-4 mr-2" />
-                        Reservar
-                      </Button>
-                    </div>
+                    
+                    <p className="text-foreground font-semibold">
+                      desde <span className="text-lg">${teacher.hourly_rate}</span>
+                      <span className="text-sm font-normal text-muted-foreground"> /sesión</span>
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </DashboardLayout>
   );

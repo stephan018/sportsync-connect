@@ -35,13 +35,17 @@ export default function ChatRoom({
         <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4">
           <User className="w-10 h-10 text-muted-foreground" />
         </div>
-        <h3 className="font-semibold text-foreground mb-2">Select a conversation</h3>
+        <h3 className="font-semibold text-foreground mb-2">Selecciona una conversación</h3>
         <p className="text-sm text-muted-foreground">
-          Choose a conversation from the sidebar to start chatting
+          Elige una conversación de la barra lateral para comenzar a chatear
         </p>
       </div>
     );
   }
+
+  const getRoleLabel = (role: string) => {
+    return role === 'teacher' ? 'Profesor' : 'Estudiante';
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -65,7 +69,7 @@ export default function ChatRoom({
         </div>
         <div>
           <h3 className="font-semibold text-foreground">{otherUser.full_name}</h3>
-          <p className="text-xs text-muted-foreground capitalize">{otherUser.role}</p>
+          <p className="text-xs text-muted-foreground">{getRoleLabel(otherUser.role)}</p>
         </div>
       </div>
 
@@ -78,7 +82,7 @@ export default function ChatRoom({
         ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <p className="text-muted-foreground">
-              No messages yet. Start the conversation!
+              Aún no hay mensajes. ¡Inicia la conversación!
             </p>
           </div>
         ) : (

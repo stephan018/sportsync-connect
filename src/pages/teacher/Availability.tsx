@@ -11,6 +11,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Clock, Plus, Trash2, Save, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
+const DAYS_OF_WEEK_ES = [
+  { value: 0, label: 'Domingo', short: 'Dom' },
+  { value: 1, label: 'Lunes', short: 'Lun' },
+  { value: 2, label: 'Martes', short: 'Mar' },
+  { value: 3, label: 'Miércoles', short: 'Mié' },
+  { value: 4, label: 'Jueves', short: 'Jue' },
+  { value: 5, label: 'Viernes', short: 'Vie' },
+  { value: 6, label: 'Sábado', short: 'Sáb' },
+];
+
 interface AvailabilitySlot {
   id?: string;
   day_of_week: number;
@@ -65,7 +75,7 @@ export default function TeacherAvailability() {
       }
     } catch (error) {
       console.error('Error fetching availability:', error);
-      toast.error('Failed to load availability');
+      toast.error('Error al cargar disponibilidad');
     } finally {
       setLoading(false);
     }
@@ -92,13 +102,13 @@ export default function TeacherAvailability() {
         .eq('id', slot.id);
       
       if (error) {
-        toast.error('Failed to delete slot');
+        toast.error('Error al eliminar horario');
         return;
       }
     }
     
     setAvailability(availability.filter((_, i) => i !== index));
-    toast.success('Slot removed');
+    toast.success('Horario eliminado');
   };
 
   const updateSlot = (index: number, updates: Partial<AvailabilitySlot>) => {
@@ -109,7 +119,7 @@ export default function TeacherAvailability() {
 
   const saveAvailability = async () => {
     if (!profile?.id) {
-      toast.error('Profile not loaded. Please refresh the page.');
+      toast.error('Perfil no cargado. Por favor recarga la página.');
       return;
     }
     
@@ -149,11 +159,11 @@ export default function TeacherAvailability() {
       }
 
       console.log('Inserted data:', data);
-      toast.success('Availability saved successfully!');
+      toast.success('¡Disponibilidad guardada exitosamente!');
       fetchAvailability();
     } catch (error: any) {
       console.error('Error saving availability:', error);
-      toast.error('Failed to save availability: ' + (error.message || 'Unknown error'));
+      toast.error('Error al guardar disponibilidad: ' + (error.message || 'Error desconocido'));
     } finally {
       setSaving(false);
     }
@@ -169,9 +179,9 @@ export default function TeacherAvailability() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Availability</h1>
+            <h1 className="text-3xl font-bold text-foreground">Disponibilidad</h1>
             <p className="text-muted-foreground mt-1">
-              Set your weekly schedule for students to book
+              Configura tu horario semanal para que los estudiantes puedan reservar
             </p>
           </div>
           <Button onClick={saveAvailability} disabled={saving} className="gradient-primary">
@@ -180,7 +190,7 @@ export default function TeacherAvailability() {
             ) : (
               <Save className="w-4 h-4 mr-2" />
             )}
-            Save Changes
+            Guardar Cambios
           </Button>
         </div>
 
@@ -192,7 +202,7 @@ export default function TeacherAvailability() {
           </div>
         ) : (
           <div className="space-y-4">
-            {DAYS_OF_WEEK.map((day) => {
+            {DAYS_OF_WEEK_ES.map((day) => {
               const slots = getDaySlots(day.value);
               
               return (
@@ -208,13 +218,13 @@ export default function TeacherAvailability() {
                             onClick={() => addSlot(day.value)}
                           >
                             <Plus className="w-4 h-4 mr-1" />
-                            Add Slot
+                            Agregar Horario
                           </Button>
                         </div>
                         
                         {slots.length === 0 ? (
                           <p className="text-muted-foreground text-sm">
-                            No availability set for this day
+                            Sin disponibilidad configurada para este día
                           </p>
                         ) : (
                           <div className="space-y-3">
@@ -247,7 +257,7 @@ export default function TeacherAvailability() {
                                     </SelectContent>
                                   </Select>
                                   
-                                  <span className="text-muted-foreground">to</span>
+                                  <span className="text-muted-foreground">a</span>
                                   
                                   <Select
                                     value={slot.end_time}
@@ -271,7 +281,7 @@ export default function TeacherAvailability() {
                                       onCheckedChange={(checked) => updateSlot(actualIndex, { is_available: checked })}
                                     />
                                     <Label className="text-sm">
-                                      {slot.is_available ? 'Active' : 'Inactive'}
+                                      {slot.is_available ? 'Activo' : 'Inactivo'}
                                     </Label>
                                   </div>
                                   

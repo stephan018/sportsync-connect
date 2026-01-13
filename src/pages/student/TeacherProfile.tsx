@@ -21,6 +21,16 @@ import {
   Star,
 } from 'lucide-react';
 
+const DAYS_OF_WEEK_ES = [
+  { value: 0, label: 'Domingo' },
+  { value: 1, label: 'Lunes' },
+  { value: 2, label: 'Martes' },
+  { value: 3, label: 'Miércoles' },
+  { value: 4, label: 'Jueves' },
+  { value: 5, label: 'Viernes' },
+  { value: 6, label: 'Sábado' },
+];
+
 interface TeacherWithStats extends Profile {
   avgRating: number;
   reviewCount: number;
@@ -103,7 +113,7 @@ export default function TeacherProfile() {
   };
 
   // Group availability by day
-  const availabilityByDay = DAYS_OF_WEEK.map((day) => ({
+  const availabilityByDay = DAYS_OF_WEEK_ES.map((day) => ({
     ...day,
     slots: availability.filter((a) => a.day_of_week === day.value),
   }));
@@ -122,9 +132,9 @@ export default function TeacherProfile() {
     return (
       <DashboardLayout>
         <div className="p-8 text-center">
-          <p className="text-muted-foreground">Teacher not found</p>
+          <p className="text-muted-foreground">Profesor no encontrado</p>
           <Button onClick={() => navigate('/browse')} className="mt-4">
-            Back to Browse
+            Volver a Explorar
           </Button>
         </div>
       </DashboardLayout>
@@ -137,7 +147,7 @@ export default function TeacherProfile() {
         {/* Back Button */}
         <Button variant="ghost" onClick={() => navigate('/browse')} className="mb-6">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Teachers
+          Volver a Profesores
         </Button>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -170,11 +180,11 @@ export default function TeacherProfile() {
                               }`}
                             />
                             <span className="font-medium">
-                              {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'New'}
+                              {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'Nuevo'}
                             </span>
                             {teacher.reviewCount > 0 && (
                               <span className="text-muted-foreground">
-                                ({teacher.reviewCount} reviews)
+                                ({teacher.reviewCount} reseñas)
                               </span>
                             )}
                           </div>
@@ -182,12 +192,12 @@ export default function TeacherProfile() {
                       </div>
                       <Badge className="gradient-primary text-lg px-4 py-2">
                         <DollarSign className="w-4 h-4 mr-1" />
-                        {Number(teacher.hourly_rate)}/hour
+                        {Number(teacher.hourly_rate)}/hora
                       </Badge>
                     </div>
                     <p className="text-muted-foreground mt-4">
                       {teacher.bio ||
-                        'Professional sports coach ready to help you achieve your fitness goals.'}
+                        'Entrenador deportivo profesional listo para ayudarte a alcanzar tus metas.'}
                     </p>
                   </div>
                 </div>
@@ -198,9 +208,9 @@ export default function TeacherProfile() {
             <Tabs defaultValue="reviews" className="w-full">
               <TabsList className="mb-4">
                 <TabsTrigger value="reviews">
-                  Reviews ({teacher.reviewCount})
+                  Reseñas ({teacher.reviewCount})
                 </TabsTrigger>
-                <TabsTrigger value="availability">Availability</TabsTrigger>
+                <TabsTrigger value="availability">Disponibilidad</TabsTrigger>
               </TabsList>
 
               <TabsContent value="reviews">
@@ -212,7 +222,7 @@ export default function TeacherProfile() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Clock className="w-5 h-5 text-primary" />
-                      Weekly Schedule
+                      Horario Semanal
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -232,7 +242,7 @@ export default function TeacherProfile() {
                               ))}
                             </div>
                           ) : (
-                            <span className="text-muted-foreground text-sm">Not available</span>
+                            <span className="text-muted-foreground text-sm">No disponible</span>
                           )}
                         </div>
                       ))}
@@ -253,11 +263,11 @@ export default function TeacherProfile() {
                   onClick={() => navigate(`/book/${teacher.id}`)}
                 >
                   <Calendar className="w-5 h-5 mr-2" />
-                  Book Sessions
+                  Reservar Sesiones
                 </Button>
                 <Button variant="outline" className="w-full" size="lg" onClick={handleMessage}>
                   <MessageSquare className="w-5 h-5 mr-2" />
-                  Send Message
+                  Enviar Mensaje
                 </Button>
               </CardContent>
             </Card>

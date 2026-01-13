@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DollarSign, TrendingUp, Users, Calendar, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { format, subMonths, startOfMonth, endOfMonth, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
 import {
   AreaChart,
   Area,
@@ -80,7 +81,7 @@ export default function TeacherEarnings() {
     
     for (let i = monthsBack - 1; i >= 0; i--) {
       const date = subMonths(new Date(), i);
-      const key = format(date, 'MMM yyyy');
+      const key = format(date, 'MMM yyyy', { locale: es });
       monthlyMap.set(key, { earnings: 0, bookings: 0 });
     }
 
@@ -90,7 +91,7 @@ export default function TeacherEarnings() {
     
     bookings.forEach((booking) => {
       const date = parseISO(booking.booking_date);
-      const key = format(date, 'MMM yyyy');
+      const key = format(date, 'MMM yyyy', { locale: es });
       const current = monthlyMap.get(key);
       if (current) {
         current.earnings += Number(booking.total_price);
@@ -132,34 +133,34 @@ export default function TeacherEarnings() {
 
   const stats = [
     {
-      title: 'Total Earnings',
+      title: 'Ganancias Totales',
       value: `$${totalEarnings.toLocaleString()}`,
       icon: DollarSign,
-      description: `Last ${timeRange} months`,
+      description: `Últimos ${timeRange} meses`,
       color: 'text-primary',
       bgColor: 'bg-primary/10',
     },
     {
-      title: 'Growth Rate',
+      title: 'Tasa de Crecimiento',
       value: `${growthRate >= 0 ? '+' : ''}${growthRate.toFixed(1)}%`,
       icon: growthRate >= 0 ? TrendingUp : ArrowDownRight,
-      description: 'vs. previous month',
+      description: 'vs. mes anterior',
       color: growthRate >= 0 ? 'text-success' : 'text-destructive',
       bgColor: growthRate >= 0 ? 'bg-success/10' : 'bg-destructive/10',
     },
     {
-      title: 'Avg. per Booking',
+      title: 'Promedio por Reserva',
       value: `$${averagePerBooking.toFixed(0)}`,
       icon: Calendar,
-      description: `${totalBookings} total bookings`,
+      description: `${totalBookings} reservas totales`,
       color: 'text-info',
       bgColor: 'bg-info/10',
     },
     {
-      title: 'Unique Students',
+      title: 'Estudiantes Únicos',
       value: uniqueStudents.toString(),
       icon: Users,
-      description: 'Returning customers',
+      description: 'Clientes recurrentes',
       color: 'text-accent',
       bgColor: 'bg-accent/10',
     },
@@ -171,7 +172,7 @@ export default function TeacherEarnings() {
         <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
           <p className="font-medium text-foreground">{label}</p>
           <p className="text-primary text-sm">
-            Earnings: ${payload[0].value.toLocaleString()}
+            Ganancias: ${payload[0].value.toLocaleString()}
           </p>
         </div>
       );
@@ -185,7 +186,7 @@ export default function TeacherEarnings() {
         <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
           <p className="font-medium text-foreground">{label}</p>
           <p className="text-accent text-sm">
-            Bookings: {payload[0].value}
+            Reservas: {payload[0].value}
           </p>
         </div>
       );
@@ -199,19 +200,19 @@ export default function TeacherEarnings() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Earnings Analytics</h1>
+            <h1 className="text-3xl font-bold text-foreground">Análisis de Ganancias</h1>
             <p className="text-muted-foreground mt-1">
-              Track your revenue and booking trends
+              Seguimiento de tus ingresos y tendencias de reservas
             </p>
           </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Select range" />
+              <SelectValue placeholder="Seleccionar rango" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="3">Last 3 months</SelectItem>
-              <SelectItem value="6">Last 6 months</SelectItem>
-              <SelectItem value="12">Last 12 months</SelectItem>
+              <SelectItem value="3">Últimos 3 meses</SelectItem>
+              <SelectItem value="6">Últimos 6 meses</SelectItem>
+              <SelectItem value="12">Últimos 12 meses</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -245,9 +246,9 @@ export default function TeacherEarnings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-primary" />
-                Monthly Revenue
+                Ingresos Mensuales
               </CardTitle>
-              <CardDescription>Your earnings over time</CardDescription>
+              <CardDescription>Tus ganancias a lo largo del tiempo</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -292,9 +293,9 @@ export default function TeacherEarnings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-accent" />
-                Monthly Bookings
+                Reservas Mensuales
               </CardTitle>
-              <CardDescription>Number of completed sessions</CardDescription>
+              <CardDescription>Número de sesiones completadas</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? (

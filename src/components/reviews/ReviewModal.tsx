@@ -40,7 +40,7 @@ export default function ReviewModal({
 
   const handleSubmit = async () => {
     if (rating === 0) {
-      toast.error('Please select a rating');
+      toast.error('Por favor selecciona una calificación');
       return;
     }
 
@@ -56,7 +56,7 @@ export default function ReviewModal({
 
       if (error) throw error;
 
-      toast.success('Review submitted successfully!');
+      toast.success('¡Reseña enviada exitosamente!');
       onReviewSubmitted();
       onOpenChange(false);
       setRating(0);
@@ -64,9 +64,9 @@ export default function ReviewModal({
     } catch (error: any) {
       console.error('Error submitting review:', error);
       if (error.code === '23505') {
-        toast.error('You have already reviewed this session');
+        toast.error('Ya has reseñado esta sesión');
       } else {
-        toast.error('Failed to submit review');
+        toast.error('Error al enviar la reseña');
       }
     } finally {
       setLoading(false);
@@ -77,16 +77,16 @@ export default function ReviewModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Rate Your Session</DialogTitle>
+          <DialogTitle>Califica Tu Sesión</DialogTitle>
           <DialogDescription>
-            How was your session with {teacherName}?
+            ¿Cómo fue tu sesión con {teacherName}?
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
           {/* Star Rating */}
           <div className="space-y-2">
-            <Label>Rating</Label>
+            <Label>Calificación</Label>
             <div className="flex gap-1 justify-center">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -109,22 +109,22 @@ export default function ReviewModal({
               ))}
             </div>
             <p className="text-center text-sm text-muted-foreground">
-              {rating === 1 && 'Poor'}
-              {rating === 2 && 'Fair'}
-              {rating === 3 && 'Good'}
-              {rating === 4 && 'Very Good'}
-              {rating === 5 && 'Excellent'}
+              {rating === 1 && 'Malo'}
+              {rating === 2 && 'Regular'}
+              {rating === 3 && 'Bueno'}
+              {rating === 4 && 'Muy Bueno'}
+              {rating === 5 && 'Excelente'}
             </p>
           </div>
 
           {/* Comment */}
           <div className="space-y-2">
-            <Label htmlFor="comment">Comment (optional)</Label>
+            <Label htmlFor="comment">Comentario (opcional)</Label>
             <Textarea
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Share your experience..."
+              placeholder="Comparte tu experiencia..."
               rows={4}
             />
           </div>
@@ -136,7 +136,7 @@ export default function ReviewModal({
             className="flex-1"
             onClick={() => onOpenChange(false)}
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             className="flex-1"
@@ -146,10 +146,10 @@ export default function ReviewModal({
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Submitting...
+                Enviando...
               </>
             ) : (
-              'Submit Review'
+              'Enviar Reseña'
             )}
           </Button>
         </div>

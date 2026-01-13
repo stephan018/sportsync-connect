@@ -334,19 +334,19 @@ export default function TeacherProfile() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8 pb-12">
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 pb-24 lg:pb-12">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="lg:col-span-2 space-y-6 lg:space-y-8">
               {/* Bio Section */}
               <Card className="overflow-hidden">
-                <CardHeader className="bg-muted/30">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Sparkles className="w-5 h-5 text-primary" />
+                <CardHeader className="bg-muted/30 p-4 lg:p-6">
+                  <CardTitle className="flex items-center gap-2 text-base lg:text-lg">
+                    <Sparkles className="w-4 lg:w-5 h-4 lg:h-5 text-primary" />
                     Sobre Mí
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <p className="text-muted-foreground leading-relaxed">
+                <CardContent className="p-4 lg:p-6">
+                  <p className="text-sm lg:text-base text-muted-foreground leading-relaxed">
                     {teacher.bio ||
                       'Entrenador deportivo profesional con años de experiencia. Mi metodología se enfoca en el progreso individual de cada alumno, adaptando los entrenamientos a sus necesidades y objetivos específicos. ¡Juntos alcanzaremos tus metas!'}
                   </p>
@@ -355,15 +355,15 @@ export default function TeacherProfile() {
 
               {/* Gallery */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-primary" />
+                <h3 className="text-base lg:text-lg font-semibold mb-3 lg:mb-4 flex items-center gap-2">
+                  <Trophy className="w-4 lg:w-5 h-4 lg:h-5 text-primary" />
                   Galería de Entrenamiento
                 </h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2 lg:gap-3">
                   {galleryImages.map((img, idx) => (
                     <div
                       key={idx}
-                      className="aspect-[4/3] rounded-xl overflow-hidden group cursor-pointer"
+                      className="aspect-[4/3] rounded-lg lg:rounded-xl overflow-hidden group cursor-pointer"
                     >
                       <img
                         src={img}
@@ -377,55 +377,55 @@ export default function TeacherProfile() {
 
               {/* Tabs for Reviews & Availability */}
               <Tabs defaultValue="reviews" className="w-full">
-                <TabsList className="w-full grid grid-cols-2 h-12">
-                  <TabsTrigger value="reviews" className="text-sm">
-                    <Star className="w-4 h-4 mr-2" />
+                <TabsList className="w-full grid grid-cols-2 h-10 lg:h-12">
+                  <TabsTrigger value="reviews" className="text-xs lg:text-sm">
+                    <Star className="w-3.5 lg:w-4 h-3.5 lg:h-4 mr-1.5 lg:mr-2" />
                     Reseñas ({teacher.reviewCount})
                   </TabsTrigger>
-                  <TabsTrigger value="availability" className="text-sm">
-                    <Clock className="w-4 h-4 mr-2" />
+                  <TabsTrigger value="availability" className="text-xs lg:text-sm">
+                    <Clock className="w-3.5 lg:w-4 h-3.5 lg:h-4 mr-1.5 lg:mr-2" />
                     Disponibilidad
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="reviews" className="mt-6">
+                <TabsContent value="reviews" className="mt-4 lg:mt-6">
                   <TeacherReviews teacherId={teacher.id} />
                 </TabsContent>
 
-                <TabsContent value="availability" className="mt-6">
+                <TabsContent value="availability" className="mt-4 lg:mt-6">
                   <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-lg">
-                        <Calendar className="w-5 h-5 text-primary" />
+                    <CardHeader className="p-4 lg:p-6">
+                      <CardTitle className="flex items-center gap-2 text-base lg:text-lg">
+                        <Calendar className="w-4 lg:w-5 h-4 lg:h-5 text-primary" />
                         Horario Semanal
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-7 gap-2">
+                    <CardContent className="p-4 lg:p-6 pt-0 lg:pt-0">
+                      <div className="grid grid-cols-7 gap-1 lg:gap-2">
                         {availabilityByDay.map((day) => (
                           <div
                             key={day.value}
-                            className={`text-center p-3 rounded-xl transition-colors ${
+                            className={`text-center p-1.5 lg:p-3 rounded-lg lg:rounded-xl transition-colors ${
                               day.slots.length > 0
                                 ? 'bg-primary/10 border border-primary/20'
                                 : 'bg-muted/50'
                             }`}
                           >
                             <span
-                              className={`text-xs font-medium ${
+                              className={`text-[10px] lg:text-xs font-medium ${
                                 day.slots.length > 0 ? 'text-primary' : 'text-muted-foreground'
                               }`}
                             >
                               {day.short}
                             </span>
-                            <div className="mt-2 space-y-1">
+                            <div className="mt-1 lg:mt-2 space-y-0.5 lg:space-y-1">
                               {day.slots.length > 0 ? (
                                 day.slots.map((slot) => {
                                   const booked = isSlotBooked(day.value, slot.start_time);
                                   return (
                                     <div
                                       key={slot.id}
-                                      className={`text-[10px] rounded px-1 py-0.5 transition-colors ${
+                                      className={`text-[8px] lg:text-[10px] rounded px-0.5 lg:px-1 py-0.5 transition-colors ${
                                         booked
                                           ? 'bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30'
                                           : 'text-muted-foreground bg-background'
@@ -433,12 +433,12 @@ export default function TeacherProfile() {
                                       title={booked ? 'Horario reservado' : 'Disponible'}
                                     >
                                       {slot.start_time.slice(0, 5)}
-                                      {booked && ' 🔸'}
+                                      <span className="hidden lg:inline">{booked && ' 🔸'}</span>
                                     </div>
                                   );
                                 })
                               ) : (
-                                <span className="text-[10px] text-muted-foreground">—</span>
+                                <span className="text-[8px] lg:text-[10px] text-muted-foreground">—</span>
                               )}
                             </div>
                           </div>
@@ -462,9 +462,10 @@ export default function TeacherProfile() {
               </Tabs>
             </div>
 
-            {/* Sidebar Actions */}
+            {/* Sidebar Actions - Fixed on mobile */}
             <div className="space-y-4">
-              <Card className="sticky top-8 overflow-hidden border-primary/20">
+              {/* Desktop Card */}
+              <Card className="hidden lg:block sticky top-8 overflow-hidden border-primary/20">
                 <div className="h-2 gradient-primary" />
                 <CardContent className="p-6 space-y-4">
                   <div className="text-center pb-4 border-b">
@@ -510,6 +511,30 @@ export default function TeacherProfile() {
                   </div>
                 </CardContent>
               </Card>
+              
+              {/* Mobile Fixed Bottom Bar */}
+              <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 safe-area-bottom z-50">
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Desde</p>
+                    <p className="text-xl font-bold text-primary">${Number(teacher.hourly_rate)}<span className="text-sm font-normal text-muted-foreground">/h</span></p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-12 w-12 shrink-0"
+                    onClick={handleMessage}
+                  >
+                    <MessageSquare className="w-5 h-5" />
+                  </Button>
+                  <Button
+                    className="gradient-primary h-12 px-6 font-semibold"
+                    onClick={() => navigate(`/book/${teacher.id}`)}
+                  >
+                    Reservar
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

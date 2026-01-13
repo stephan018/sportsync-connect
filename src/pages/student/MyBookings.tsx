@@ -244,54 +244,54 @@ export default function MyBookings() {
         )}
         
         <CardContent className="p-0">
-          <div className="flex flex-col md:flex-row">
-            {/* Left section - Teacher info */}
-            <div className="flex-1 p-5">
-              <div className="flex items-start gap-4">
+          <div className="flex flex-col">
+            {/* Main section - Teacher info */}
+            <div className="flex-1 p-4 lg:p-5">
+              <div className="flex items-start gap-3 lg:gap-4">
                 {/* Avatar with sport icon */}
-                <div className="relative">
-                  <Avatar className="h-16 w-16 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
+                <div className="relative shrink-0">
+                  <Avatar className="h-12 w-12 lg:h-16 lg:w-16 ring-2 ring-offset-2 ring-offset-background ring-primary/20">
                     <AvatarImage src={booking.teacher?.avatar_url || ''} alt={booking.teacher?.full_name} />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground text-xl font-bold">
+                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground text-lg lg:text-xl font-bold">
                       {booking.teacher?.full_name?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="absolute -bottom-1 -right-1 text-lg bg-background rounded-full p-0.5 shadow-sm">
+                  <span className="absolute -bottom-1 -right-1 text-sm lg:text-lg bg-background rounded-full p-0.5 shadow-sm">
                     {sportIcon}
                   </span>
                 </div>
                 
                 {/* Teacher details */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-lg text-foreground truncate">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <h3 className="font-semibold text-base lg:text-lg text-foreground truncate">
                       {booking.teacher?.full_name}
                     </h3>
                     {booking.teacher?.sport && (
-                      <Badge variant="secondary" className="text-xs font-normal">
+                      <Badge variant="secondary" className="text-[10px] lg:text-xs font-normal">
                         {booking.teacher.sport}
                       </Badge>
                     )}
                   </div>
                   
                   {/* Date & Time */}
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mt-2">
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-y-1 sm:gap-x-4 text-xs lg:text-sm text-muted-foreground mt-1 lg:mt-2">
                     <span className="flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4 text-primary/70" />
+                      <Calendar className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-primary/70" />
                       <span className="capitalize">
-                        {format(parseISO(booking.booking_date), "EEEE, d 'de' MMMM", { locale: es })}
+                        {format(parseISO(booking.booking_date), "EEE, d MMM", { locale: es })}
                       </span>
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-primary/70" />
+                      <Clock className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-primary/70" />
                       {booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}
                     </span>
                   </div>
                   
                   {/* Notes if any */}
                   {booking.notes && (
-                    <p className="text-sm text-muted-foreground mt-2 line-clamp-1">
-                      <MessageSquare className="w-3.5 h-3.5 inline mr-1" />
+                    <p className="text-xs lg:text-sm text-muted-foreground mt-1 lg:mt-2 line-clamp-1 hidden sm:block">
+                      <MessageSquare className="w-3 lg:w-3.5 h-3 lg:h-3.5 inline mr-1" />
                       {booking.notes}
                     </p>
                   )}
@@ -299,52 +299,51 @@ export default function MyBookings() {
               </div>
             </div>
             
-            {/* Right section - Status, Price & Actions */}
-            <div className="flex md:flex-col items-center justify-between md:justify-center gap-3 p-5 md:border-l border-t md:border-t-0 bg-muted/30 md:w-56">
+            {/* Bottom section - Status, Price & Actions */}
+            <div className="flex items-center justify-between gap-2 lg:gap-3 px-4 lg:px-5 py-3 lg:py-4 border-t bg-muted/30">
               {/* Status Badge */}
-              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${statusConfig.bgClass}`}>
-                <span className={`w-2 h-2 rounded-full ${statusConfig.dotClass} animate-pulse`} />
-                <StatusIcon className={`w-4 h-4 ${statusConfig.textClass}`} />
-                <span className={`text-sm font-medium ${statusConfig.textClass}`}>
+              <div className={`flex items-center gap-1.5 lg:gap-2 px-2 lg:px-3 py-1 lg:py-1.5 rounded-full ${statusConfig.bgClass}`}>
+                <span className={`w-1.5 lg:w-2 h-1.5 lg:h-2 rounded-full ${statusConfig.dotClass} animate-pulse`} />
+                <StatusIcon className={`w-3.5 lg:w-4 h-3.5 lg:h-4 ${statusConfig.textClass}`} />
+                <span className={`text-xs lg:text-sm font-medium ${statusConfig.textClass}`}>
                   {statusConfig.label}
                 </span>
               </div>
               
               {/* Price */}
               <div className="text-center">
-                <span className="text-2xl font-bold text-foreground">
+                <span className="text-lg lg:text-2xl font-bold text-foreground">
                   ${Number(booking.total_price).toFixed(0)}
                 </span>
-                <p className="text-xs text-muted-foreground">por sesión</p>
               </div>
               
               {/* Actions */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 lg:gap-2">
                 {showReview && booking.status === 'completed' && !booking.hasReview && (
                   <Button
                     size="sm"
                     onClick={() => openReviewModal(booking)}
-                    className="gap-1.5"
+                    className="gap-1 lg:gap-1.5 text-xs lg:text-sm h-8 lg:h-9 px-2 lg:px-3"
                   >
-                    <Star className="w-4 h-4" />
-                    Dejar Reseña
+                    <Star className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
+                    <span className="hidden sm:inline">Reseñar</span>
                   </Button>
                 )}
                 {showReview && booking.hasReview && (
-                  <Badge variant="secondary" className="gap-1.5 py-1.5 px-3">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    Reseñado
+                  <Badge variant="secondary" className="gap-1 lg:gap-1.5 py-1 lg:py-1.5 px-2 lg:px-3 text-xs">
+                    <Star className="w-3 lg:w-3.5 h-3 lg:h-3.5 fill-amber-400 text-amber-400" />
+                    <span className="hidden sm:inline">Reseñado</span>
                   </Badge>
                 )}
                 {showCancel && booking.status !== 'cancelled' && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 lg:h-9 px-2 lg:px-3"
                     onClick={() => cancelBooking(booking.id)}
                   >
-                    <X className="w-4 h-4 mr-1" />
-                    Cancelar
+                    <X className="w-4 h-4" />
+                    <span className="hidden sm:inline ml-1">Cancelar</span>
                   </Button>
                 )}
               </div>
@@ -424,19 +423,20 @@ export default function MyBookings() {
 
   return (
     <DashboardLayout>
-      <div className="p-4 md:p-8 max-w-5xl mx-auto">
+      <div className="p-4 lg:p-8 pb-24 lg:pb-8 max-w-5xl mx-auto">
         {/* Header with stats */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div className="mb-6 lg:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 lg:gap-4 mb-4 lg:mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Mis Reservas</h1>
-              <p className="text-muted-foreground mt-1">
+              <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Mis Reservas</h1>
+              <p className="text-sm lg:text-base text-muted-foreground mt-1">
                 Gestiona tus sesiones de entrenamiento
               </p>
             </div>
             <Button 
               onClick={() => navigate('/browse')}
-              className="gap-2 w-fit"
+              className="gap-2 w-full sm:w-fit"
+              size="sm"
             >
               Buscar Profesores
               <ChevronRight className="w-4 h-4" />
@@ -444,24 +444,24 @@ export default function MyBookings() {
           </div>
           
           {/* Quick stats */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-3 gap-2 lg:gap-4 mb-6 lg:mb-8">
             {stats.map((stat) => (
-              <Card key={stat.label} className="text-center py-4">
-                <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
+              <Card key={stat.label} className="text-center py-3 lg:py-4">
+                <p className={`text-xl lg:text-3xl font-bold ${stat.color}`}>{stat.value}</p>
+                <p className="text-xs lg:text-sm text-muted-foreground">{stat.label}</p>
               </Card>
             ))}
           </div>
 
-          {/* Week Calendar View */}
-          <Card className="mb-8 overflow-hidden">
+          {/* Week Calendar View - Hidden on mobile, shown on larger screens */}
+          <Card className="mb-6 lg:mb-8 overflow-hidden hidden md:block">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-lg">
+                <CardTitle className="flex items-center gap-2 text-base lg:text-lg">
                   <CalendarDays className="w-5 h-5 text-primary" />
                   Próximas Clases
                 </CardTitle>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 lg:gap-2">
                   <Button 
                     variant="outline" 
                     size="icon" 
@@ -487,7 +487,7 @@ export default function MyBookings() {
                   </Button>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-xs lg:text-sm text-muted-foreground mt-1">
                 {format(weekRange.start, "d 'de' MMMM", { locale: es })} - {format(weekRange.end, "d 'de' MMMM yyyy", { locale: es })}
               </p>
             </CardHeader>

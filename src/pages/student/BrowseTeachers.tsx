@@ -138,12 +138,12 @@ export default function BrowseTeachers() {
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-20 lg:pb-8">
         {/* Hero Search Section */}
-        <div className="bg-gradient-to-b from-muted/50 to-background px-4 pt-6 pb-4">
+        <div className="bg-gradient-to-b from-muted/50 to-background px-4 pt-4 lg:pt-6 pb-4">
           <div className="max-w-4xl mx-auto">
             {/* Search Bar */}
-            <div className="bg-card rounded-full shadow-lg border border-border/50 p-2 flex items-center gap-2">
+            <div className="bg-card rounded-2xl lg:rounded-full shadow-lg border border-border/50 p-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
@@ -153,7 +153,7 @@ export default function BrowseTeachers() {
                   className="pl-12 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-12 text-base"
                 />
               </div>
-              <Button className="rounded-full h-12 px-8 gradient-primary text-primary-foreground font-semibold">
+              <Button className="rounded-xl sm:rounded-full h-12 px-6 sm:px-8 gradient-primary text-primary-foreground font-semibold">
                 <Search className="w-4 h-4 mr-2" />
                 Buscar
               </Button>
@@ -162,7 +162,7 @@ export default function BrowseTeachers() {
         </div>
 
         {/* Category Pills */}
-        <div className="px-4 py-4 border-b border-border/50">
+        <div className="px-4 py-3 lg:py-4 border-b border-border/50">
           <ScrollArea className="w-full">
             <div className="flex gap-2 pb-2 max-w-6xl mx-auto">
               {SPORT_CATEGORIES.map((category) => {
@@ -173,15 +173,15 @@ export default function BrowseTeachers() {
                     key={category.id}
                     onClick={() => setSportFilter(category.id)}
                     className={`
-                      flex flex-col items-center gap-1.5 px-5 py-3 rounded-xl transition-all duration-200 whitespace-nowrap min-w-[80px]
+                      flex flex-col items-center gap-1 lg:gap-1.5 px-3 lg:px-5 py-2 lg:py-3 rounded-xl transition-all duration-200 whitespace-nowrap min-w-[60px] lg:min-w-[80px]
                       ${isActive 
                         ? 'bg-primary text-primary-foreground shadow-md' 
                         : 'bg-card hover:bg-muted text-muted-foreground hover:text-foreground border border-border/50'
                       }
                     `}
                   >
-                    <Icon className="w-5 h-5" />
-                    <span className="text-xs font-medium">{category.label}</span>
+                    <Icon className="w-4 h-4 lg:w-5 lg:h-5" />
+                    <span className="text-[10px] lg:text-xs font-medium">{category.label}</span>
                   </button>
                 );
               })}
@@ -191,19 +191,19 @@ export default function BrowseTeachers() {
         </div>
 
         {/* Results Header */}
-        <div className="px-4 py-4 max-w-6xl mx-auto">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">
+        <div className="px-4 py-3 lg:py-4 max-w-6xl mx-auto">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="text-base lg:text-lg font-semibold text-foreground truncate">
                 {sportFilter === 'all' ? 'Todos los profesores' : sportFilter}
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs lg:text-sm text-muted-foreground">
                 {filteredTeachers.length} profesor{filteredTeachers.length !== 1 ? 'es' : ''} disponible{filteredTeachers.length !== 1 ? 's' : ''}
               </p>
             </div>
-            <Button variant="outline" className="rounded-full gap-2">
+            <Button variant="outline" size="sm" className="rounded-full gap-2 shrink-0">
               <SlidersHorizontal className="w-4 h-4" />
-              Filtros
+              <span className="hidden sm:inline">Filtros</span>
             </Button>
           </div>
         </div>
@@ -211,27 +211,27 @@ export default function BrowseTeachers() {
         {/* Teachers Grid */}
         <div className="px-4 pb-8 max-w-6xl mx-auto">
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="animate-pulse">
-                  <div className="aspect-[4/3] bg-muted rounded-2xl mb-3" />
-                  <div className="h-5 bg-muted rounded w-3/4 mb-2" />
-                  <div className="h-4 bg-muted rounded w-1/2" />
+                  <div className="aspect-[4/3] bg-muted rounded-xl lg:rounded-2xl mb-2 lg:mb-3" />
+                  <div className="h-4 lg:h-5 bg-muted rounded w-3/4 mb-2" />
+                  <div className="h-3 lg:h-4 bg-muted rounded w-1/2" />
                 </div>
               ))}
             </div>
           ) : filteredTeachers.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                <Users className="w-10 h-10 text-muted-foreground" />
+            <div className="text-center py-12 lg:py-20">
+              <div className="w-16 lg:w-20 h-16 lg:h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 lg:w-10 h-8 lg:h-10 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-foreground">No se encontraron profesores</h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
+              <h3 className="text-lg lg:text-xl font-semibold mb-2 text-foreground">No se encontraron profesores</h3>
+              <p className="text-sm lg:text-base text-muted-foreground max-w-md mx-auto px-4">
                 Intenta ajustar tu búsqueda o explora otras categorías de deportes
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
               {filteredTeachers.map((teacher, index) => (
                 <article
                   key={teacher.id}
@@ -239,7 +239,7 @@ export default function BrowseTeachers() {
                   onClick={() => navigate(`/teacher/${teacher.id}`)}
                 >
                   {/* Image */}
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-3">
+                  <div className="relative aspect-[4/3] rounded-xl lg:rounded-2xl overflow-hidden mb-2 lg:mb-3">
                     <img
                       src={getTeacherImage(teacher, index)}
                       alt={teacher.full_name}
@@ -255,14 +255,14 @@ export default function BrowseTeachers() {
                     {teacher.sport && (
                       <Badge 
                         variant="secondary" 
-                        className="absolute top-3 right-3 bg-card/95 backdrop-blur-sm text-foreground border-0 font-medium"
+                        className="absolute top-2 lg:top-3 right-2 lg:right-3 bg-card/95 backdrop-blur-sm text-foreground border-0 font-medium text-[10px] lg:text-xs px-2 py-0.5"
                       >
                         {teacher.sport}
                       </Badge>
                     )}
 
-                    {/* Quick Book Button - appears on hover */}
-                    <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                    {/* Quick Book Button - appears on hover (desktop only) */}
+                    <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 hidden lg:block">
                       <Button 
                         className="w-full gradient-primary text-primary-foreground font-semibold shadow-lg"
                         onClick={(e) => {
@@ -276,26 +276,26 @@ export default function BrowseTeachers() {
                   </div>
 
                   {/* Content */}
-                  <div className="space-y-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                  <div className="space-y-0.5 lg:space-y-1">
+                    <div className="flex items-start justify-between gap-1 lg:gap-2">
+                      <h3 className="font-semibold text-sm lg:text-base text-foreground group-hover:text-primary transition-colors line-clamp-1">
                         {teacher.full_name}
                       </h3>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <Star className={`w-4 h-4 ${teacher.avgRating > 0 ? 'text-warning fill-warning' : 'text-muted-foreground'}`} />
-                        <span className="text-sm font-medium">
+                      <div className="flex items-center gap-0.5 lg:gap-1 shrink-0">
+                        <Star className={`w-3 lg:w-4 h-3 lg:h-4 ${teacher.avgRating > 0 ? 'text-warning fill-warning' : 'text-muted-foreground'}`} />
+                        <span className="text-xs lg:text-sm font-medium">
                           {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'Nuevo'}
                         </span>
                       </div>
                     </div>
                     
-                    <p className="text-sm text-muted-foreground line-clamp-1">
+                    <p className="text-xs lg:text-sm text-muted-foreground line-clamp-1 hidden sm:block">
                       {teacher.bio || 'Profesor profesional de deportes'}
                     </p>
                     
-                    <p className="text-foreground font-semibold">
-                      desde <span className="text-lg">${teacher.hourly_rate}</span>
-                      <span className="text-sm font-normal text-muted-foreground"> /sesión</span>
+                    <p className="text-foreground font-semibold text-sm lg:text-base">
+                      <span className="text-base lg:text-lg">${teacher.hourly_rate}</span>
+                      <span className="text-xs lg:text-sm font-normal text-muted-foreground"> /sesión</span>
                     </p>
                   </div>
                 </article>

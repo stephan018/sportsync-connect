@@ -15,7 +15,7 @@ interface NotificationRequest {
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString("es-ES", {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -25,10 +25,7 @@ const formatDate = (dateString: string) => {
 
 const formatTime = (timeString: string) => {
   const [hours, minutes] = timeString.split(":");
-  const hour = parseInt(hours);
-  const ampm = hour >= 12 ? "PM" : "AM";
-  const displayHour = hour % 12 || 12;
-  return `${displayHour}:${minutes} ${ampm}`;
+  return `${hours}:${minutes}`;
 };
 
 const getEmailContent = (
@@ -44,107 +41,254 @@ const getEmailContent = (
   const templates = {
     created: {
       teacher: {
-        subject: "New Booking Request",
+        subject: "📅 Nueva Solicitud de Reserva",
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #10b981;">New Booking Request!</h1>
-            <p>Hi ${teacherName},</p>
-            <p>You have a new booking request from <strong>${studentName}</strong>.</p>
-            <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Date:</strong> ${sessionDate}</p>
-              <p style="margin: 5px 0;"><strong>Time:</strong> ${sessionTime}</p>
-              <p style="margin: 5px 0;"><strong>Price:</strong> $${booking.total_price}</p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #ffffff;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #10b981; margin: 0; font-size: 28px;">🎯 ProffX</h1>
             </div>
-            <p>Please log in to your dashboard to confirm or manage this booking.</p>
-            <p style="color: #6b7280; font-size: 14px;">Best regards,<br>SportSync Team</p>
+            
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+              <h2 style="margin: 0 0 10px 0; font-size: 22px;">📅 ¡Nueva Solicitud de Reserva!</h2>
+              <p style="margin: 0; opacity: 0.9; font-size: 16px;">Un estudiante quiere entrenar contigo</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Hola <strong>${teacherName}</strong>,</p>
+            <p style="font-size: 16px; color: #374151;">Tienes una nueva solicitud de reserva de <strong>${studentName}</strong>.</p>
+            
+            <div style="background: #f3f4f6; padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #10b981;">
+              <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">📋 Detalles de la Sesión</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Fecha</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Horario</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionTime}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Precio</td>
+                  <td style="padding: 8px 0; color: #10b981; font-weight: 600; text-align: right;">$${booking.total_price}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Inicia sesión en tu panel para confirmar o gestionar esta reserva.</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 13px; margin: 0;">Saludos,<br>El equipo de ProffX</p>
+            </div>
           </div>
         `,
       },
       student: {
-        subject: "Booking Request Submitted",
+        subject: "✅ Solicitud de Reserva Enviada",
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #10b981;">Booking Request Submitted!</h1>
-            <p>Hi ${studentName},</p>
-            <p>Your booking request with <strong>${teacherName}</strong> has been submitted successfully.</p>
-            <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Date:</strong> ${sessionDate}</p>
-              <p style="margin: 5px 0;"><strong>Time:</strong> ${sessionTime}</p>
-              <p style="margin: 5px 0;"><strong>Price:</strong> $${booking.total_price}</p>
-              <p style="margin: 5px 0;"><strong>Status:</strong> Pending confirmation</p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #ffffff;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #10b981; margin: 0; font-size: 28px;">🎯 ProffX</h1>
             </div>
-            <p>You'll receive another email once your coach confirms the session.</p>
-            <p style="color: #6b7280; font-size: 14px;">Best regards,<br>SportSync Team</p>
+            
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+              <h2 style="margin: 0 0 10px 0; font-size: 22px;">✅ ¡Solicitud Enviada!</h2>
+              <p style="margin: 0; opacity: 0.9; font-size: 16px;">Tu reserva está pendiente de confirmación</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Hola <strong>${studentName}</strong>,</p>
+            <p style="font-size: 16px; color: #374151;">Tu solicitud de reserva con <strong>${teacherName}</strong> ha sido enviada correctamente.</p>
+            
+            <div style="background: #f3f4f6; padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #f59e0b;">
+              <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">📋 Detalles de la Sesión</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Fecha</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Horario</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionTime}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Precio</td>
+                  <td style="padding: 8px 0; color: #10b981; font-weight: 600; text-align: right;">$${booking.total_price}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Estado</td>
+                  <td style="padding: 8px 0; color: #f59e0b; font-weight: 600; text-align: right;">⏳ Pendiente</td>
+                </tr>
+              </table>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Recibirás otro email cuando tu profesor confirme la sesión.</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 13px; margin: 0;">Saludos,<br>El equipo de ProffX</p>
+            </div>
           </div>
         `,
       },
     },
     confirmed: {
       teacher: {
-        subject: "Booking Confirmed",
+        subject: "✅ Reserva Confirmada",
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #10b981;">Booking Confirmed!</h1>
-            <p>Hi ${teacherName},</p>
-            <p>You have confirmed the booking with <strong>${studentName}</strong>.</p>
-            <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Date:</strong> ${sessionDate}</p>
-              <p style="margin: 5px 0;"><strong>Time:</strong> ${sessionTime}</p>
-              <p style="margin: 5px 0;"><strong>Price:</strong> $${booking.total_price}</p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #ffffff;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #10b981; margin: 0; font-size: 28px;">🎯 ProffX</h1>
             </div>
-            <p>The session is now scheduled. See you there!</p>
-            <p style="color: #6b7280; font-size: 14px;">Best regards,<br>SportSync Team</p>
+            
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+              <h2 style="margin: 0 0 10px 0; font-size: 22px;">✅ ¡Reserva Confirmada!</h2>
+              <p style="margin: 0; opacity: 0.9; font-size: 16px;">La sesión está agendada</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Hola <strong>${teacherName}</strong>,</p>
+            <p style="font-size: 16px; color: #374151;">Has confirmado la reserva con <strong>${studentName}</strong>.</p>
+            
+            <div style="background: #f3f4f6; padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #10b981;">
+              <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">📋 Detalles de la Sesión</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Fecha</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Horario</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionTime}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Precio</td>
+                  <td style="padding: 8px 0; color: #10b981; font-weight: 600; text-align: right;">$${booking.total_price}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">¡La sesión está programada! Nos vemos allí 💪</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 13px; margin: 0;">Saludos,<br>El equipo de ProffX</p>
+            </div>
           </div>
         `,
       },
       student: {
-        subject: "Your Booking is Confirmed!",
+        subject: "🎉 ¡Tu Reserva está Confirmada!",
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #10b981;">Great News! Your Booking is Confirmed!</h1>
-            <p>Hi ${studentName},</p>
-            <p><strong>${teacherName}</strong> has confirmed your booking.</p>
-            <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Date:</strong> ${sessionDate}</p>
-              <p style="margin: 5px 0;"><strong>Time:</strong> ${sessionTime}</p>
-              <p style="margin: 5px 0;"><strong>Price:</strong> $${booking.total_price}</p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #ffffff;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #10b981; margin: 0; font-size: 28px;">🎯 ProffX</h1>
             </div>
-            <p>Get ready for your session!</p>
-            <p style="color: #6b7280; font-size: 14px;">Best regards,<br>SportSync Team</p>
+            
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+              <h2 style="margin: 0 0 10px 0; font-size: 22px;">🎉 ¡Excelente Noticia!</h2>
+              <p style="margin: 0; opacity: 0.9; font-size: 16px;">Tu reserva ha sido confirmada</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Hola <strong>${studentName}</strong>,</p>
+            <p style="font-size: 16px; color: #374151;"><strong>${teacherName}</strong> ha confirmado tu reserva.</p>
+            
+            <div style="background: #f3f4f6; padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #10b981;">
+              <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">📋 Detalles de la Sesión</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Fecha</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Horario</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionTime}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Precio</td>
+                  <td style="padding: 8px 0; color: #10b981; font-weight: 600; text-align: right;">$${booking.total_price}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">¡Prepárate para tu sesión! 🏆</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 13px; margin: 0;">Saludos,<br>El equipo de ProffX</p>
+            </div>
           </div>
         `,
       },
     },
     cancelled: {
       teacher: {
-        subject: "Booking Cancelled",
+        subject: "❌ Reserva Cancelada",
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #ef4444;">Booking Cancelled</h1>
-            <p>Hi ${teacherName},</p>
-            <p>A booking with <strong>${studentName}</strong> has been cancelled.</p>
-            <div style="background: #fef2f2; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Date:</strong> ${sessionDate}</p>
-              <p style="margin: 5px 0;"><strong>Time:</strong> ${sessionTime}</p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #ffffff;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #10b981; margin: 0; font-size: 28px;">🎯 ProffX</h1>
             </div>
-            <p>This time slot is now available for other bookings.</p>
-            <p style="color: #6b7280; font-size: 14px;">Best regards,<br>SportSync Team</p>
+            
+            <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+              <h2 style="margin: 0 0 10px 0; font-size: 22px;">❌ Reserva Cancelada</h2>
+              <p style="margin: 0; opacity: 0.9; font-size: 16px;">Una sesión ha sido cancelada</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Hola <strong>${teacherName}</strong>,</p>
+            <p style="font-size: 16px; color: #374151;">La reserva con <strong>${studentName}</strong> ha sido cancelada.</p>
+            
+            <div style="background: #fef2f2; padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #ef4444;">
+              <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">📋 Detalles de la Sesión Cancelada</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Fecha</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Horario</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionTime}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Este horario ahora está disponible para otras reservas.</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 13px; margin: 0;">Saludos,<br>El equipo de ProffX</p>
+            </div>
           </div>
         `,
       },
       student: {
-        subject: "Booking Cancelled",
+        subject: "❌ Reserva Cancelada",
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #ef4444;">Booking Cancelled</h1>
-            <p>Hi ${studentName},</p>
-            <p>Your booking with <strong>${teacherName}</strong> has been cancelled.</p>
-            <div style="background: #fef2f2; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="margin: 5px 0;"><strong>Date:</strong> ${sessionDate}</p>
-              <p style="margin: 5px 0;"><strong>Time:</strong> ${sessionTime}</p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #ffffff;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #10b981; margin: 0; font-size: 28px;">🎯 ProffX</h1>
             </div>
-            <p>You can browse other available sessions on our platform.</p>
-            <p style="color: #6b7280; font-size: 14px;">Best regards,<br>SportSync Team</p>
+            
+            <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+              <h2 style="margin: 0 0 10px 0; font-size: 22px;">❌ Reserva Cancelada</h2>
+              <p style="margin: 0; opacity: 0.9; font-size: 16px;">Tu sesión ha sido cancelada</p>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Hola <strong>${studentName}</strong>,</p>
+            <p style="font-size: 16px; color: #374151;">Tu reserva con <strong>${teacherName}</strong> ha sido cancelada.</p>
+            
+            <div style="background: #fef2f2; padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #ef4444;">
+              <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">📋 Detalles de la Sesión Cancelada</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Fecha</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Horario</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-weight: 600; text-align: right;">${sessionTime}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <p style="font-size: 16px; color: #374151;">Puedes explorar otras sesiones disponibles en nuestra plataforma.</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 13px; margin: 0;">Saludos,<br>El equipo de ProffX</p>
+            </div>
           </div>
         `,
       },
@@ -163,7 +307,7 @@ async function sendEmail(to: string, subject: string, html: string) {
       Authorization: `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: "SportSync <onboarding@resend.dev>",
+      from: "ProffX <onboarding@resend.dev>",
       to: [to],
       subject,
       html,

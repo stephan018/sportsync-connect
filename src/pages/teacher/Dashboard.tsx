@@ -6,7 +6,8 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, DollarSign, Users, TrendingUp, ArrowUpRight } from 'lucide-react';
-import { format, startOfMonth, endOfMonth, isToday, isTomorrow, parseISO, addHours } from 'date-fns';
+import { format, startOfMonth, endOfMonth, isToday, isTomorrow, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface BookingWithStudent extends Booking {
   student: Profile;
@@ -85,14 +86,14 @@ export default function TeacherDashboard() {
 
   const getDateLabel = (dateStr: string) => {
     const date = parseISO(dateStr);
-    if (isToday(date)) return 'Today';
-    if (isTomorrow(date)) return 'Tomorrow';
-    return format(date, 'EEE, MMM d');
+    if (isToday(date)) return 'Hoy';
+    if (isTomorrow(date)) return 'Mañana';
+    return format(date, 'EEE, d MMM', { locale: es });
   };
 
   const stats = [
     {
-      title: 'Monthly Earnings',
+      title: 'Ganancias del Mes',
       value: `$${monthlyEarnings.toLocaleString()}`,
       icon: DollarSign,
       trend: '+12%',
@@ -100,26 +101,26 @@ export default function TeacherDashboard() {
       bgColor: 'bg-primary/10',
     },
     {
-      title: 'Upcoming Classes',
+      title: 'Próximas Clases',
       value: upcomingBookings.length.toString(),
       icon: Calendar,
-      trend: 'This week',
+      trend: 'Esta semana',
       color: 'text-info',
       bgColor: 'bg-info/10',
     },
     {
-      title: 'Total Students',
+      title: 'Total Estudiantes',
       value: totalStudents.toString(),
       icon: Users,
-      trend: 'All time',
+      trend: 'Histórico',
       color: 'text-accent',
       bgColor: 'bg-accent/10',
     },
     {
-      title: 'Hourly Rate',
+      title: 'Tarifa por Hora',
       value: `$${profile?.hourly_rate || 0}`,
       icon: TrendingUp,
-      trend: 'Per session',
+      trend: 'Por sesión',
       color: 'text-success',
       bgColor: 'bg-success/10',
     },
@@ -131,10 +132,10 @@ export default function TeacherDashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">
-            Welcome back, {profile?.full_name?.split(' ')[0]}! 👋
+            ¡Bienvenido, {profile?.full_name?.split(' ')[0]}! 👋
           </h1>
           <p className="text-muted-foreground mt-1">
-            Here's what's happening with your classes today
+            Aquí está lo que sucede con tus clases hoy
           </p>
         </div>
 
@@ -166,9 +167,9 @@ export default function TeacherDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-primary" />
-              Upcoming Classes
+              Próximas Clases
             </CardTitle>
-            <CardDescription>Your next scheduled sessions</CardDescription>
+            <CardDescription>Tus próximas sesiones programadas</CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? (
@@ -180,9 +181,9 @@ export default function TeacherDashboard() {
             ) : upcomingBookings.length === 0 ? (
               <div className="text-center py-12">
                 <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">No upcoming classes</p>
+                <p className="text-muted-foreground">Sin clases próximas</p>
                 <p className="text-sm text-muted-foreground">
-                  Set your availability to start receiving bookings
+                  Configura tu disponibilidad para comenzar a recibir reservas
                 </p>
               </div>
             ) : (
@@ -199,7 +200,7 @@ export default function TeacherDashboard() {
                       <div>
                         <p className="font-medium">{booking.student?.full_name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {getDateLabel(booking.booking_date)} at {booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}
+                          {getDateLabel(booking.booking_date)} a las {booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}
                         </p>
                       </div>
                     </div>
@@ -208,7 +209,7 @@ export default function TeacherDashboard() {
                         variant={booking.status === 'confirmed' ? 'default' : 'secondary'}
                         className={booking.status === 'confirmed' ? 'bg-primary' : ''}
                       >
-                        {booking.status}
+                        {booking.status === 'confirmed' ? 'Confirmado' : booking.status === 'pending' ? 'Pendiente' : booking.status}
                       </Badge>
                       <span className="font-semibold text-primary">
                         ${Number(booking.total_price).toFixed(0)}

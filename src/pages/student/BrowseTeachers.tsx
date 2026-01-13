@@ -113,9 +113,9 @@ export default function BrowseTeachers() {
       <div className="p-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Find Your Coach</h1>
+          <h1 className="text-3xl font-bold text-foreground">Encuentra tu Profesor</h1>
           <p className="text-muted-foreground mt-1">
-            Browse and book sessions with professional sports teachers
+            Busca y reserva sesiones con profesores profesionales de deportes
           </p>
         </div>
 
@@ -124,7 +124,7 @@ export default function BrowseTeachers() {
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
-              placeholder="Search by name, sport or specialty..."
+              placeholder="Buscar por nombre, deporte o especialidad..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-12 h-12 text-lg"
@@ -133,10 +133,10 @@ export default function BrowseTeachers() {
           <Select value={sportFilter} onValueChange={setSportFilter}>
             <SelectTrigger className="w-full sm:w-48 h-12">
               <Dumbbell className="w-4 h-4 mr-2 text-muted-foreground" />
-              <SelectValue placeholder="All Sports" />
+              <SelectValue placeholder="Todos los Deportes" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Sports</SelectItem>
+              <SelectItem value="all">Todos los Deportes</SelectItem>
               {availableSports.map((sport) => (
                 <SelectItem key={sport} value={sport}>
                   {sport}
@@ -156,9 +156,9 @@ export default function BrowseTeachers() {
         ) : filteredTeachers.length === 0 ? (
           <div className="text-center py-16">
             <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No teachers found</h3>
+            <h3 className="text-xl font-semibold mb-2">No se encontraron profesores</h3>
             <p className="text-muted-foreground">
-              Try adjusting your search or check back later
+              Intenta ajustar tu búsqueda o vuelve más tarde
             </p>
           </div>
         ) : (
@@ -201,7 +201,7 @@ export default function BrowseTeachers() {
                             <>
                               <span className="mx-1">•</span>
                               <span>
-                                {teacher.reviewCount} review{teacher.reviewCount !== 1 ? 's' : ''}
+                                {teacher.reviewCount} reseña{teacher.reviewCount !== 1 ? 's' : ''}
                               </span>
                             </>
                           )}
@@ -215,7 +215,7 @@ export default function BrowseTeachers() {
 
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
                       {teacher.bio ||
-                        'Professional sports coach ready to help you achieve your fitness goals.'}
+                        'Profesor profesional listo para ayudarte a alcanzar tus metas fitness.'}
                     </p>
 
                     <div className="flex gap-2">
@@ -225,14 +225,14 @@ export default function BrowseTeachers() {
                         onClick={() => navigate(`/teacher/${teacher.id}`)}
                       >
                         <User className="w-4 h-4 mr-2" />
-                        View Profile
+                        Ver Perfil
                       </Button>
                       <Button
                         className="flex-1 gradient-primary"
                         onClick={() => navigate(`/book/${teacher.id}`)}
                       >
                         <Calendar className="w-4 h-4 mr-2" />
-                        Book
+                        Reservar
                       </Button>
                     </div>
                   </div>

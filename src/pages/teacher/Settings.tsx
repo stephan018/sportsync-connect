@@ -18,26 +18,26 @@ import { toast } from 'sonner';
 import { Loader2, Save, User } from 'lucide-react';
 
 const SPORTS = [
-  'Tennis',
-  'Swimming',
+  'Tenis',
+  'Natación',
   'Golf',
-  'Basketball',
-  'Soccer',
-  'Volleyball',
-  'Boxing',
+  'Baloncesto',
+  'Fútbol',
+  'Voleibol',
+  'Boxeo',
   'Yoga',
   'Pilates',
   'CrossFit',
   'Running',
-  'Cycling',
-  'Martial Arts',
-  'Dance',
-  'Gymnastics',
-  'Rowing',
-  'Surfing',
-  'Skiing',
-  'Snowboarding',
-  'Other',
+  'Ciclismo',
+  'Artes Marciales',
+  'Baile',
+  'Gimnasia',
+  'Remo',
+  'Surf',
+  'Esquí',
+  'Snowboard',
+  'Otro',
 ];
 
 export default function Settings() {
@@ -73,9 +73,9 @@ export default function Settings() {
         .eq('id', profile.id);
 
       if (error) throw error;
-      toast.success('Profile updated successfully!');
+      toast.success('¡Perfil actualizado exitosamente!');
     } catch (error: any) {
-      toast.error('Failed to update profile: ' + error.message);
+      toast.error('Error al actualizar perfil: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -85,9 +85,9 @@ export default function Settings() {
     <DashboardLayout>
       <div className="p-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Profile Settings</h1>
+          <h1 className="text-3xl font-bold text-foreground">Configuración del Perfil</h1>
           <p className="text-muted-foreground mt-1">
-            Manage your profile information and teaching preferences
+            Administra tu información de perfil y preferencias de enseñanza
           </p>
         </div>
 
@@ -96,30 +96,30 @@ export default function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="w-5 h-5" />
-                Personal Information
+                Información Personal
               </CardTitle>
               <CardDescription>
-                Update your profile details visible to students
+                Actualiza los detalles de tu perfil visibles para los estudiantes
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName">Nombre Completo</Label>
                 <Input
                   id="fullName"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Your full name"
+                  placeholder="Tu nombre completo"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
+                <Label htmlFor="bio">Biografía</Label>
                 <Textarea
                   id="bio"
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell students about yourself and your teaching experience..."
+                  placeholder="Cuéntales a los estudiantes sobre ti y tu experiencia como profesor..."
                   rows={4}
                 />
               </div>
@@ -128,17 +128,17 @@ export default function Settings() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Teaching Details</CardTitle>
+              <CardTitle>Detalles de Enseñanza</CardTitle>
               <CardDescription>
-                Set your sport specialty and hourly rate
+                Configura tu especialidad deportiva y tarifa por hora
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="sport">Sport / Activity</Label>
+                <Label htmlFor="sport">Deporte / Actividad</Label>
                 <Select value={sport} onValueChange={setSport}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select your sport" />
+                    <SelectValue placeholder="Selecciona tu deporte" />
                   </SelectTrigger>
                   <SelectContent>
                     {SPORTS.map((s) => (
@@ -151,7 +151,7 @@ export default function Settings() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="hourlyRate">Hourly Rate ($)</Label>
+                <Label htmlFor="hourlyRate">Tarifa por Hora ($)</Label>
                 <Input
                   id="hourlyRate"
                   type="number"
@@ -162,7 +162,7 @@ export default function Settings() {
                   placeholder="50"
                 />
                 <p className="text-sm text-muted-foreground">
-                  This is the rate students will pay per hour for your sessions
+                  Esta es la tarifa que los estudiantes pagarán por hora de sesión
                 </p>
               </div>
             </CardContent>
@@ -172,12 +172,12 @@ export default function Settings() {
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Saving...
+                Guardando...
               </>
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                Save Changes
+                Guardar Cambios
               </>
             )}
           </Button>

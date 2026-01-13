@@ -27,33 +27,33 @@ export default function Index() {
   const features = [
     {
       icon: Calendar,
-      title: 'Recurring Bookings',
-      description: 'Book weekly sessions for months at a time with a single click.',
+      title: 'Reservas Recurrentes',
+      description: 'Reserva sesiones semanales por meses con un solo clic.',
     },
     {
       icon: Users,
-      title: 'Expert Teachers',
-      description: 'Connect with certified sports professionals in your area.',
+      title: 'Profesores Expertos',
+      description: 'Conecta con profesionales certificados en tu área.',
     },
     {
       icon: TrendingUp,
-      title: 'Track Progress',
-      description: 'Monitor your fitness journey with session history and stats.',
+      title: 'Sigue tu Progreso',
+      description: 'Monitorea tu progreso con historial de sesiones y estadísticas.',
     },
     {
       icon: DollarSign,
-      title: 'Transparent Pricing',
-      description: 'Clear hourly rates with no hidden fees or surprises.',
+      title: 'Precios Transparentes',
+      description: 'Tarifas por hora claras sin cargos ocultos ni sorpresas.',
     },
   ];
 
   const benefits = [
-    'Find certified sports teachers near you',
-    'Book recurring weekly sessions easily',
-    'Real-time chat with your coach',
-    'Flexible scheduling options',
-    'Track your training history',
-    'Secure online payments',
+    'Encuentra profesores certificados cerca de ti',
+    'Reserva sesiones semanales recurrentes fácilmente',
+    'Chat en tiempo real con tu profesor',
+    'Opciones de horarios flexibles',
+    'Historial de entrenamientos',
+    'Pagos seguros en línea',
   ];
 
   return (
@@ -72,14 +72,14 @@ export default function Index() {
               <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
                 <Dumbbell className="w-6 h-6 text-primary-foreground" />
               </div>
-              <span className="text-2xl font-bold text-primary-foreground">SportSync</span>
+              <span className="text-2xl font-bold text-primary-foreground">ProffX</span>
             </Link>
             <div className="flex items-center gap-4">
               <Button variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10" asChild>
-                <Link to="/auth">Login</Link>
+                <Link to="/auth">Iniciar Sesión</Link>
               </Button>
               <Button className="gradient-accent shadow-accent-glow" asChild>
-                <Link to="/auth">Get Started</Link>
+                <Link to="/auth">Comenzar</Link>
               </Button>
             </div>
           </nav>
@@ -87,28 +87,28 @@ export default function Index() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary-foreground text-sm mb-6">
               <Star className="w-4 h-4" />
-              <span>Trusted by 10,000+ athletes</span>
+              <span>Más de 10,000 atletas confían en nosotros</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-              Your fitness journey{' '}
-              <span className="text-gradient-primary">starts here</span>
+              Tu camino fitness{' '}
+              <span className="text-gradient-primary">comienza aquí</span>
             </h1>
             
             <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl">
-              Connect with professional sports teachers, book recurring sessions, and achieve your fitness goals with personalized coaching.
+              Conecta con profesores profesionales de deportes, reserva sesiones recurrentes y alcanza tus metas fitness con coaching personalizado.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="gradient-primary shadow-glow text-lg h-14 px-8" asChild>
                 <Link to="/auth">
-                  Start Training
+                  Empezar a Entrenar
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/10 h-14 px-8" asChild>
                 <Link to="/auth">
-                  Become a Teacher
+                  Ser Profesor
                 </Link>
               </Button>
             </div>
@@ -120,9 +120,9 @@ export default function Index() {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Why Choose SportSync?</h2>
+            <h2 className="text-4xl font-bold mb-4">¿Por qué elegir ProffX?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to connect with the right coach and achieve your fitness goals.
+              Todo lo que necesitas para conectar con el profesor ideal y alcanzar tus metas fitness.
             </p>
           </div>
           
@@ -150,11 +150,11 @@ export default function Index() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl font-bold mb-6">
-                Everything you need to{' '}
-                <span className="text-gradient-primary">level up</span>
+                Todo lo que necesitas para{' '}
+                <span className="text-gradient-primary">superarte</span>
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Whether you're a student looking for a coach or a teacher wanting to grow your business, SportSync has you covered.
+                Ya seas un estudiante buscando un profesor o un profesor queriendo hacer crecer tu negocio, ProffX te tiene cubierto.
               </p>
               
               <div className="space-y-4">
@@ -170,7 +170,7 @@ export default function Index() {
               
               <Button className="mt-8 gradient-primary shadow-glow" size="lg" asChild>
                 <Link to="/auth">
-                  Get Started Free
+                  Comenzar Gratis
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
@@ -184,8 +184,8 @@ export default function Index() {
                     J
                   </div>
                   <div>
-                    <h4 className="font-semibold text-lg">John Smith</h4>
-                    <p className="text-muted-foreground">Tennis Coach</p>
+                    <h4 className="font-semibold text-lg">Juan García</h4>
+                    <p className="text-muted-foreground">Profesor de Tenis</p>
                   </div>
                   <div className="ml-auto flex items-center gap-1">
                     <Star className="w-5 h-5 text-warning fill-warning" />
@@ -197,28 +197,28 @@ export default function Index() {
                   <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
                     <div className="flex items-center gap-3">
                       <Clock className="w-5 h-5 text-primary" />
-                      <span>Tuesday, 10:00 AM</span>
+                      <span>Martes, 10:00 AM</span>
                     </div>
                     <span className="text-primary font-semibold">$50</span>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
                     <div className="flex items-center gap-3">
                       <Clock className="w-5 h-5 text-primary" />
-                      <span>Thursday, 10:00 AM</span>
+                      <span>Jueves, 10:00 AM</span>
                     </div>
                     <span className="text-primary font-semibold">$50</span>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
                     <div className="flex items-center gap-3">
                       <Clock className="w-5 h-5 text-primary" />
-                      <span>Saturday, 2:00 PM</span>
+                      <span>Sábado, 2:00 PM</span>
                     </div>
                     <span className="text-primary font-semibold">$50</span>
                   </div>
                 </div>
                 
                 <Button className="w-full mt-6 gradient-primary">
-                  Book All Sessions - $150/week
+                  Reservar Todas - $150/semana
                 </Button>
               </div>
             </div>
@@ -234,14 +234,14 @@ export default function Index() {
         
         <div className="relative container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
-            Ready to transform your fitness?
+            ¿Listo para transformar tu fitness?
           </h2>
           <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-            Join thousands of athletes who are already training with the best coaches on SportSync.
+            Únete a miles de atletas que ya entrenan con los mejores profesores en ProffX.
           </p>
           <Button size="lg" className="gradient-accent shadow-accent-glow text-lg h-14 px-10" asChild>
             <Link to="/auth">
-              Get Started Now
+              Comenzar Ahora
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
           </Button>
@@ -256,10 +256,10 @@ export default function Index() {
               <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
                 <Dumbbell className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">SportSync</span>
+              <span className="text-xl font-bold">ProffX</span>
             </div>
             <p className="text-muted-foreground text-sm">
-              © 2024 SportSync. All rights reserved.
+              © 2024 ProffX. Todos los derechos reservados.
             </p>
           </div>
         </div>

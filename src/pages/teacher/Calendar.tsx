@@ -32,6 +32,7 @@ import {
   parseISO,
   isToday
 } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
 interface BookingWithStudent extends Booking {
@@ -126,9 +127,24 @@ export default function TeacherCalendar() {
     }
   };
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return 'Confirmada';
+      case 'pending':
+        return 'Pendiente';
+      case 'completed':
+        return 'Completada';
+      case 'cancelled':
+        return 'Cancelada';
+      default:
+        return status;
+    }
+  };
+
   const headerTitle = viewMode === 'week' 
-    ? `${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d, yyyy')}`
-    : format(currentDate, 'MMMM yyyy');
+    ? `${format(dateRange.start, 'd MMM', { locale: es })} - ${format(dateRange.end, 'd MMM yyyy', { locale: es })}`
+    : format(currentDate, 'MMMM yyyy', { locale: es });
 
   return (
     <DashboardLayout>
@@ -138,17 +154,17 @@ export default function TeacherCalendar() {
           <div>
             <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
               <CalendarIcon className="w-8 h-8 text-primary" />
-              Calendar
+              Calendario
             </h1>
             <p className="text-muted-foreground mt-1">
-              View and manage your scheduled sessions
+              Ver y gestionar tus sesiones programadas
             </p>
           </div>
           
           <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
             <TabsList>
-              <TabsTrigger value="week">Week</TabsTrigger>
-              <TabsTrigger value="month">Month</TabsTrigger>
+              <TabsTrigger value="week">Semana</TabsTrigger>
+              <TabsTrigger value="month">Mes</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -163,10 +179,10 @@ export default function TeacherCalendar() {
               <ChevronRight className="w-4 h-4" />
             </Button>
             <Button variant="outline" onClick={goToToday}>
-              Today
+              Hoy
             </Button>
           </div>
-          <h2 className="text-xl font-semibold">{headerTitle}</h2>
+          <h2 className="text-xl font-semibold capitalize">{headerTitle}</h2>
         </div>
 
         {/* Calendar Grid */}
@@ -202,6 +218,7 @@ export default function TeacherCalendar() {
             onClose={() => setSelectedBooking(null)}
             onRefresh={fetchBookings}
             getStatusColor={getStatusColor}
+            getStatusLabel={getStatusLabel}
           />
         )}
       </div>
@@ -224,7 +241,7 @@ function WeekView({ days, getBookingsForDay, getStatusColor, onSelectBooking }: 
       {/* Day Headers */}
       <div className="grid grid-cols-8 border-b border-border flex-shrink-0">
         <div className="p-3 text-center text-xs text-muted-foreground border-r border-border">
-          Time
+          Hora
         </div>
         {days.map((day) => (
           <div 
@@ -234,7 +251,7 @@ function WeekView({ days, getBookingsForDay, getStatusColor, onSelectBooking }: 
               isToday(day) && "bg-primary/5"
             )}
           >
-            <p className="text-xs text-muted-foreground">{format(day, 'EEE')}</p>
+            <p className="text-xs text-muted-foreground">{format(day, 'EEE', { locale: es })}</p>
             <p className={cn(
               "text-lg font-semibold",
               isToday(day) && "text-primary"
@@ -319,7 +336,7 @@ function MonthView({ days, currentDate, getBookingsForDay, getStatusColor, onSel
     <div className="flex flex-col h-full">
       {/* Day Headers */}
       <div className="grid grid-cols-7 border-b border-border">
-        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
+        {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day) => (
           <div key={day} className="p-3 text-center text-sm font-medium text-muted-foreground border-r border-border last:border-r-0">
             {day}
           </div>
@@ -371,7 +388,7 @@ function MonthView({ days, currentDate, getBookingsForDay, getStatusColor, onSel
                     ))}
                     {dayBookings.length > 3 && (
                       <p className="text-xs text-muted-foreground text-center">
-                        +{dayBookings.length - 3} more
+                        +{dayBookings.length - 3} más
                       </p>
                     )}
                   </div>
@@ -390,9 +407,10 @@ interface BookingDetailModalProps {
   onClose: () => void;
   onRefresh: () => void;
   getStatusColor: (status: string) => string;
+  getStatusLabel: (status: string) => string;
 }
 
-function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor }: BookingDetailModalProps) {
+function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor, getStatusLabel }: BookingDetailModalProps) {
   const [updating, setUpdating] = useState(false);
 
   const handleConfirm = async () => {
@@ -444,9 +462,9 @@ function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor }: Boo
       <Card className="w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>Session Details</span>
+            <span>Detalles de la Sesión</span>
             <Badge className={getStatusColor(booking.status)}>
-              {booking.status}
+              {getStatusLabel(booking.status)}
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -457,14 +475,14 @@ function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor }: Boo
             </div>
             <div>
               <p className="font-semibold">{booking.student?.full_name}</p>
-              <p className="text-sm text-muted-foreground">Student</p>
+              <p className="text-sm text-muted-foreground">Estudiante</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center gap-2 text-muted-foreground">
               <CalendarIcon className="w-4 h-4" />
-              <span>{format(parseISO(booking.booking_date), 'MMM d, yyyy')}</span>
+              <span>{format(parseISO(booking.booking_date), "d 'de' MMM yyyy", { locale: es })}</span>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock className="w-4 h-4" />
@@ -474,14 +492,14 @@ function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor }: Boo
 
           <div className="pt-4 border-t border-border">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Session Price</span>
+              <span className="text-muted-foreground">Precio de la Sesión</span>
               <span className="text-xl font-bold text-primary">${Number(booking.total_price).toFixed(2)}</span>
             </div>
           </div>
 
           {booking.notes && (
             <div className="pt-4 border-t border-border">
-              <p className="text-sm text-muted-foreground mb-1">Notes</p>
+              <p className="text-sm text-muted-foreground mb-1">Notas</p>
               <p className="text-sm">{booking.notes}</p>
             </div>
           )}
@@ -494,7 +512,7 @@ function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor }: Boo
                   onClick={handleConfirm}
                   disabled={updating}
                 >
-                  {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm'}
+                  {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirmar'}
                 </Button>
                 <Button 
                   variant="destructive" 
@@ -502,7 +520,7 @@ function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor }: Boo
                   onClick={handleCancel}
                   disabled={updating}
                 >
-                  Cancel
+                  Cancelar
                 </Button>
               </>
             )}
@@ -513,11 +531,11 @@ function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor }: Boo
                 onClick={handleCancel}
                 disabled={updating}
               >
-                Cancel Booking
+                {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Cancelar Sesión'}
               </Button>
             )}
             <Button variant="outline" className="flex-1" onClick={onClose}>
-              Close
+              Cerrar
             </Button>
           </div>
         </CardContent>

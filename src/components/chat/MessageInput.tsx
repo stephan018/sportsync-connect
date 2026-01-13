@@ -39,7 +39,7 @@ export default function MessageInput({ onSendMessage }: MessageInputProps) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
+          placeholder="Escribe un mensaje..."
           className="min-h-[44px] max-h-32 resize-none"
           rows={1}
         />

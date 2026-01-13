@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { MessageSquare, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ChatRoomWithDetails } from '@/hooks/useChat';
@@ -16,9 +17,9 @@ export default function ChatList({ rooms, selectedRoomId, onSelectRoom }: ChatLi
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
           <MessageSquare className="w-8 h-8 text-muted-foreground" />
         </div>
-        <h3 className="font-semibold text-foreground mb-2">No conversations yet</h3>
+        <h3 className="font-semibold text-foreground mb-2">Aún no hay conversaciones</h3>
         <p className="text-sm text-muted-foreground">
-          Start a conversation by booking a session with a teacher
+          Inicia una conversación reservando una sesión con un profesor
         </p>
       </div>
     );
@@ -27,7 +28,7 @@ export default function ChatList({ rooms, selectedRoomId, onSelectRoom }: ChatLi
   return (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-border">
-        <h2 className="text-lg font-semibold text-foreground">Messages</h2>
+        <h2 className="text-lg font-semibold text-foreground">Mensajes</h2>
       </div>
       <div className="flex-1 overflow-y-auto">
         {rooms.map((room) => (
@@ -53,16 +54,16 @@ export default function ChatList({ rooms, selectedRoomId, onSelectRoom }: ChatLi
             <div className="flex-1 min-w-0 text-left">
               <div className="flex items-center justify-between mb-1">
                 <span className="font-medium text-foreground truncate">
-                  {room.otherUser?.full_name || 'Unknown User'}
+                  {room.otherUser?.full_name || 'Usuario Desconocido'}
                 </span>
                 {room.lastMessage && (
                   <span className="text-xs text-muted-foreground">
-                    {format(new Date(room.lastMessage.created_at), 'MMM d')}
+                    {format(new Date(room.lastMessage.created_at), "d 'de' MMM", { locale: es })}
                   </span>
                 )}
               </div>
               <p className="text-sm text-muted-foreground truncate">
-                {room.lastMessage?.content || 'No messages yet'}
+                {room.lastMessage?.content || 'Sin mensajes aún'}
               </p>
             </div>
           </button>

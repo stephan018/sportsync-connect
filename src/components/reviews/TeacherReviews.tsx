@@ -4,6 +4,7 @@ import { ReviewWithStudent } from '@/types/database';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface TeacherReviewsProps {
   teacherId: string;
@@ -62,7 +63,7 @@ export default function TeacherReviews({ teacherId }: TeacherReviewsProps) {
       <Card>
         <CardContent className="py-8 text-center">
           <Star className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">No reviews yet</p>
+          <p className="text-muted-foreground">Aún no hay reseñas</p>
         </CardContent>
       </Card>
     );
@@ -85,7 +86,7 @@ export default function TeacherReviews({ teacherId }: TeacherReviewsProps) {
           ))}
         </div>
         <span className="font-semibold">{stats.average.toFixed(1)}</span>
-        <span className="text-muted-foreground">({stats.count} reviews)</span>
+        <span className="text-muted-foreground">({stats.count} reseñas)</span>
       </div>
 
       {/* Reviews List */}
@@ -100,7 +101,7 @@ export default function TeacherReviews({ teacherId }: TeacherReviewsProps) {
                 <div>
                   <p className="font-medium">{review.student?.full_name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {format(parseISO(review.created_at), 'MMM d, yyyy')}
+                    {format(parseISO(review.created_at), "d 'de' MMM yyyy", { locale: es })}
                   </p>
                 </div>
               </div>

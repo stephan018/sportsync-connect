@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ReviewModal from '@/components/reviews/ReviewModal';
 import { Calendar, Clock, Star, X } from 'lucide-react';
 import { format, parseISO, isAfter } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 
 interface BookingWithTeacher extends Booking {
@@ -86,11 +87,11 @@ export default function MyBookings() {
       
       sendBookingNotification(bookingId, 'cancelled');
       
-      toast.success('Booking cancelled');
+      toast.success('Reserva cancelada');
       fetchBookings();
     } catch (error) {
       console.error('Error cancelling booking:', error);
-      toast.error('Failed to cancel booking');
+      toast.error('Error al cancelar la reserva');
     }
   };
 
@@ -122,6 +123,21 @@ export default function MyBookings() {
     }
   };
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return 'Confirmada';
+      case 'pending':
+        return 'Pendiente';
+      case 'completed':
+        return 'Completada';
+      case 'cancelled':
+        return 'Cancelada';
+      default:
+        return status;
+    }
+  };
+
   const BookingCard = ({
     booking,
     showCancel = false,
@@ -143,7 +159,7 @@ export default function MyBookings() {
               <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  {format(parseISO(booking.booking_date), 'EEE, MMM d, yyyy')}
+                  {format(parseISO(booking.booking_date), "EEE, d 'de' MMM yyyy", { locale: es })}
                 </span>
                 <span className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
@@ -153,7 +169,7 @@ export default function MyBookings() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Badge className={getStatusColor(booking.status)}>{booking.status}</Badge>
+            <Badge className={getStatusColor(booking.status)}>{getStatusLabel(booking.status)}</Badge>
             <span className="font-semibold text-primary">
               ${Number(booking.total_price).toFixed(0)}
             </span>
@@ -164,13 +180,13 @@ export default function MyBookings() {
                 onClick={() => openReviewModal(booking)}
               >
                 <Star className="w-4 h-4 mr-1" />
-                Review
+                Reseña
               </Button>
             )}
             {showReview && booking.hasReview && (
               <Badge variant="secondary" className="gap-1">
                 <Star className="w-3 h-3 fill-warning text-warning" />
-                Reviewed
+                Reseñado
               </Badge>
             )}
             {showCancel && booking.status !== 'cancelled' && (
@@ -194,17 +210,17 @@ export default function MyBookings() {
       <div className="p-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">My Bookings</h1>
+          <h1 className="text-3xl font-bold text-foreground">Mis Reservas</h1>
           <p className="text-muted-foreground mt-1">
-            View and manage your scheduled sessions
+            Ver y gestionar tus sesiones programadas
           </p>
         </div>
 
         <Tabs defaultValue="upcoming" className="w-full">
           <TabsList className="mb-6">
-            <TabsTrigger value="upcoming">Upcoming ({upcomingBookings.length})</TabsTrigger>
-            <TabsTrigger value="past">Past ({pastBookings.length})</TabsTrigger>
-            <TabsTrigger value="cancelled">Cancelled ({cancelledBookings.length})</TabsTrigger>
+            <TabsTrigger value="upcoming">Próximas ({upcomingBookings.length})</TabsTrigger>
+            <TabsTrigger value="past">Pasadas ({pastBookings.length})</TabsTrigger>
+            <TabsTrigger value="cancelled">Canceladas ({cancelledBookings.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="upcoming">
@@ -218,9 +234,9 @@ export default function MyBookings() {
               <Card>
                 <CardContent className="py-12 text-center">
                   <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No upcoming bookings</h3>
+                  <h3 className="text-lg font-semibold mb-2">No hay reservas próximas</h3>
                   <p className="text-muted-foreground">
-                    Browse teachers to book your first session
+                    Explora profesores para reservar tu primera sesión
                   </p>
                 </CardContent>
               </Card>
@@ -238,9 +254,9 @@ export default function MyBookings() {
               <Card>
                 <CardContent className="py-12 text-center">
                   <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No past sessions</h3>
+                  <h3 className="text-lg font-semibold mb-2">No hay sesiones pasadas</h3>
                   <p className="text-muted-foreground">
-                    Your completed sessions will appear here
+                    Tus sesiones completadas aparecerán aquí
                   </p>
                 </CardContent>
               </Card>
@@ -258,8 +274,8 @@ export default function MyBookings() {
               <Card>
                 <CardContent className="py-12 text-center">
                   <X className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No cancelled bookings</h3>
-                  <p className="text-muted-foreground">Cancelled sessions will appear here</p>
+                  <h3 className="text-lg font-semibold mb-2">No hay reservas canceladas</h3>
+                  <p className="text-muted-foreground">Las sesiones canceladas aparecerán aquí</p>
                 </CardContent>
               </Card>
             ) : (
@@ -281,7 +297,7 @@ export default function MyBookings() {
           bookingId={reviewModal.booking.id}
           teacherId={reviewModal.booking.teacher_id}
           studentId={profile.id}
-          teacherName={reviewModal.booking.teacher?.full_name || 'Teacher'}
+          teacherName={reviewModal.booking.teacher?.full_name || 'Profesor'}
           onReviewSubmitted={fetchBookings}
         />
       )}

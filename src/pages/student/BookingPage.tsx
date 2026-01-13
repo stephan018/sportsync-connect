@@ -14,16 +14,27 @@ import { Calendar } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, CalendarDays, Clock, DollarSign, Loader2, Check, X } from 'lucide-react';
 import { format, addDays, addMonths, getDay, isSameDay, isAfter, startOfDay } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 
 type DurationOption = '1_week' | '2_weeks' | '1_month' | '2_months' | '3_months';
 
 const DURATION_OPTIONS: { value: DurationOption; label: string; days: number }[] = [
-  { value: '1_week', label: '1 Week', days: 7 },
-  { value: '2_weeks', label: '2 Weeks', days: 14 },
-  { value: '1_month', label: '1 Month', days: 30 },
-  { value: '2_months', label: '2 Months', days: 60 },
-  { value: '3_months', label: '3 Months', days: 90 },
+  { value: '1_week', label: '1 Semana', days: 7 },
+  { value: '2_weeks', label: '2 Semanas', days: 14 },
+  { value: '1_month', label: '1 Mes', days: 30 },
+  { value: '2_months', label: '2 Meses', days: 60 },
+  { value: '3_months', label: '3 Meses', days: 90 },
+];
+
+const DAYS_OF_WEEK_ES = [
+  { value: 0, label: 'Domingo', short: 'Dom' },
+  { value: 1, label: 'Lunes', short: 'Lun' },
+  { value: 2, label: 'Martes', short: 'Mar' },
+  { value: 3, label: 'Miércoles', short: 'Mié' },
+  { value: 4, label: 'Jueves', short: 'Jue' },
+  { value: 5, label: 'Viernes', short: 'Vie' },
+  { value: 6, label: 'Sábado', short: 'Sáb' },
 ];
 
 export default function BookingPage() {
@@ -83,7 +94,7 @@ export default function BookingPage() {
       setAvailability(availData as Availability[]);
     } catch (error) {
       console.error('Error fetching teacher data:', error);
-      toast.error('Failed to load teacher information');
+      toast.error('Error al cargar información del profesor');
     } finally {
       setLoading(false);
     }
@@ -129,7 +140,7 @@ export default function BookingPage() {
     // Check if the day is available for this teacher
     const isAvailable = availability.some(a => a.day_of_week === dayValue);
     if (!isAvailable) {
-      toast.error(`The teacher is not available on ${DAYS_OF_WEEK.find(d => d.value === dayValue)?.label}`);
+      toast.error(`El profesor no está disponible el ${DAYS_OF_WEEK_ES.find(d => d.value === dayValue)?.label}`);
       return;
     }
 
@@ -160,7 +171,7 @@ export default function BookingPage() {
 
   const handleBooking = async () => {
     if (!profile?.id || !teacherId || calculatedDates.length === 0 || !selectedTimeSlot) {
-      toast.error('Please complete all booking details');
+      toast.error('Por favor completa todos los detalles de la reserva');
       return;
     }
 
@@ -199,11 +210,11 @@ export default function BookingPage() {
         });
       }
 
-      toast.success(`Successfully booked ${validDates.length} sessions!`);
+      toast.success(`¡${validDates.length} sesiones reservadas exitosamente!`);
       navigate('/bookings');
     } catch (error) {
       console.error('Error creating bookings:', error);
-      toast.error('Failed to create bookings');
+      toast.error('Error al crear las reservas');
     } finally {
       setBooking(false);
     }
@@ -223,9 +234,9 @@ export default function BookingPage() {
     return (
       <DashboardLayout>
         <div className="p-8 text-center">
-          <p className="text-muted-foreground">Teacher not found</p>
+          <p className="text-muted-foreground">Profesor no encontrado</p>
           <Button onClick={() => navigate('/browse')} className="mt-4">
-            Back to Browse
+            Volver a Explorar
           </Button>
         </div>
       </DashboardLayout>
@@ -238,7 +249,7 @@ export default function BookingPage() {
         {/* Back Button */}
         <Button variant="ghost" onClick={() => navigate('/browse')} className="mb-6">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Teachers
+          Volver a Profesores
         </Button>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -254,11 +265,11 @@ export default function BookingPage() {
                   <div>
                     <h2 className="text-2xl font-bold">{teacher.full_name}</h2>
                     <p className="text-muted-foreground">
-                      {teacher.bio || 'Professional sports coach'}
+                      {teacher.bio || 'Entrenador deportivo profesional'}
                     </p>
                     <Badge className="mt-2 gradient-primary">
                       <DollarSign className="w-3 h-3 mr-1" />
-                      ${Number(teacher.hourly_rate)}/hour
+                      ${Number(teacher.hourly_rate)}/hora
                     </Badge>
                   </div>
                 </div>
@@ -270,9 +281,9 @@ export default function BookingPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <CalendarDays className="w-5 h-5 text-primary" />
-                  Select Start Date
+                  Seleccionar Fecha de Inicio
                 </CardTitle>
-                <CardDescription>When would you like to start your sessions?</CardDescription>
+                <CardDescription>¿Cuándo te gustaría comenzar tus sesiones?</CardDescription>
               </CardHeader>
               <CardContent>
                 <Calendar
@@ -281,6 +292,7 @@ export default function BookingPage() {
                   onSelect={setStartDate}
                   disabled={(date) => date < startOfDay(new Date())}
                   className="rounded-md border"
+                  locale={es}
                 />
               </CardContent>
             </Card>
@@ -290,31 +302,31 @@ export default function BookingPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-primary" />
-                  Select Recurring Days
+                  Seleccionar Días Recurrentes
                 </CardTitle>
-                <CardDescription>Choose which days of the week you want to attend</CardDescription>
+                <CardDescription>Elige qué días de la semana quieres asistir</CardDescription>
               </CardHeader>
               <CardContent>
                 {availability.length === 0 ? (
                   <div className="text-center py-8 bg-muted/50 rounded-lg">
                     <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                    <h3 className="font-semibold text-lg mb-2">No Availability Set</h3>
+                    <h3 className="font-semibold text-lg mb-2">Sin Disponibilidad Configurada</h3>
                     <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                      This teacher hasn't configured their available time slots yet. 
-                      Please contact them via message or check back later.
+                      Este profesor aún no ha configurado sus horarios disponibles. 
+                      Por favor contáctalo por mensaje o vuelve más tarde.
                     </p>
                     <Button
                       variant="outline"
                       className="mt-4"
                       onClick={() => navigate(`/teacher/${teacherId}`)}
                     >
-                      View Teacher Profile
+                      Ver Perfil del Profesor
                     </Button>
                   </div>
                 ) : (
                   <>
                     <div className="grid grid-cols-7 gap-2">
-                      {DAYS_OF_WEEK.map((day) => {
+                      {DAYS_OF_WEEK_ES.map((day) => {
                         const isAvailable = availability.some(a => a.day_of_week === day.value);
                         const isSelected = selectedDays.includes(day.value);
                         
@@ -339,7 +351,7 @@ export default function BookingPage() {
                       })}
                     </div>
                     <p className="text-sm text-muted-foreground mt-4">
-                      Greyed out days are not available for this teacher
+                      Los días en gris no están disponibles para este profesor
                     </p>
                   </>
                 )}
@@ -349,8 +361,8 @@ export default function BookingPage() {
             {/* Duration */}
             <Card>
               <CardHeader>
-                <CardTitle>Session Duration</CardTitle>
-                <CardDescription>How long would you like to book sessions for?</CardDescription>
+                <CardTitle>Duración del Plan</CardTitle>
+                <CardDescription>¿Por cuánto tiempo quieres reservar sesiones?</CardDescription>
               </CardHeader>
               <CardContent>
                 <Select value={duration} onValueChange={(v) => setDuration(v as DurationOption)}>
@@ -372,8 +384,8 @@ export default function BookingPage() {
             {selectedDays.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Select Time Slot</CardTitle>
-                  <CardDescription>Choose your preferred time</CardDescription>
+                  <CardTitle>Seleccionar Horario</CardTitle>
+                  <CardDescription>Elige tu horario preferido</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -407,13 +419,13 @@ export default function BookingPage() {
           <div className="space-y-6">
             <Card className="sticky top-8">
               <CardHeader>
-                <CardTitle>Booking Summary</CardTitle>
+                <CardTitle>Resumen de Reserva</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Selected Dates */}
                 {calculatedDates.length > 0 && (
                   <div>
-                    <p className="text-sm font-medium mb-2">Sessions ({calculatedDates.length} total)</p>
+                    <p className="text-sm font-medium mb-2">Sesiones ({calculatedDates.length} en total)</p>
                     <div className="max-h-48 overflow-y-auto space-y-2">
                       {calculatedDates.slice(0, 10).map((date, idx) => {
                         const hasConflict = conflictDates.some(cd => isSameDay(cd, date));
@@ -424,7 +436,7 @@ export default function BookingPage() {
                               hasConflict ? 'bg-destructive/10' : 'bg-muted'
                             }`}
                           >
-                            <span>{format(date, 'EEE, MMM d, yyyy')}</span>
+                            <span>{format(date, "EEE, d 'de' MMM yyyy", { locale: es })}</span>
                             {hasConflict ? (
                               <X className="w-4 h-4 text-destructive" />
                             ) : (
@@ -435,7 +447,7 @@ export default function BookingPage() {
                       })}
                       {calculatedDates.length > 10 && (
                         <p className="text-xs text-muted-foreground text-center py-2">
-                          +{calculatedDates.length - 10} more sessions
+                          +{calculatedDates.length - 10} sesiones más
                         </p>
                       )}
                     </div>
@@ -445,41 +457,47 @@ export default function BookingPage() {
                 {/* Price Breakdown */}
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-sm mb-2">
-                    <span>Rate per session</span>
+                    <span>Precio por sesión</span>
                     <span>${Number(teacher.hourly_rate)}</span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span>Number of sessions</span>
+                    <span>Número de sesiones</span>
                     <span>{calculatedDates.length - conflictDates.length}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg border-t pt-2">
                     <span>Total</span>
                     <span className="text-primary">
-                      ${(calculatedDates.length - conflictDates.length) * Number(teacher.hourly_rate)}
+                      ${(totalPrice - (conflictDates.length * (Number(teacher.hourly_rate) || 0))).toLocaleString()}
                     </span>
                   </div>
                 </div>
 
+                {conflictDates.length > 0 && (
+                  <p className="text-xs text-destructive">
+                    {conflictDates.length} sesión(es) excluida(s) por conflictos de horario
+                  </p>
+                )}
+
                 <Button
                   className="w-full gradient-primary"
-                  disabled={calculatedDates.length === 0 || !selectedTimeSlot || booking}
+                  size="lg"
+                  disabled={
+                    booking ||
+                    calculatedDates.length === 0 ||
+                    !selectedTimeSlot ||
+                    calculatedDates.length === conflictDates.length
+                  }
                   onClick={handleBooking}
                 >
                   {booking ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
                     <>
-                      <Check className="w-4 h-4 mr-2" />
-                      Confirm Booking
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Reservando...
                     </>
+                  ) : (
+                    'Confirmar Reserva'
                   )}
                 </Button>
-                
-                {conflictDates.length > 0 && (
-                  <p className="text-xs text-destructive text-center">
-                    {conflictDates.length} date(s) already booked and will be skipped
-                  </p>
-                )}
               </CardContent>
             </Card>
           </div>

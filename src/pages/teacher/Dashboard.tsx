@@ -128,33 +128,33 @@ export default function TeacherDashboard() {
 
   return (
     <DashboardLayout>
-      <div className="p-8">
+      <div className="p-4 lg:p-8 pb-24 lg:pb-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">
+        <div className="mb-6 lg:mb-8">
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
             ¡Bienvenido, {profile?.full_name?.split(' ')[0]}! 👋
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm lg:text-base text-muted-foreground mt-1">
             Aquí está lo que sucede con tus clases hoy
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-6 lg:mb-8">
           {stats.map((stat) => (
             <Card key={stat.title} className="card-hover">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{stat.title}</p>
-                    <p className="text-3xl font-bold mt-2">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+              <CardContent className="p-4 lg:p-6">
+                <div className="flex flex-col lg:flex-row items-start lg:justify-between gap-2 lg:gap-0">
+                  <div className="order-2 lg:order-1">
+                    <p className="text-xs lg:text-sm text-muted-foreground">{stat.title}</p>
+                    <p className="text-xl lg:text-3xl font-bold mt-1 lg:mt-2">{stat.value}</p>
+                    <p className="text-[10px] lg:text-xs text-muted-foreground mt-1 flex items-center gap-1">
                       <ArrowUpRight className="w-3 h-3" />
                       {stat.trend}
                     </p>
                   </div>
-                  <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center`}>
-                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                  <div className={`order-1 lg:order-2 w-10 h-10 lg:w-12 lg:h-12 rounded-xl ${stat.bgColor} flex items-center justify-center shrink-0`}>
+                    <stat.icon className={`w-5 h-5 lg:w-6 lg:h-6 ${stat.color}`} />
                   </div>
                 </div>
               </CardContent>
@@ -187,31 +187,31 @@ export default function TeacherDashboard() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 lg:space-y-4">
                 {upcomingBookings.map((booking) => (
                   <div
                     key={booking.id}
-                    className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 lg:p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Users className="w-6 h-6 text-primary" />
+                    <div className="flex items-center gap-3 lg:gap-4">
+                      <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <Users className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
                       </div>
-                      <div>
-                        <p className="font-medium">{booking.student?.full_name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {getDateLabel(booking.booking_date)} a las {booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}
+                      <div className="min-w-0">
+                        <p className="font-medium text-sm lg:text-base truncate">{booking.student?.full_name}</p>
+                        <p className="text-xs lg:text-sm text-muted-foreground">
+                          {getDateLabel(booking.booking_date)} • {booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-4 ml-13 sm:ml-0">
                       <Badge
                         variant={booking.status === 'confirmed' ? 'default' : 'secondary'}
-                        className={booking.status === 'confirmed' ? 'bg-primary' : ''}
+                        className={`text-xs ${booking.status === 'confirmed' ? 'bg-primary' : ''}`}
                       >
                         {booking.status === 'confirmed' ? 'Confirmado' : booking.status === 'pending' ? 'Pendiente' : booking.status}
                       </Badge>
-                      <span className="font-semibold text-primary">
+                      <span className="font-semibold text-primary text-sm lg:text-base">
                         ${Number(booking.total_price).toFixed(0)}
                       </span>
                     </div>

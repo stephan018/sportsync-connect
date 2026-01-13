@@ -33,18 +33,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   const teacherNavItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: Calendar, label: 'Calendar', path: '/dashboard/calendar' },
-    { icon: Clock, label: 'Availability', path: '/dashboard/availability' },
-    { icon: DollarSign, label: 'Earnings', path: '/dashboard/earnings' },
-    { icon: MessageSquare, label: 'Messages', path: '/dashboard/messages' },
-    { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
+    { icon: LayoutDashboard, label: 'Panel', path: '/dashboard' },
+    { icon: Calendar, label: 'Calendario', path: '/dashboard/calendar' },
+    { icon: Clock, label: 'Disponibilidad', path: '/dashboard/availability' },
+    { icon: DollarSign, label: 'Ganancias', path: '/dashboard/earnings' },
+    { icon: MessageSquare, label: 'Mensajes', path: '/dashboard/messages' },
+    { icon: Settings, label: 'Configuración', path: '/dashboard/settings' },
   ];
 
   const studentNavItems = [
-    { icon: Search, label: 'Browse Teachers', path: '/browse' },
-    { icon: Calendar, label: 'My Bookings', path: '/bookings' },
-    { icon: MessageSquare, label: 'Messages', path: '/messages' },
+    { icon: Search, label: 'Buscar Profesores', path: '/browse' },
+    { icon: Calendar, label: 'Mis Reservas', path: '/bookings' },
+    { icon: MessageSquare, label: 'Mensajes', path: '/messages' },
   ];
 
   const navItems = isTeacher ? teacherNavItems : studentNavItems;
@@ -59,7 +59,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
               <Dumbbell className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold text-sidebar-foreground">SportSync</span>
+            <span className="text-xl font-bold text-sidebar-foreground">ProffX</span>
           </Link>
         </div>
 
@@ -110,7 +110,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             type="button"
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Sign Out
+            Cerrar Sesión
           </Button>
         </div>
       </aside>

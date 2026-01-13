@@ -41,7 +41,7 @@ export default function Auth() {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success('Welcome back!');
+      toast.success('¡Bienvenido de nuevo!');
     }
     
     setIsLoading(false);
@@ -52,7 +52,7 @@ export default function Auth() {
     setIsLoading(true);
     
     if (!signupName.trim()) {
-      toast.error('Please enter your full name');
+      toast.error('Por favor ingresa tu nombre completo');
       setIsLoading(false);
       return;
     }
@@ -62,7 +62,7 @@ export default function Auth() {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success('Account created successfully!');
+      toast.success('¡Cuenta creada exitosamente!');
     }
     
     setIsLoading(false);
@@ -80,32 +80,32 @@ export default function Auth() {
           <div className="mx-auto mb-4 w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
             <Dumbbell className="w-8 h-8 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl font-bold">SportSync</CardTitle>
-          <CardDescription>Connect with sports teachers or find students</CardDescription>
+          <CardTitle className="text-2xl font-bold">ProffX</CardTitle>
+          <CardDescription>Conecta con profesores de deportes o encuentra estudiantes</CardDescription>
         </CardHeader>
         
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
+              <TabsTrigger value="signup">Registrarse</TabsTrigger>
             </TabsList>
             
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
+                  <Label htmlFor="login-email">Correo Electrónico</Label>
                   <Input
                     id="login-email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="tu@email.com"
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">Password</Label>
+                  <Label htmlFor="login-password">Contraseña</Label>
                   <Input
                     id="login-password"
                     type="password"
@@ -116,7 +116,7 @@ export default function Auth() {
                   />
                 </div>
                 <Button type="submit" className="w-full gradient-primary" disabled={isLoading}>
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Login'}
+                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Iniciar Sesión'}
                 </Button>
               </form>
             </TabsContent>
@@ -124,29 +124,29 @@ export default function Auth() {
             <TabsContent value="signup">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">Full Name</Label>
+                  <Label htmlFor="signup-name">Nombre Completo</Label>
                   <Input
                     id="signup-name"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Juan Pérez"
                     value={signupName}
                     onChange={(e) => setSignupName(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
+                  <Label htmlFor="signup-email">Correo Electrónico</Label>
                   <Input
                     id="signup-email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="tu@email.com"
                     value={signupEmail}
                     onChange={(e) => setSignupEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
+                  <Label htmlFor="signup-password">Contraseña</Label>
                   <Input
                     id="signup-password"
                     type="password"
@@ -159,7 +159,7 @@ export default function Auth() {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label>I am a...</Label>
+                  <Label>Soy un...</Label>
                   <RadioGroup
                     value={signupRole}
                     onValueChange={(value) => setSignupRole(value as AppRole)}
@@ -175,8 +175,8 @@ export default function Auth() {
                     >
                       <RadioGroupItem value="student" id="role-student" className="sr-only" />
                       <GraduationCap className={`w-8 h-8 mb-2 ${signupRole === 'student' ? 'text-primary' : 'text-muted-foreground'}`} />
-                      <span className={`font-medium ${signupRole === 'student' ? 'text-primary' : 'text-foreground'}`}>Student</span>
-                      <span className="text-xs text-muted-foreground">Find teachers</span>
+                      <span className={`font-medium ${signupRole === 'student' ? 'text-primary' : 'text-foreground'}`}>Estudiante</span>
+                      <span className="text-xs text-muted-foreground">Buscar profesores</span>
                     </Label>
                     
                     <Label
@@ -189,14 +189,14 @@ export default function Auth() {
                     >
                       <RadioGroupItem value="teacher" id="role-teacher" className="sr-only" />
                       <Dumbbell className={`w-8 h-8 mb-2 ${signupRole === 'teacher' ? 'text-primary' : 'text-muted-foreground'}`} />
-                      <span className={`font-medium ${signupRole === 'teacher' ? 'text-primary' : 'text-foreground'}`}>Teacher</span>
-                      <span className="text-xs text-muted-foreground">Offer classes</span>
+                      <span className={`font-medium ${signupRole === 'teacher' ? 'text-primary' : 'text-foreground'}`}>Profesor</span>
+                      <span className="text-xs text-muted-foreground">Ofrecer clases</span>
                     </Label>
                   </RadioGroup>
                 </div>
                 
                 <Button type="submit" className="w-full gradient-primary" disabled={isLoading}>
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create Account'}
+                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Crear Cuenta'}
                 </Button>
               </form>
             </TabsContent>

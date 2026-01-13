@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Booking, Profile } from '@/types/database';
 import { sendBookingNotification } from '@/lib/notifications';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,12 +21,26 @@ import {
   XCircle, 
   Timer,
   MessageSquare,
-  ChevronRight
+  ChevronRight,
+  ChevronLeft,
+  CalendarDays
 } from 'lucide-react';
-import { format, parseISO, isAfter, isSameDay } from 'date-fns';
+import { 
+  format, 
+  parseISO, 
+  isAfter, 
+  isSameDay,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  addWeeks,
+  subWeeks,
+  isToday
+} from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface BookingWithTeacher extends Booking {
   teacher: Profile;
@@ -52,10 +66,29 @@ export default function MyBookings() {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState<BookingWithTeacher[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentWeek, setCurrentWeek] = useState(new Date());
   const [reviewModal, setReviewModal] = useState<{
     open: boolean;
     booking: BookingWithTeacher | null;
   }>({ open: false, booking: null });
+
+  // Week calendar data
+  const weekRange = useMemo(() => ({
+    start: startOfWeek(currentWeek, { weekStartsOn: 1 }),
+    end: endOfWeek(currentWeek, { weekStartsOn: 1 })
+  }), [currentWeek]);
+
+  const weekDays = useMemo(() => 
+    eachDayOfInterval({ start: weekRange.start, end: weekRange.end }), 
+    [weekRange]
+  );
+
+  const getBookingsForDay = (day: Date) => {
+    return bookings.filter(b => 
+      isSameDay(parseISO(b.booking_date), day) && 
+      b.status !== 'cancelled'
+    );
+  };
 
   useEffect(() => {
     if (profile?.id) {
@@ -202,7 +235,7 @@ export default function MyBookings() {
     const isToday = isSameDay(parseISO(booking.booking_date), today);
     
     return (
-      <Card className={`group relative overflow-hidden transition-all duration-300 hover:shadow-lg border-l-4 ${statusConfig.borderClass} bg-card`}>
+      <Card id={`booking-${booking.id}`} className={`group relative overflow-hidden transition-all duration-300 hover:shadow-lg border-l-4 ${statusConfig.borderClass} bg-card`}>
         {/* Today indicator */}
         {isToday && booking.status !== 'cancelled' && (
           <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-bl-lg">
@@ -411,7 +444,7 @@ export default function MyBookings() {
           </div>
           
           {/* Quick stats */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-4 mb-8">
             {stats.map((stat) => (
               <Card key={stat.label} className="text-center py-4">
                 <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -419,6 +452,133 @@ export default function MyBookings() {
               </Card>
             ))}
           </div>
+
+          {/* Week Calendar View */}
+          <Card className="mb-8 overflow-hidden">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <CalendarDays className="w-5 h-5 text-primary" />
+                  Próximas Clases
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8"
+                    onClick={() => setCurrentWeek(subWeeks(currentWeek, 1))}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setCurrentWeek(new Date())}
+                  >
+                    Hoy
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8"
+                    onClick={() => setCurrentWeek(addWeeks(currentWeek, 1))}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                {format(weekRange.start, "d 'de' MMMM", { locale: es })} - {format(weekRange.end, "d 'de' MMMM yyyy", { locale: es })}
+              </p>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="grid grid-cols-7 border-t">
+                {weekDays.map((day) => {
+                  const dayBookings = getBookingsForDay(day);
+                  const isCurrentDay = isToday(day);
+                  
+                  return (
+                    <div 
+                      key={day.toISOString()}
+                      className={cn(
+                        "min-h-[140px] border-r last:border-r-0 flex flex-col",
+                        isCurrentDay && "bg-primary/5"
+                      )}
+                    >
+                      {/* Day header */}
+                      <div className={cn(
+                        "p-2 text-center border-b",
+                        isCurrentDay && "bg-primary/10"
+                      )}>
+                        <p className="text-xs text-muted-foreground uppercase">
+                          {format(day, 'EEE', { locale: es })}
+                        </p>
+                        <p className={cn(
+                          "text-lg font-semibold",
+                          isCurrentDay && "text-primary"
+                        )}>
+                          {format(day, 'd')}
+                        </p>
+                      </div>
+                      
+                      {/* Bookings */}
+                      <div className="flex-1 p-1.5 space-y-1 overflow-y-auto">
+                        {dayBookings.length > 0 ? (
+                          dayBookings.slice(0, 3).map((booking) => {
+                            const statusConfig = getStatusConfig(booking.status, booking.booking_date);
+                            return (
+                              <div
+                                key={booking.id}
+                                className={cn(
+                                  "p-1.5 rounded text-xs cursor-pointer transition-colors hover:opacity-80",
+                                  booking.status === 'confirmed' 
+                                    ? "bg-primary text-primary-foreground" 
+                                    : "bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+                                )}
+                                onClick={() => {
+                                  const element = document.getElementById(`booking-${booking.id}`);
+                                  element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }}
+                                title={`${booking.teacher?.full_name} - ${booking.start_time.slice(0, 5)}`}
+                              >
+                                <p className="font-medium truncate">
+                                  {booking.start_time.slice(0, 5)}
+                                </p>
+                                <p className="truncate opacity-90">
+                                  {booking.teacher?.full_name?.split(' ')[0]}
+                                </p>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <div className="h-full flex items-center justify-center">
+                            <span className="text-xs text-muted-foreground">—</span>
+                          </div>
+                        )}
+                        {dayBookings.length > 3 && (
+                          <p className="text-[10px] text-muted-foreground text-center">
+                            +{dayBookings.length - 3} más
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {/* Legend */}
+              <div className="flex items-center gap-4 px-4 py-2 border-t text-xs text-muted-foreground bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-primary"></div>
+                  <span>Confirmada</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-amber-500/50 border border-amber-500"></div>
+                  <span>Pendiente</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Tabs */}

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Profile, Availability } from '@/types/database';
+import { Profile, Availability, Booking } from '@/types/database';
 import { useAuth } from '@/hooks/useAuth';
 import { useChat } from '@/hooks/useChat';
+import { format, addDays, getDay } from 'date-fns';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import TeacherReviews from '@/components/reviews/TeacherReviews';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -82,6 +83,7 @@ export default function TeacherProfile() {
 
   const [teacher, setTeacher] = useState<TeacherWithStats | null>(null);
   const [availability, setAvailability] = useState<Availability[]>([]);
+  const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -115,6 +117,20 @@ export default function TeacherProfile() {
 
       if (availError) throw availError;
       setAvailability(availData as Availability[]);
+
+      // Fetch upcoming bookings for next 7 days to show which slots are booked
+      const today = new Date();
+      const nextWeek = addDays(today, 7);
+      const { data: bookingsData, error: bookingsError } = await supabase
+        .from('bookings')
+        .select('*')
+        .eq('teacher_id', teacherId)
+        .in('status', ['pending', 'confirmed'])
+        .gte('booking_date', format(today, 'yyyy-MM-dd'))
+        .lte('booking_date', format(nextWeek, 'yyyy-MM-dd'));
+
+      if (bookingsError) throw bookingsError;
+      setUpcomingBookings(bookingsData as Booking[]);
 
       // Fetch reviews for rating
       const { data: reviewsData, error: reviewsError } = await supabase
@@ -163,6 +179,16 @@ export default function TeacherProfile() {
     ...day,
     slots: availability.filter((a) => a.day_of_week === day.value),
   }));
+
+  // Check if a slot is booked for a specific day
+  const isSlotBooked = (dayOfWeek: number, startTime: string) => {
+    // Check bookings in the next 7 days that match this day of week and time
+    return upcomingBookings.some((booking) => {
+      const bookingDate = new Date(booking.booking_date);
+      const bookingDayOfWeek = getDay(bookingDate);
+      return bookingDayOfWeek === dayOfWeek && booking.start_time === startTime;
+    });
+  };
 
   const heroImage = teacher?.sport
     ? SPORT_HERO_IMAGES[teacher.sport] || DEFAULT_HERO
@@ -394,20 +420,41 @@ export default function TeacherProfile() {
                             </span>
                             <div className="mt-2 space-y-1">
                               {day.slots.length > 0 ? (
-                                day.slots.map((slot) => (
-                                  <div
-                                    key={slot.id}
-                                    className="text-[10px] text-muted-foreground bg-background rounded px-1 py-0.5"
-                                  >
-                                    {slot.start_time.slice(0, 5)}
-                                  </div>
-                                ))
+                                day.slots.map((slot) => {
+                                  const booked = isSlotBooked(day.value, slot.start_time);
+                                  return (
+                                    <div
+                                      key={slot.id}
+                                      className={`text-[10px] rounded px-1 py-0.5 transition-colors ${
+                                        booked
+                                          ? 'bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30'
+                                          : 'text-muted-foreground bg-background'
+                                      }`}
+                                      title={booked ? 'Horario reservado' : 'Disponible'}
+                                    >
+                                      {slot.start_time.slice(0, 5)}
+                                      {booked && ' 🔸'}
+                                    </div>
+                                  );
+                                })
                               ) : (
                                 <span className="text-[10px] text-muted-foreground">—</span>
                               )}
                             </div>
                           </div>
                         ))}
+                      </div>
+                      
+                      {/* Legend */}
+                      <div className="flex items-center gap-4 mt-4 pt-4 border-t text-xs text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded bg-background border"></div>
+                          <span>Disponible</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded bg-amber-500/20 border border-amber-500/30"></div>
+                          <span>Reservado esta semana</span>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { OptimizedImage } from '@/components/ui/optimized-image';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   ArrowLeft,
   Calendar,
@@ -202,13 +204,13 @@ export default function TeacherProfile() {
     return (
       <DashboardLayout>
         <div className="animate-pulse">
-          <div className="h-72 bg-muted" />
+          <Skeleton className="h-72 md:h-80 w-full" />
           <div className="max-w-6xl mx-auto px-6 -mt-20">
             <div className="flex gap-6">
-              <div className="w-36 h-36 rounded-2xl bg-muted border-4 border-background" />
+              <Skeleton className="w-36 h-36 rounded-2xl border-4 border-background" />
               <div className="flex-1 pt-24 space-y-3">
-                <div className="h-8 bg-muted rounded w-64" />
-                <div className="h-4 bg-muted rounded w-48" />
+                <Skeleton className="h-8 w-64" />
+                <Skeleton className="h-4 w-48" />
               </div>
             </div>
           </div>
@@ -241,10 +243,12 @@ export default function TeacherProfile() {
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <div className="relative h-72 md:h-80 overflow-hidden">
-          <img
+          <OptimizedImage
             src={heroImage}
             alt={`${teacher.sport || 'Deporte'} training`}
-            className="w-full h-full object-cover"
+            className="h-72 md:h-80"
+            imgClassName="w-full h-full"
+            showSkeleton={true}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
           
@@ -363,12 +367,13 @@ export default function TeacherProfile() {
                   {galleryImages.map((img, idx) => (
                     <div
                       key={idx}
-                      className="aspect-[4/3] rounded-lg lg:rounded-xl overflow-hidden group cursor-pointer"
+                      className="rounded-lg lg:rounded-xl overflow-hidden group cursor-pointer"
                     >
-                      <img
+                      <OptimizedImage
                         src={img}
                         alt={`Training ${idx + 1}`}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        aspectRatio="4/3"
+                        imgClassName="transition-transform duration-300 group-hover:scale-110"
                       />
                     </div>
                   ))}

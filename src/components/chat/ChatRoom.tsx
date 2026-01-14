@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import { User, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { OptimizedAvatar } from '@/components/ui/optimized-image';
 import MessageInput from './MessageInput';
 import { cn } from '@/lib/utils';
 import type { Message, Profile } from '@/types/database';
@@ -56,17 +57,12 @@ export default function ChatRoom({
             <ArrowLeft className="w-5 h-5" />
           </Button>
         )}
-        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-          {otherUser.avatar_url ? (
-            <img
-              src={otherUser.avatar_url}
-              alt={otherUser.full_name}
-              className="w-10 h-10 rounded-full object-cover"
-            />
-          ) : (
-            <User className="w-5 h-5 text-primary" />
-          )}
-        </div>
+        <OptimizedAvatar
+          src={otherUser.avatar_url}
+          alt={otherUser.full_name}
+          fallback={otherUser.full_name.charAt(0)}
+          size="md"
+        />
         <div>
           <h3 className="font-semibold text-foreground">{otherUser.full_name}</h3>
           <p className="text-xs text-muted-foreground">{getRoleLabel(otherUser.role)}</p>

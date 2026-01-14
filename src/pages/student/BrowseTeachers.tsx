@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { OptimizedImage } from '@/components/ui/optimized-image';
+import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Search, 
   Star, 
@@ -213,10 +215,10 @@ export default function BrowseTeachers() {
           {loading ? (
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-[4/3] bg-muted rounded-xl lg:rounded-2xl mb-2 lg:mb-3" />
-                  <div className="h-4 lg:h-5 bg-muted rounded w-3/4 mb-2" />
-                  <div className="h-3 lg:h-4 bg-muted rounded w-1/2" />
+                <div key={i} className="space-y-2 lg:space-y-3">
+                  <Skeleton className="aspect-[4/3] rounded-xl lg:rounded-2xl" />
+                  <Skeleton className="h-4 lg:h-5 w-3/4" />
+                  <Skeleton className="h-3 lg:h-4 w-1/2" />
                 </div>
               ))}
             </div>
@@ -238,15 +240,14 @@ export default function BrowseTeachers() {
                   className="group cursor-pointer"
                   onClick={() => navigate(`/teacher/${teacher.id}`)}
                 >
-                  {/* Image */}
-                  <div className="relative aspect-[4/3] rounded-xl lg:rounded-2xl overflow-hidden mb-2 lg:mb-3">
-                    <img
+                  {/* Image with lazy loading */}
+                  <div className="relative rounded-xl lg:rounded-2xl overflow-hidden mb-2 lg:mb-3">
+                    <OptimizedImage
                       src={getTeacherImage(teacher, index)}
                       alt={teacher.full_name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      onError={(e) => {
-                        e.currentTarget.src = PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length];
-                      }}
+                      aspectRatio="4/3"
+                      fallbackSrc={PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length]}
+                      imgClassName="transition-transform duration-500 group-hover:scale-105"
                     />
                     {/* Overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -255,14 +256,14 @@ export default function BrowseTeachers() {
                     {teacher.sport && (
                       <Badge 
                         variant="secondary" 
-                        className="absolute top-2 lg:top-3 right-2 lg:right-3 bg-card/95 backdrop-blur-sm text-foreground border-0 font-medium text-[10px] lg:text-xs px-2 py-0.5"
+                        className="absolute top-2 lg:top-3 right-2 lg:right-3 bg-card/95 backdrop-blur-sm text-foreground border-0 font-medium text-[10px] lg:text-xs px-2 py-0.5 z-10"
                       >
                         {teacher.sport}
                       </Badge>
                     )}
 
                     {/* Quick Book Button - appears on hover (desktop only) */}
-                    <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 hidden lg:block">
+                    <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 hidden lg:block z-10">
                       <Button 
                         className="w-full gradient-primary text-primary-foreground font-semibold shadow-lg"
                         onClick={(e) => {

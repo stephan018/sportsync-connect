@@ -3,6 +3,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { ProfileImageUpload, GalleryUpload } from '@/components/profile/ProfileImageUpload';
+import { NotificationSettings } from '@/components/notifications/NotificationSettings';
+import { useNotificationSettings } from '@/hooks/useBookingNotifications';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -43,6 +45,7 @@ const SPORTS = [
 
 export default function Settings() {
   const { profile, user } = useAuth();
+  const { hasPermission, requestNotificationPermission } = useNotificationSettings();
   const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState('');
   const [bio, setBio] = useState('');
@@ -154,6 +157,12 @@ export default function Settings() {
               )}
             </CardContent>
           </Card>
+
+          {/* Notification Settings */}
+          <NotificationSettings 
+            hasPermission={hasPermission} 
+            requestPermission={requestNotificationPermission} 
+          />
 
           <Card>
             <CardHeader>

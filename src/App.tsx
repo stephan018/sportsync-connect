@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { BookingNotificationProvider } from "@/components/notifications/BookingNotificationProvider";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import TeacherDashboard from "./pages/teacher/Dashboard";
@@ -165,7 +166,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <AppRoutes />
+          <BookingNotificationProvider>
+            <AppRoutes />
+          </BookingNotificationProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

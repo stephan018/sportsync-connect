@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import { ProfileImageUpload, GalleryUpload } from '@/components/profile/ProfileImageUpload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Loader2, Save, User } from 'lucide-react';
+import { Loader2, Save, User, Image } from 'lucide-react';
 
 const SPORTS = [
   'Tenis',
@@ -41,12 +42,14 @@ const SPORTS = [
 ];
 
 export default function Settings() {
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState('');
   const [bio, setBio] = useState('');
   const [hourlyRate, setHourlyRate] = useState('');
   const [sport, setSport] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
 
   useEffect(() => {
     if (profile) {
@@ -54,8 +57,23 @@ export default function Settings() {
       setBio(profile.bio || '');
       setHourlyRate(profile.hourly_rate?.toString() || '50');
       setSport(profile.sport || '');
+      setAvatarUrl(profile.avatar_url || null);
+      fetchGalleryImages();
     }
   }, [profile]);
+
+  const fetchGalleryImages = async () => {
+    if (!profile) return;
+    const { data } = await supabase
+      .from('profiles')
+      .select('gallery_images')
+      .eq('id', profile.id)
+      .single();
+    
+    if (data?.gallery_images) {
+      setGalleryImages(data.gallery_images);
+    }
+  };
 
   const handleSave = async () => {
     if (!profile) return;
@@ -83,15 +101,60 @@ export default function Settings() {
 
   return (
     <DashboardLayout>
-      <div className="p-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Configuración del Perfil</h1>
-          <p className="text-muted-foreground mt-1">
+      <div className="p-4 md:p-8">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Configuración del Perfil</h1>
+          <p className="text-muted-foreground mt-1 text-sm md:text-base">
             Administra tu información de perfil y preferencias de enseñanza
           </p>
         </div>
 
         <div className="max-w-2xl space-y-6">
+          {/* Photo Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Image className="w-5 h-5" />
+                Foto de Perfil
+              </CardTitle>
+              <CardDescription>
+                Esta es la imagen que verán los estudiantes al buscarte
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {user && (
+                <ProfileImageUpload
+                  userId={user.id}
+                  currentAvatarUrl={avatarUrl}
+                  fullName={fullName}
+                  onAvatarChange={setAvatarUrl}
+                />
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Gallery Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Image className="w-5 h-5" />
+                Galería de Entrenamiento
+              </CardTitle>
+              <CardDescription>
+                Muestra fotos de tus entrenamientos y sesiones
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {user && (
+                <GalleryUpload
+                  userId={user.id}
+                  galleryImages={galleryImages}
+                  onGalleryChange={setGalleryImages}
+                />
+              )}
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

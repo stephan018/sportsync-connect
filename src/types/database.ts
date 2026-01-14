@@ -13,6 +13,7 @@ export interface Profile {
   session_duration: number | null;
   avatar_url: string | null;
   sport: string | null;
+  gallery_images: string[] | null;
   created_at: string;
   updated_at: string;
 }

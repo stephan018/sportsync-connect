@@ -190,6 +190,7 @@ export type Database = {
           bio: string | null
           created_at: string
           full_name: string
+          gallery_images: string[] | null
           group_hourly_rate: number | null
           hourly_rate: number | null
           id: string
@@ -205,6 +206,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           full_name: string
+          gallery_images?: string[] | null
           group_hourly_rate?: number | null
           hourly_rate?: number | null
           id?: string
@@ -220,6 +222,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           full_name?: string
+          gallery_images?: string[] | null
           group_hourly_rate?: number | null
           hourly_rate?: number | null
           id?: string

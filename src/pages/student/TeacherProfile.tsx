@@ -75,6 +75,7 @@ interface TeacherWithStats extends Profile {
   avgRating: number;
   reviewCount: number;
   completedSessions: number;
+  gallery_images: string[] | null;
 }
 
 export default function TeacherProfile() {
@@ -196,9 +197,12 @@ export default function TeacherProfile() {
     ? SPORT_HERO_IMAGES[teacher.sport] || DEFAULT_HERO
     : DEFAULT_HERO;
 
-  const galleryImages = teacher?.sport
-    ? GALLERY_IMAGES[teacher.sport] || GALLERY_IMAGES['default']
-    : GALLERY_IMAGES['default'];
+  // Use teacher's uploaded gallery images, fallback to sport-specific defaults
+  const galleryImages = teacher?.gallery_images && teacher.gallery_images.length > 0
+    ? teacher.gallery_images
+    : teacher?.sport
+      ? GALLERY_IMAGES[teacher.sport] || GALLERY_IMAGES['default']
+      : GALLERY_IMAGES['default'];
 
   if (loading) {
     return (
@@ -278,9 +282,19 @@ export default function TeacherProfile() {
           <div className="relative -mt-20 mb-8">
             <div className="flex flex-col md:flex-row gap-6">
               {/* Avatar */}
-              <div className="w-32 h-32 md:w-36 md:h-36 rounded-2xl gradient-primary flex items-center justify-center text-5xl md:text-6xl font-bold text-primary-foreground border-4 border-background shadow-xl shrink-0">
-                {teacher.full_name.charAt(0)}
-              </div>
+              {teacher.avatar_url ? (
+                <div className="w-32 h-32 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-background shadow-xl shrink-0">
+                  <img
+                    src={teacher.avatar_url}
+                    alt={teacher.full_name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-32 h-32 md:w-36 md:h-36 rounded-2xl gradient-primary flex items-center justify-center text-5xl md:text-6xl font-bold text-primary-foreground border-4 border-background shadow-xl shrink-0">
+                  {teacher.full_name.charAt(0)}
+                </div>
+              )}
 
               {/* Info */}
               <div className="flex-1 pt-0 md:pt-20">

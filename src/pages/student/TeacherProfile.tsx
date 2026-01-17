@@ -7,6 +7,7 @@ import { useChat } from '@/hooks/useChat';
 import { format, addDays, getDay } from 'date-fns';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import TeacherReviews from '@/components/reviews/TeacherReviews';
+import WeeklyScheduleView from '@/components/availability/WeeklyScheduleView';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +19,6 @@ import {
   Calendar,
   Clock,
   DollarSign,
-  MapPin,
   MessageSquare,
   Star,
   Trophy,
@@ -26,16 +26,6 @@ import {
   CheckCircle2,
   Sparkles,
 } from 'lucide-react';
-
-const DAYS_OF_WEEK_ES = [
-  { value: 0, label: 'Domingo', short: 'Dom' },
-  { value: 1, label: 'Lunes', short: 'Lun' },
-  { value: 2, label: 'Martes', short: 'Mar' },
-  { value: 3, label: 'Miércoles', short: 'Mié' },
-  { value: 4, label: 'Jueves', short: 'Jue' },
-  { value: 5, label: 'Viernes', short: 'Vie' },
-  { value: 6, label: 'Sábado', short: 'Sáb' },
-];
 
 // Sport-specific hero images
 const SPORT_HERO_IMAGES: Record<string, string> = {
@@ -176,12 +166,6 @@ export default function TeacherProfile() {
       navigate('/messages');
     }
   };
-
-  // Group availability by day
-  const availabilityByDay = DAYS_OF_WEEK_ES.map((day) => ({
-    ...day,
-    slots: availability.filter((a) => a.day_of_week === day.value),
-  }));
 
   // Check if a slot is booked for a specific day
   const isSlotBooked = (dayOfWeek: number, startTime: string) => {
@@ -412,71 +396,10 @@ export default function TeacherProfile() {
                 </TabsContent>
 
                 <TabsContent value="availability" className="mt-4 lg:mt-6">
-                  <Card>
-                    <CardHeader className="p-4 lg:p-6">
-                      <CardTitle className="flex items-center gap-2 text-base lg:text-lg">
-                        <Calendar className="w-4 lg:w-5 h-4 lg:h-5 text-primary" />
-                        Horario Semanal
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 lg:p-6 pt-0 lg:pt-0">
-                      <div className="grid grid-cols-7 gap-1 lg:gap-2">
-                        {availabilityByDay.map((day) => (
-                          <div
-                            key={day.value}
-                            className={`text-center p-1.5 lg:p-3 rounded-lg lg:rounded-xl transition-colors ${
-                              day.slots.length > 0
-                                ? 'bg-primary/10 border border-primary/20'
-                                : 'bg-muted/50'
-                            }`}
-                          >
-                            <span
-                              className={`text-[10px] lg:text-xs font-medium ${
-                                day.slots.length > 0 ? 'text-primary' : 'text-muted-foreground'
-                              }`}
-                            >
-                              {day.short}
-                            </span>
-                            <div className="mt-1 lg:mt-2 space-y-0.5 lg:space-y-1">
-                              {day.slots.length > 0 ? (
-                                day.slots.map((slot) => {
-                                  const booked = isSlotBooked(day.value, slot.start_time);
-                                  return (
-                                    <div
-                                      key={slot.id}
-                                      className={`text-[8px] lg:text-[10px] rounded px-0.5 lg:px-1 py-0.5 transition-colors ${
-                                        booked
-                                          ? 'bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30'
-                                          : 'text-muted-foreground bg-background'
-                                      }`}
-                                      title={booked ? 'Horario reservado' : 'Disponible'}
-                                    >
-                                      {slot.start_time.slice(0, 5)}
-                                      <span className="hidden lg:inline">{booked && ' 🔸'}</span>
-                                    </div>
-                                  );
-                                })
-                              ) : (
-                                <span className="text-[8px] lg:text-[10px] text-muted-foreground">—</span>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Legend */}
-                      <div className="flex items-center gap-4 mt-4 pt-4 border-t text-xs text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded bg-background border"></div>
-                          <span>Disponible</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded bg-amber-500/20 border border-amber-500/30"></div>
-                          <span>Reservado esta semana</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <WeeklyScheduleView
+                    availability={availability}
+                    isSlotBooked={isSlotBooked}
+                  />
                 </TabsContent>
               </Tabs>
             </div>

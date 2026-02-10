@@ -336,9 +336,9 @@ export default function TeacherProfile() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 pb-24 lg:pb-12">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 pb-24 md:pb-12">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6 lg:space-y-8">
+            <div className="md:col-span-2 space-y-6 md:space-y-8">
               {/* Bio Section */}
               <Card className="overflow-hidden">
                 <CardHeader className="bg-muted/30 p-4 lg:p-6">
@@ -407,7 +407,7 @@ export default function TeacherProfile() {
             {/* Sidebar Actions - Fixed on mobile */}
             <div className="space-y-4">
               {/* Desktop Card */}
-              <Card className="hidden lg:block sticky top-8 overflow-hidden border-primary/20">
+              <Card className="hidden md:block sticky top-8 overflow-hidden border-primary/20">
                 <div className="h-2 gradient-primary" />
                 <CardContent className="p-6 space-y-4">
                   <div className="text-center pb-4 border-b">
@@ -455,7 +455,7 @@ export default function TeacherProfile() {
               </Card>
               
               {/* Mobile Fixed Bottom Bar */}
-              <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 safe-area-bottom z-50">
+              <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 safe-area-bottom z-50">
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <p className="text-xs text-muted-foreground">Desde</p>

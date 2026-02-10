@@ -455,7 +455,7 @@ export default function TeacherProfile() {
               </Card>
               
               {/* Mobile Fixed Bottom Bar */}
-              <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 safe-area-bottom z-50">
+              <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 safe-area-bottom z-50">
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <p className="text-xs text-muted-foreground">Desde</p>

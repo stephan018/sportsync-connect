@@ -23,7 +23,7 @@ import { Loader2 } from "lucide-react";
 const queryClient = new QueryClient();
 
 // Protected route wrapper
-function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles?: ('teacher' | 'student')[] }) {
+function ProtectedRoute({ children, allowedRoles, skipOnboardingCheck }: { children: React.ReactNode; allowedRoles?: ('teacher' | 'student')[]; skipOnboardingCheck?: boolean }) {
   const { user, profile, loading } = useAuth();
 
   if (loading) {
@@ -44,6 +44,10 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
+  }
+
+  if (!skipOnboardingCheck && !profile.is_onboarded) {
+    return <Navigate to="/onboarding" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(profile.role)) {

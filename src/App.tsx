@@ -21,6 +21,7 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import PublicTeacherProfile from "./pages/PublicTeacherProfile";
 import InstallPrompt from "./components/pwa/InstallPrompt";
+import ReviewPromptModal from "./components/reviews/ReviewPromptModal";
 import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();

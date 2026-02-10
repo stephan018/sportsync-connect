@@ -12,6 +12,7 @@ export interface Profile {
   group_hourly_rate: number | null;
   max_students_per_session: number | null;
   session_duration: number | null;
+  reschedule_window_hours: number | null;
   avatar_url: string | null;
   sport: string | null;
   gallery_images: string[] | null;

@@ -114,6 +114,12 @@ const getEmailContent = (
   const calendarButtons = getCalendarButtons(booking, teacherName, studentName);
   const whatsAppButton = getWhatsAppButton(isForTeacher ? studentName : teacherName);
 
+  // Previous booking info for rescheduled events
+  const previousDate = booking.previous_date ? formatDate(booking.previous_date) : null;
+  const previousTime = booking.previous_start_time && booking.previous_end_time
+    ? `${formatTime(booking.previous_start_time)} - ${formatTime(booking.previous_end_time)}`
+    : null;
+
   const sessionDetailsBlock = `
     <div style="background: #f3f4f6; padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #10b981;">
       <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">📋 Detalles de la Sesión</h3>

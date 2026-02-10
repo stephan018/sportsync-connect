@@ -122,14 +122,6 @@ export default function TeacherProfile() {
       if (bookingsError) throw bookingsError;
       setUpcomingBookings(bookingsData as Booking[]);
 
-      // Fetch reviews for rating
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from('reviews')
-        .select('rating')
-        .eq('teacher_id', teacherId);
-
-      if (reviewsError) throw reviewsError;
-
       // Fetch completed sessions count
       const { count: sessionsCount } = await supabase
         .from('bookings')
@@ -137,16 +129,8 @@ export default function TeacherProfile() {
         .eq('teacher_id', teacherId)
         .eq('status', 'completed');
 
-      const reviewCount = reviewsData?.length || 0;
-      const avgRating =
-        reviewCount > 0
-          ? reviewsData.reduce((sum, r) => sum + r.rating, 0) / reviewCount
-          : 0;
-
       setTeacher({
         ...(teacherData as Profile),
-        avgRating,
-        reviewCount,
         completedSessions: sessionsCount || 0,
       });
     } catch (error) {

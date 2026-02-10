@@ -76,6 +76,9 @@ export default function RescheduleModal({
       if (availRes.error) throw availRes.error;
       if (bookingsRes.error) throw bookingsRes.error;
 
+      console.log('[RescheduleModal] Availability loaded:', availRes.data?.length, 'slots');
+      console.log('[RescheduleModal] Existing bookings:', bookingsRes.data?.length);
+      
       setAvailability(availRes.data as Availability[]);
       setExistingBookings(bookingsRes.data || []);
     } catch (error) {

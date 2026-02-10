@@ -85,33 +85,7 @@ export default function BrowseTeachers() {
 
       if (teachersError) throw teachersError;
 
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from('reviews')
-        .select('teacher_id, rating');
-
-      if (reviewsError) throw reviewsError;
-
-      const ratingsByTeacher: Record<string, { total: number; count: number }> = {};
-      reviewsData?.forEach((review) => {
-        if (!ratingsByTeacher[review.teacher_id]) {
-          ratingsByTeacher[review.teacher_id] = { total: 0, count: 0 };
-        }
-        ratingsByTeacher[review.teacher_id].total += review.rating;
-        ratingsByTeacher[review.teacher_id].count += 1;
-      });
-
-      const teachersWithRatings: TeacherWithRating[] = (teachersData as Profile[]).map(
-        (teacher) => {
-          const stats = ratingsByTeacher[teacher.id];
-          return {
-            ...teacher,
-            avgRating: stats ? stats.total / stats.count : 0,
-            reviewCount: stats?.count || 0,
-          };
-        }
-      );
-
-      setTeachers(teachersWithRatings);
+      setTeachers(teachersData as TeacherWithRating[]);
     } catch (error) {
       console.error('Error fetching teachers:', error);
     } finally {

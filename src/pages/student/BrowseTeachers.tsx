@@ -254,9 +254,9 @@ export default function BrowseTeachers() {
                         {teacher.full_name}
                       </h3>
                       <div className="flex items-center gap-0.5 lg:gap-1 shrink-0">
-                        <Star className={`w-3 lg:w-4 h-3 lg:h-4 ${teacher.avgRating > 0 ? 'text-warning fill-warning' : 'text-muted-foreground'}`} />
+                        <Star className={`w-3 lg:w-4 h-3 lg:h-4 ${Number(teacher.average_rating) > 0 ? 'text-warning fill-warning' : 'text-muted-foreground'}`} />
                         <span className="text-xs lg:text-sm font-medium">
-                          {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'Nuevo'}
+                          {Number(teacher.average_rating) > 0 ? Number(teacher.average_rating).toFixed(1) : 'Nuevo'}
                         </span>
                       </div>
                     </div>

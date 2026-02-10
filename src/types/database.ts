@@ -16,6 +16,8 @@ export interface Profile {
   gallery_images: string[] | null;
   is_onboarded: boolean;
   years_of_experience: number | null;
+  average_rating: number;
+  total_reviews: number;
   location: string | null;
   skill_level: string | null;
   sports_interests: string[] | null;

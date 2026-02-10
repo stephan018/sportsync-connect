@@ -152,7 +152,7 @@ export default function RescheduleModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CalendarDays className="w-5 h-5 text-primary" />
@@ -176,82 +176,80 @@ export default function RescheduleModal({
             <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
         ) : (
-          <ScrollArea className="flex-1 -mx-6 px-6">
-            <div className="space-y-4">
-              {/* Date picker */}
-              <div>
-                <p className="text-sm font-medium mb-2">Nueva fecha</p>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => {
-                    setSelectedDate(date);
-                    setSelectedSlot('');
-                  }}
-                  disabled={(date) => !isDateAvailable(date)}
-                  fromDate={new Date()}
-                  toDate={addDays(new Date(), 30)}
-                  className="rounded-md border"
-                  locale={es}
-                />
-              </div>
-
-              {/* Time slots */}
-              {selectedDate && (
-                <div>
-                  <p className="text-sm font-medium mb-2">Horarios disponibles</p>
-                  {availableSlots.length === 0 ? (
-                    <p className="text-sm text-muted-foreground py-4 text-center">
-                      No hay horarios disponibles para esta fecha
-                    </p>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-2">
-                      {availableSlots.map((slot) => {
-                        const slotKey = `${slot.start_time}-${slot.end_time}`;
-                        const isSelected = selectedSlot === slotKey;
-                        return (
-                          <button
-                            key={slot.id}
-                            onClick={() => setSelectedSlot(slotKey)}
-                            className={`flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all text-sm font-medium ${
-                              isSelected
-                                ? 'border-primary bg-primary text-primary-foreground'
-                                : 'border-border hover:border-primary/50'
-                            }`}
-                          >
-                            <Clock className="w-4 h-4" />
-                            {slot.start_time.slice(0, 5)} - {slot.end_time.slice(0, 5)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Summary */}
-              {selectedDate && selectedSlot && (
-                <Card className="p-3 border-primary/20 bg-primary/5">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="flex-1">
-                      <p className="text-muted-foreground line-through capitalize">
-                        {format(new Date(currentDate + 'T12:00:00'), "d MMM", { locale: es })} {currentStartTime.slice(0, 5)}
-                      </p>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-primary shrink-0" />
-                    <div className="flex-1 text-right">
-                      <p className="font-semibold text-primary capitalize">
-                        {format(selectedDate, "d MMM", { locale: es })} {selectedSlot.split('-')[0].slice(0, 5)}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2 text-center">
-                    El precio se mantiene: <span className="font-semibold">${totalPrice}</span>
-                  </p>
-                </Card>
-              )}
+          <div className="space-y-4">
+            {/* Date picker - compact */}
+            <div>
+              <p className="text-sm font-medium mb-2">Nueva fecha</p>
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => {
+                  setSelectedDate(date);
+                  setSelectedSlot('');
+                }}
+                disabled={(date) => !isDateAvailable(date)}
+                fromDate={new Date()}
+                toDate={addDays(new Date(), 30)}
+                className="rounded-md border mx-auto pointer-events-auto"
+                locale={es}
+              />
             </div>
-          </ScrollArea>
+
+            {/* Time slots */}
+            {selectedDate && (
+              <div>
+                <p className="text-sm font-medium mb-2">Horarios disponibles</p>
+                {availableSlots.length === 0 ? (
+                  <p className="text-sm text-muted-foreground py-4 text-center">
+                    No hay horarios disponibles para esta fecha
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    {availableSlots.map((slot) => {
+                      const slotKey = `${slot.start_time}-${slot.end_time}`;
+                      const isSelected = selectedSlot === slotKey;
+                      return (
+                        <button
+                          key={slot.id}
+                          onClick={() => setSelectedSlot(slotKey)}
+                          className={`flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all text-sm font-medium ${
+                            isSelected
+                              ? 'border-primary bg-primary text-primary-foreground'
+                              : 'border-border hover:border-primary/50'
+                          }`}
+                        >
+                          <Clock className="w-4 h-4" />
+                          {slot.start_time.slice(0, 5)} - {slot.end_time.slice(0, 5)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Summary */}
+            {selectedDate && selectedSlot && (
+              <Card className="p-3 border-primary/20 bg-primary/5">
+                <div className="flex items-center gap-2 text-sm">
+                  <div className="flex-1">
+                    <p className="text-muted-foreground line-through capitalize">
+                      {format(new Date(currentDate + 'T12:00:00'), "d MMM", { locale: es })} {currentStartTime.slice(0, 5)}
+                    </p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-primary shrink-0" />
+                  <div className="flex-1 text-right">
+                    <p className="font-semibold text-primary capitalize">
+                      {format(selectedDate, "d MMM", { locale: es })} {selectedSlot.split('-')[0].slice(0, 5)}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2 text-center">
+                  El precio se mantiene: <span className="font-semibold">${totalPrice}</span>
+                </p>
+              </Card>
+            )}
+          </div>
         )}
 
         <div className="flex gap-2 pt-2">

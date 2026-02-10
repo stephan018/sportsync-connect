@@ -19,6 +19,8 @@ import MyBookings from "./pages/student/MyBookings";
 import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
+import PublicTeacherProfile from "./pages/PublicTeacherProfile";
+import InstallPrompt from "./components/pwa/InstallPrompt";
 import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();

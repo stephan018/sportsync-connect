@@ -407,7 +407,7 @@ export default function TeacherProfile() {
             {/* Sidebar Actions - Fixed on mobile */}
             <div className="space-y-4">
               {/* Desktop Card */}
-              <Card className="hidden lg:block sticky top-8 overflow-hidden border-primary/20">
+              <Card className="hidden md:block sticky top-8 overflow-hidden border-primary/20">
                 <div className="h-2 gradient-primary" />
                 <CardContent className="p-6 space-y-4">
                   <div className="text-center pb-4 border-b">

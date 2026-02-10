@@ -47,6 +47,9 @@ export interface Booking {
   status: BookingStatus;
   total_price: number;
   notes: string | null;
+  previous_date: string | null;
+  previous_start_time: string | null;
+  previous_end_time: string | null;
   created_at: string;
   updated_at: string;
 }

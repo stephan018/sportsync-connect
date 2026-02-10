@@ -364,7 +364,7 @@ export default function TeacherProfile() {
                 <TabsList className="w-full grid grid-cols-2 h-10 lg:h-12">
                   <TabsTrigger value="reviews" className="text-xs lg:text-sm">
                     <Star className="w-3.5 lg:w-4 h-3.5 lg:h-4 mr-1.5 lg:mr-2" />
-                    Reseñas ({teacher.reviewCount})
+                    Reseñas ({teacher.total_reviews})
                   </TabsTrigger>
                   <TabsTrigger value="availability" className="text-xs lg:text-sm">
                     <Clock className="w-3.5 lg:w-4 h-3.5 lg:h-4 mr-1.5 lg:mr-2" />

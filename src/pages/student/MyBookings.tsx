@@ -648,7 +648,7 @@ export default function MyBookings() {
             ) : (
               <div className="space-y-4">
                 {upcomingBookings.map((booking) => (
-                  <BookingCard key={booking.id} booking={booking} showCancel />
+                  <BookingCard key={booking.id} booking={booking} showCancel showReschedule />
                 ))}
               </div>
             )}

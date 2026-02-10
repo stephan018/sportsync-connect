@@ -10,7 +10,7 @@ const corsHeaders = {
 
 interface NotificationRequest {
   bookingId: string;
-  eventType: "created" | "confirmed" | "cancelled";
+  eventType: "created" | "confirmed" | "cancelled" | "rescheduled";
 }
 
 const formatDate = (dateString: string) => {

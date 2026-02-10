@@ -75,7 +75,7 @@ export default function RescheduleModal({
 
       if (availRes.error) throw availRes.error;
       if (bookingsRes.error) throw bookingsRes.error;
-
+      
       setAvailability(availRes.data as Availability[]);
       setExistingBookings(bookingsRes.data || []);
     } catch (error) {
@@ -99,13 +99,14 @@ export default function RescheduleModal({
 
     const daySlots = availability.filter(a => a.day_of_week === dayOfWeek);
 
-    // Filter out already booked slots
+    // Filter out slots that overlap with existing bookings
     return daySlots.filter(slot => {
-      const isBooked = existingBookings.some(
-        b => b.booking_date === dateStr && b.start_time === slot.start_time && b.end_time === slot.end_time
-      );
-      // Also exclude the current booking's slot if same date
-      const isCurrent = dateStr === currentDate && slot.start_time === currentStartTime && slot.end_time === currentEndTime;
+      const isBooked = existingBookings.some(b => {
+        if (b.booking_date !== dateStr) return false;
+        return slot.start_time < b.end_time && slot.end_time > b.start_time;
+      });
+      const isCurrent = dateStr === currentDate && 
+        slot.start_time < currentEndTime && slot.end_time > currentStartTime;
       return !isBooked && !isCurrent;
     });
   };

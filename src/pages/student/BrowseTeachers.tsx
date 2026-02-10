@@ -221,6 +221,7 @@ export default function BrowseTeachers() {
                 <span className="hidden sm:inline">Filtros</span>
               </Button>
             </div>
+          </div>
         </div>
 
         {/* Teachers Grid */}

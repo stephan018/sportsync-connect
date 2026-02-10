@@ -200,11 +200,27 @@ export default function BrowseTeachers() {
                 {filteredTeachers.length} profesor{filteredTeachers.length !== 1 ? 'es' : ''} disponible{filteredTeachers.length !== 1 ? 's' : ''}
               </p>
             </div>
-            <Button variant="outline" size="sm" className="rounded-full gap-2 shrink-0">
-              <SlidersHorizontal className="w-4 h-4" />
-              <span className="hidden sm:inline">Filtros</span>
-            </Button>
-          </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={sortByDistance ? 'default' : 'outline'}
+                size="sm"
+                className="rounded-full gap-2 shrink-0"
+                onClick={async () => {
+                  if (!myLat && profile) {
+                    await requestAndSaveLocation(profile.id);
+                  }
+                  setSortByDistance(prev => !prev);
+                }}
+                disabled={locLoading}
+              >
+                {locLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                <span className="hidden sm:inline">Cerca de mí</span>
+              </Button>
+              <Button variant="outline" size="sm" className="rounded-full gap-2 shrink-0">
+                <SlidersHorizontal className="w-4 h-4" />
+                <span className="hidden sm:inline">Filtros</span>
+              </Button>
+            </div>
         </div>
 
         {/* Teachers Grid */}

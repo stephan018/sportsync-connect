@@ -194,12 +194,17 @@ export type Database = {
           group_hourly_rate: number | null
           hourly_rate: number | null
           id: string
+          is_onboarded: boolean
+          location: string | null
           max_students_per_session: number | null
           role: Database["public"]["Enums"]["app_role"]
           session_duration: number | null
+          skill_level: string | null
           sport: string | null
+          sports_interests: string[] | null
           updated_at: string
           user_id: string
+          years_of_experience: number | null
         }
         Insert: {
           avatar_url?: string | null
@@ -210,12 +215,17 @@ export type Database = {
           group_hourly_rate?: number | null
           hourly_rate?: number | null
           id?: string
+          is_onboarded?: boolean
+          location?: string | null
           max_students_per_session?: number | null
           role: Database["public"]["Enums"]["app_role"]
           session_duration?: number | null
+          skill_level?: string | null
           sport?: string | null
+          sports_interests?: string[] | null
           updated_at?: string
           user_id: string
+          years_of_experience?: number | null
         }
         Update: {
           avatar_url?: string | null
@@ -226,12 +236,17 @@ export type Database = {
           group_hourly_rate?: number | null
           hourly_rate?: number | null
           id?: string
+          is_onboarded?: boolean
+          location?: string | null
           max_students_per_session?: number | null
           role?: Database["public"]["Enums"]["app_role"]
           session_duration?: number | null
+          skill_level?: string | null
           sport?: string | null
+          sports_interests?: string[] | null
           updated_at?: string
           user_id?: string
+          years_of_experience?: number | null
         }
         Relationships: []
       }

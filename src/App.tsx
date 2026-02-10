@@ -18,6 +18,7 @@ import BookingPage from "./pages/student/BookingPage";
 import MyBookings from "./pages/student/MyBookings";
 import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
+import Onboarding from "./pages/Onboarding";
 import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();

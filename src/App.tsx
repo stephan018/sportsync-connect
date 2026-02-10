@@ -168,6 +168,9 @@ function AppRoutes() {
         }
       />
       
+      {/* Public Teacher Profile (no auth required) */}
+      <Route path="/profe/:slug" element={<PublicTeacherProfile />} />
+
       {/* Catch-all */}
       <Route path="*" element={<NotFound />} />
     </Routes>

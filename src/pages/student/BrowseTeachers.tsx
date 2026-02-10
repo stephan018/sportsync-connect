@@ -61,9 +61,11 @@ export default function BrowseTeachers() {
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { getOrCreateChatRoom } = useChat();
+  const { latitude: myLat, longitude: myLon, loading: locLoading, requestAndSaveLocation } = useGeolocation();
   const [teachers, setTeachers] = useState<TeacherWithRating[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sportFilter, setSportFilter] = useState<string>('all');
+  const [sortByDistance, setSortByDistance] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const handleMessageTeacher = async (teacherId: string) => {

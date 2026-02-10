@@ -338,7 +338,7 @@ export default function TeacherProfile() {
 
           <div className="grid md:grid-cols-3 gap-6 md:gap-8 pb-24 md:pb-12">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6 lg:space-y-8">
+            <div className="md:col-span-2 space-y-6 md:space-y-8">
               {/* Bio Section */}
               <Card className="overflow-hidden">
                 <CardHeader className="bg-muted/30 p-4 lg:p-6">

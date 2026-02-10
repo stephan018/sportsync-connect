@@ -308,10 +308,21 @@ export default function BrowseTeachers() {
                       {teacher.bio || 'Profesor profesional de deportes'}
                     </p>
                     
-                    <p className="text-foreground font-semibold text-sm lg:text-base">
-                      <span className="text-base lg:text-lg">${teacher.hourly_rate}</span>
-                      <span className="text-xs lg:text-sm font-normal text-muted-foreground"> /sesión</span>
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-foreground font-semibold text-sm lg:text-base">
+                        <span className="text-base lg:text-lg">${teacher.hourly_rate}</span>
+                        <span className="text-xs lg:text-sm font-normal text-muted-foreground"> /sesión</span>
+                      </p>
+                      {(() => {
+                        const dist = getTeacherDistance(teacher);
+                        return dist !== null ? (
+                          <span className="text-[10px] lg:text-xs text-muted-foreground flex items-center gap-0.5">
+                            <MapPin className="w-3 h-3" />
+                            {dist < 1 ? `${Math.round(dist * 1000)}m` : `${dist.toFixed(1)}km`}
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
                   </div>
                 </article>
               ))}

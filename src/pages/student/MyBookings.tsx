@@ -351,6 +351,17 @@ export default function MyBookings() {
                     <span className="hidden sm:inline">Reseñado</span>
                   </Badge>
                 )}
+                {showReschedule && canReschedule(booking) && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1 h-8 lg:h-9 px-2 lg:px-3 text-xs lg:text-sm"
+                    onClick={() => setRescheduleModal({ open: true, booking })}
+                  >
+                    <RefreshCw className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
+                    <span className="hidden sm:inline">Reprogramar</span>
+                  </Button>
+                )}
                 {showCancel && booking.status !== 'cancelled' && (
                   <Button
                     variant="ghost"

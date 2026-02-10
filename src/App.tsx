@@ -19,6 +19,8 @@ import MyBookings from "./pages/student/MyBookings";
 import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
+import PublicTeacherProfile from "./pages/PublicTeacherProfile";
+import InstallPrompt from "./components/pwa/InstallPrompt";
 import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
@@ -166,6 +168,9 @@ function AppRoutes() {
         }
       />
       
+      {/* Public Teacher Profile (no auth required) */}
+      <Route path="/profe/:slug" element={<PublicTeacherProfile />} />
+
       {/* Catch-all */}
       <Route path="*" element={<NotFound />} />
     </Routes>
@@ -181,6 +186,7 @@ const App = () => (
         <AuthProvider>
           <BookingNotificationProvider>
             <AppRoutes />
+            <InstallPrompt />
           </BookingNotificationProvider>
         </AuthProvider>
       </BrowserRouter>

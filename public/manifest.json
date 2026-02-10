@@ -1,0 +1,26 @@
+{
+  "name": "ProffX - Conecta con los mejores profesores",
+  "short_name": "ProffX",
+  "description": "Plataforma para conectar estudiantes con profesores profesionales de deportes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fcfcfc",
+  "theme_color": "#0d9668",
+  "orientation": "portrait-primary",
+  "categories": ["sports", "education", "fitness"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

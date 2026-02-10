@@ -201,6 +201,7 @@ export type Database = {
           role: Database["public"]["Enums"]["app_role"]
           session_duration: number | null
           skill_level: string | null
+          slug: string | null
           sport: string | null
           sports_interests: string[] | null
           total_reviews: number | null
@@ -224,6 +225,7 @@ export type Database = {
           role: Database["public"]["Enums"]["app_role"]
           session_duration?: number | null
           skill_level?: string | null
+          slug?: string | null
           sport?: string | null
           sports_interests?: string[] | null
           total_reviews?: number | null
@@ -247,6 +249,7 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
           session_duration?: number | null
           skill_level?: string | null
+          slug?: string | null
           sport?: string | null
           sports_interests?: string[] | null
           total_reviews?: number | null

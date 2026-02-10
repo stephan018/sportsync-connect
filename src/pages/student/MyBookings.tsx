@@ -226,13 +226,23 @@ export default function MyBookings() {
     }
   };
 
+  const canReschedule = (booking: BookingWithTeacher) => {
+    if (booking.status === 'cancelled' || booking.status === 'completed') return false;
+    const windowHours = booking.teacher?.reschedule_window_hours ?? 24;
+    const bookingStart = new Date(`${booking.booking_date}T${booking.start_time}`);
+    const hoursUntil = (bookingStart.getTime() - Date.now()) / (1000 * 60 * 60);
+    return hoursUntil > windowHours;
+  };
+
   const BookingCard = ({
     booking,
     showCancel = false,
+    showReschedule = false,
     showReview = false,
   }: {
     booking: BookingWithTeacher;
     showCancel?: boolean;
+    showReschedule?: boolean;
     showReview?: boolean;
   }) => {
     const statusConfig = getStatusConfig(booking.status, booking.booking_date);

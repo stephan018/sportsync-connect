@@ -28,7 +28,11 @@ export default function Auth() {
 
   useEffect(() => {
     if (user && profile) {
-      navigate(profile.role === 'teacher' ? '/dashboard' : '/browse');
+      if (!profile.is_onboarded) {
+        navigate('/onboarding');
+      } else {
+        navigate(profile.role === 'teacher' ? '/dashboard' : '/browse');
+      }
     }
   }, [user, profile, navigate]);
 

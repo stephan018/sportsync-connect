@@ -14,6 +14,11 @@ export interface Profile {
   avatar_url: string | null;
   sport: string | null;
   gallery_images: string[] | null;
+  is_onboarded: boolean;
+  years_of_experience: number | null;
+  location: string | null;
+  skill_level: string | null;
+  sports_interests: string[] | null;
   created_at: string;
   updated_at: string;
 }

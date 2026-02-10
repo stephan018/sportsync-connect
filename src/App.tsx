@@ -18,12 +18,13 @@ import BookingPage from "./pages/student/BookingPage";
 import MyBookings from "./pages/student/MyBookings";
 import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
+import Onboarding from "./pages/Onboarding";
 import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
 
 // Protected route wrapper
-function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles?: ('teacher' | 'student')[] }) {
+function ProtectedRoute({ children, allowedRoles, skipOnboardingCheck }: { children: React.ReactNode; allowedRoles?: ('teacher' | 'student')[]; skipOnboardingCheck?: boolean }) {
   const { user, profile, loading } = useAuth();
 
   if (loading) {
@@ -46,6 +47,10 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
     );
   }
 
+  if (!skipOnboardingCheck && !profile.is_onboarded) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
   if (allowedRoles && !allowedRoles.includes(profile.role)) {
     return <Navigate to={profile.role === 'teacher' ? '/dashboard' : '/browse'} replace />;
   }
@@ -58,6 +63,14 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/auth" element={<Auth />} />
+      <Route
+        path="/onboarding"
+        element={
+          <ProtectedRoute skipOnboardingCheck>
+            <Onboarding />
+          </ProtectedRoute>
+        }
+      />
       
       {/* Teacher Routes */}
       <Route

@@ -700,6 +700,21 @@ export default function MyBookings() {
           onReviewSubmitted={fetchBookings}
         />
       )}
+
+      {/* Reschedule Modal */}
+      {rescheduleModal.booking && (
+        <RescheduleModal
+          open={rescheduleModal.open}
+          onOpenChange={(open) => setRescheduleModal({ ...rescheduleModal, open })}
+          bookingId={rescheduleModal.booking.id}
+          teacherId={rescheduleModal.booking.teacher_id}
+          currentDate={rescheduleModal.booking.booking_date}
+          currentStartTime={rescheduleModal.booking.start_time}
+          currentEndTime={rescheduleModal.booking.end_time}
+          totalPrice={Number(rescheduleModal.booking.total_price)}
+          onRescheduled={fetchBookings}
+        />
+      )}
     </DashboardLayout>
   );
 }

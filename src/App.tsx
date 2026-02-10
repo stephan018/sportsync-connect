@@ -188,6 +188,7 @@ const App = () => (
           <BookingNotificationProvider>
             <AppRoutes />
             <InstallPrompt />
+            <ReviewPromptModal />
           </BookingNotificationProvider>
         </AuthProvider>
       </BrowserRouter>

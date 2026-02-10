@@ -63,6 +63,14 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/auth" element={<Auth />} />
+      <Route
+        path="/onboarding"
+        element={
+          <ProtectedRoute skipOnboardingCheck>
+            <Onboarding />
+          </ProtectedRoute>
+        }
+      />
       
       {/* Teacher Routes */}
       <Route

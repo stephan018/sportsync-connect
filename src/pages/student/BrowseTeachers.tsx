@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/types/database';
 import { useAuth } from '@/hooks/useAuth';
 import { useChat } from '@/hooks/useChat';
+import { useGeolocation, getDistanceKm } from '@/hooks/useGeolocation';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +26,9 @@ import {
   Heart,
   Footprints,
   SlidersHorizontal,
-  Grid3X3
+  Grid3X3,
+  MapPin,
+  Loader2
 } from 'lucide-react';
 
 type TeacherWithRating = Profile;
@@ -58,9 +61,11 @@ export default function BrowseTeachers() {
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { getOrCreateChatRoom } = useChat();
+  const { latitude: myLat, longitude: myLon, loading: locLoading, requestAndSaveLocation } = useGeolocation();
   const [teachers, setTeachers] = useState<TeacherWithRating[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sportFilter, setSportFilter] = useState<string>('all');
+  const [sortByDistance, setSortByDistance] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const handleMessageTeacher = async (teacherId: string) => {
@@ -93,16 +98,37 @@ export default function BrowseTeachers() {
     }
   };
 
-  const filteredTeachers = teachers.filter((teacher) => {
-    const matchesSearch =
-      teacher.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      teacher.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      teacher.sport?.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredTeachers = useMemo(() => {
+    let result = teachers.filter((teacher) => {
+      const matchesSearch =
+        teacher.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.sport?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSport = sportFilter === 'all' || teacher.sport === sportFilter;
+      return matchesSearch && matchesSport;
+    });
 
-    const matchesSport = sportFilter === 'all' || teacher.sport === sportFilter;
+    if (sortByDistance && myLat && myLon) {
+      result = [...result].sort((a, b) => {
+        const aLat = (a as any).latitude;
+        const aLon = (a as any).longitude;
+        const bLat = (b as any).latitude;
+        const bLon = (b as any).longitude;
+        if (!aLat || !aLon) return 1;
+        if (!bLat || !bLon) return -1;
+        return getDistanceKm(myLat, myLon, aLat, aLon) - getDistanceKm(myLat, myLon, bLat, bLon);
+      });
+    }
 
-    return matchesSearch && matchesSport;
-  });
+    return result;
+  }, [teachers, searchQuery, sportFilter, sortByDistance, myLat, myLon]);
+
+  const getTeacherDistance = (teacher: TeacherWithRating) => {
+    const tLat = (teacher as any).latitude;
+    const tLon = (teacher as any).longitude;
+    if (!myLat || !myLon || !tLat || !tLon) return null;
+    return getDistanceKm(myLat, myLon, tLat, tLon);
+  };
 
   // Get image for teacher (use avatar or placeholder)
   const getTeacherImage = (teacher: TeacherWithRating, index: number) => {
@@ -174,10 +200,27 @@ export default function BrowseTeachers() {
                 {filteredTeachers.length} profesor{filteredTeachers.length !== 1 ? 'es' : ''} disponible{filteredTeachers.length !== 1 ? 's' : ''}
               </p>
             </div>
-            <Button variant="outline" size="sm" className="rounded-full gap-2 shrink-0">
-              <SlidersHorizontal className="w-4 h-4" />
-              <span className="hidden sm:inline">Filtros</span>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={sortByDistance ? 'default' : 'outline'}
+                size="sm"
+                className="rounded-full gap-2 shrink-0"
+                onClick={async () => {
+                  if (!myLat && profile) {
+                    await requestAndSaveLocation(profile.id);
+                  }
+                  setSortByDistance(prev => !prev);
+                }}
+                disabled={locLoading}
+              >
+                {locLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                <span className="hidden sm:inline">Cerca de mí</span>
+              </Button>
+              <Button variant="outline" size="sm" className="rounded-full gap-2 shrink-0">
+                <SlidersHorizontal className="w-4 h-4" />
+                <span className="hidden sm:inline">Filtros</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -265,10 +308,21 @@ export default function BrowseTeachers() {
                       {teacher.bio || 'Profesor profesional de deportes'}
                     </p>
                     
-                    <p className="text-foreground font-semibold text-sm lg:text-base">
-                      <span className="text-base lg:text-lg">${teacher.hourly_rate}</span>
-                      <span className="text-xs lg:text-sm font-normal text-muted-foreground"> /sesión</span>
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-foreground font-semibold text-sm lg:text-base">
+                        <span className="text-base lg:text-lg">${teacher.hourly_rate}</span>
+                        <span className="text-xs lg:text-sm font-normal text-muted-foreground"> /sesión</span>
+                      </p>
+                      {(() => {
+                        const dist = getTeacherDistance(teacher);
+                        return dist !== null ? (
+                          <span className="text-[10px] lg:text-xs text-muted-foreground flex items-center gap-0.5">
+                            <MapPin className="w-3 h-3" />
+                            {dist < 1 ? `${Math.round(dist * 1000)}m` : `${dist.toFixed(1)}km`}
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
                   </div>
                 </article>
               ))}

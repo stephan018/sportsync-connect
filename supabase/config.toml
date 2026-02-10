@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.send-session-reminders]
 verify_jwt = false
+
+[functions.auto-complete-bookings]
+verify_jwt = false

@@ -281,7 +281,7 @@ export default function TeacherProfile() {
                             <Star
                               key={star}
                               className={`w-4 h-4 ${
-                                star <= Math.round(teacher.avgRating)
+                                star <= Math.round(Number(teacher.average_rating))
                                   ? 'text-warning fill-warning'
                                   : 'text-muted-foreground/30'
                               }`}
@@ -289,10 +289,10 @@ export default function TeacherProfile() {
                           ))}
                         </div>
                         <span className="font-semibold">
-                          {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'Nuevo'}
+                          {Number(teacher.average_rating) > 0 ? Number(teacher.average_rating).toFixed(1) : 'Nuevo'}
                         </span>
                         <span className="text-muted-foreground text-sm">
-                          ({teacher.reviewCount} reseñas)
+                          ({teacher.total_reviews} reseñas)
                         </span>
                       </div>
 

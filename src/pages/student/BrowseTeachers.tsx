@@ -28,10 +28,7 @@ import {
   Grid3X3
 } from 'lucide-react';
 
-interface TeacherWithRating extends Profile {
-  avgRating: number;
-  reviewCount: number;
-}
+type TeacherWithRating = Profile;
 
 // Sport categories with icons
 const SPORT_CATEGORIES = [

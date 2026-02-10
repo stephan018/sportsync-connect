@@ -339,7 +339,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Sending emails to teacher: ${teacherEmail}, student: ${studentEmail}`);
 
-    const emailPromises = [];
+    const results = [];
 
     if (teacherEmail) {
       const teacherContent = getEmailContent(
@@ -349,7 +349,18 @@ const handler = async (req: Request): Promise<Response> => {
         booking.student.full_name,
         true
       );
-      emailPromises.push(sendEmail(teacherEmail, teacherContent.subject, teacherContent.html));
+      try {
+        const result = await sendEmail(teacherEmail, teacherContent.subject, teacherContent.html);
+        results.push({ to: teacherEmail, status: "sent", data: result });
+      } catch (e: any) {
+        console.warn(`Failed to send email to teacher ${teacherEmail}:`, e.message);
+        results.push({ to: teacherEmail, status: "failed", error: e.message });
+      }
+    }
+
+    // Delay between emails to respect Resend rate limit (2 req/s)
+    if (teacherEmail && studentEmail) {
+      await new Promise((resolve) => setTimeout(resolve, 600));
     }
 
     if (studentEmail) {
@@ -360,10 +371,15 @@ const handler = async (req: Request): Promise<Response> => {
         booking.student.full_name,
         false
       );
-      emailPromises.push(sendEmail(studentEmail, studentContent.subject, studentContent.html));
+      try {
+        const result = await sendEmail(studentEmail, studentContent.subject, studentContent.html);
+        results.push({ to: studentEmail, status: "sent", data: result });
+      } catch (e: any) {
+        console.warn(`Failed to send email to student ${studentEmail}:`, e.message);
+        results.push({ to: studentEmail, status: "failed", error: e.message });
+      }
     }
 
-    const results = await Promise.all(emailPromises);
     console.log("Email results:", JSON.stringify(results, null, 2));
 
     return new Response(

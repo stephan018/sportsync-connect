@@ -62,10 +62,7 @@ const GALLERY_IMAGES: Record<string, string[]> = {
 const DEFAULT_HERO = 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=400&fit=crop';
 
 interface TeacherWithStats extends Profile {
-  avgRating: number;
-  reviewCount: number;
   completedSessions: number;
-  gallery_images: string[] | null;
 }
 
 export default function TeacherProfile() {

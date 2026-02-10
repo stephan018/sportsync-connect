@@ -131,13 +131,22 @@ export default function TeacherDashboard() {
     <DashboardLayout>
       <div className="p-4 lg:p-8 pb-24 lg:pb-8">
         {/* Header */}
-        <div className="mb-6 lg:mb-8">
-          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-            ¡Bienvenido, {profile?.full_name?.split(' ')[0]}! 👋
-          </h1>
-          <p className="text-sm lg:text-base text-muted-foreground mt-1">
-            Aquí está lo que sucede con tus clases hoy
-          </p>
+        <div className="mb-6 lg:mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+              ¡Bienvenido, {profile?.full_name?.split(' ')[0]}! 👋
+            </h1>
+            <p className="text-sm lg:text-base text-muted-foreground mt-1">
+              Aquí está lo que sucede con tus clases hoy
+            </p>
+          </div>
+          {profile && (
+            <ShareProfileButton
+              slug={profile.slug}
+              profileId={profile.id}
+              fullName={profile.full_name}
+            />
+          )}
         </div>
 
         {/* Stats Grid */}

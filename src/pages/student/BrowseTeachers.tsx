@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/types/database';
 import { useAuth } from '@/hooks/useAuth';
 import { useChat } from '@/hooks/useChat';
+import { useGeolocation, getDistanceKm } from '@/hooks/useGeolocation';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

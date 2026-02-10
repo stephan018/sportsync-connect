@@ -187,6 +187,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          average_rating: number | null
           bio: string | null
           created_at: string
           full_name: string
@@ -202,12 +203,14 @@ export type Database = {
           skill_level: string | null
           sport: string | null
           sports_interests: string[] | null
+          total_reviews: number | null
           updated_at: string
           user_id: string
           years_of_experience: number | null
         }
         Insert: {
           avatar_url?: string | null
+          average_rating?: number | null
           bio?: string | null
           created_at?: string
           full_name: string
@@ -223,12 +226,14 @@ export type Database = {
           skill_level?: string | null
           sport?: string | null
           sports_interests?: string[] | null
+          total_reviews?: number | null
           updated_at?: string
           user_id: string
           years_of_experience?: number | null
         }
         Update: {
           avatar_url?: string | null
+          average_rating?: number | null
           bio?: string | null
           created_at?: string
           full_name?: string
@@ -244,6 +249,7 @@ export type Database = {
           skill_level?: string | null
           sport?: string | null
           sports_interests?: string[] | null
+          total_reviews?: number | null
           updated_at?: string
           user_id?: string
           years_of_experience?: number | null

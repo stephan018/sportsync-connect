@@ -62,10 +62,7 @@ const GALLERY_IMAGES: Record<string, string[]> = {
 const DEFAULT_HERO = 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=400&fit=crop';
 
 interface TeacherWithStats extends Profile {
-  avgRating: number;
-  reviewCount: number;
   completedSessions: number;
-  gallery_images: string[] | null;
 }
 
 export default function TeacherProfile() {
@@ -125,14 +122,6 @@ export default function TeacherProfile() {
       if (bookingsError) throw bookingsError;
       setUpcomingBookings(bookingsData as Booking[]);
 
-      // Fetch reviews for rating
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from('reviews')
-        .select('rating')
-        .eq('teacher_id', teacherId);
-
-      if (reviewsError) throw reviewsError;
-
       // Fetch completed sessions count
       const { count: sessionsCount } = await supabase
         .from('bookings')
@@ -140,16 +129,8 @@ export default function TeacherProfile() {
         .eq('teacher_id', teacherId)
         .eq('status', 'completed');
 
-      const reviewCount = reviewsData?.length || 0;
-      const avgRating =
-        reviewCount > 0
-          ? reviewsData.reduce((sum, r) => sum + r.rating, 0) / reviewCount
-          : 0;
-
       setTeacher({
         ...(teacherData as Profile),
-        avgRating,
-        reviewCount,
         completedSessions: sessionsCount || 0,
       });
     } catch (error) {
@@ -300,7 +281,7 @@ export default function TeacherProfile() {
                             <Star
                               key={star}
                               className={`w-4 h-4 ${
-                                star <= Math.round(teacher.avgRating)
+                                star <= Math.round(Number(teacher.average_rating))
                                   ? 'text-warning fill-warning'
                                   : 'text-muted-foreground/30'
                               }`}
@@ -308,10 +289,10 @@ export default function TeacherProfile() {
                           ))}
                         </div>
                         <span className="font-semibold">
-                          {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'Nuevo'}
+                          {Number(teacher.average_rating) > 0 ? Number(teacher.average_rating).toFixed(1) : 'Nuevo'}
                         </span>
                         <span className="text-muted-foreground text-sm">
-                          ({teacher.reviewCount} reseñas)
+                          ({teacher.total_reviews} reseñas)
                         </span>
                       </div>
 
@@ -383,7 +364,7 @@ export default function TeacherProfile() {
                 <TabsList className="w-full grid grid-cols-2 h-10 lg:h-12">
                   <TabsTrigger value="reviews" className="text-xs lg:text-sm">
                     <Star className="w-3.5 lg:w-4 h-3.5 lg:h-4 mr-1.5 lg:mr-2" />
-                    Reseñas ({teacher.reviewCount})
+                    Reseñas ({teacher.total_reviews})
                   </TabsTrigger>
                   <TabsTrigger value="availability" className="text-xs lg:text-sm">
                     <Clock className="w-3.5 lg:w-4 h-3.5 lg:h-4 mr-1.5 lg:mr-2" />

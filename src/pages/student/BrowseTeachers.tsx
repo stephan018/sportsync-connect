@@ -28,10 +28,7 @@ import {
   Grid3X3
 } from 'lucide-react';
 
-interface TeacherWithRating extends Profile {
-  avgRating: number;
-  reviewCount: number;
-}
+type TeacherWithRating = Profile;
 
 // Sport categories with icons
 const SPORT_CATEGORIES = [
@@ -88,33 +85,7 @@ export default function BrowseTeachers() {
 
       if (teachersError) throw teachersError;
 
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from('reviews')
-        .select('teacher_id, rating');
-
-      if (reviewsError) throw reviewsError;
-
-      const ratingsByTeacher: Record<string, { total: number; count: number }> = {};
-      reviewsData?.forEach((review) => {
-        if (!ratingsByTeacher[review.teacher_id]) {
-          ratingsByTeacher[review.teacher_id] = { total: 0, count: 0 };
-        }
-        ratingsByTeacher[review.teacher_id].total += review.rating;
-        ratingsByTeacher[review.teacher_id].count += 1;
-      });
-
-      const teachersWithRatings: TeacherWithRating[] = (teachersData as Profile[]).map(
-        (teacher) => {
-          const stats = ratingsByTeacher[teacher.id];
-          return {
-            ...teacher,
-            avgRating: stats ? stats.total / stats.count : 0,
-            reviewCount: stats?.count || 0,
-          };
-        }
-      );
-
-      setTeachers(teachersWithRatings);
+      setTeachers(teachersData as TeacherWithRating[]);
     } catch (error) {
       console.error('Error fetching teachers:', error);
     } finally {
@@ -283,9 +254,9 @@ export default function BrowseTeachers() {
                         {teacher.full_name}
                       </h3>
                       <div className="flex items-center gap-0.5 lg:gap-1 shrink-0">
-                        <Star className={`w-3 lg:w-4 h-3 lg:h-4 ${teacher.avgRating > 0 ? 'text-warning fill-warning' : 'text-muted-foreground'}`} />
+                        <Star className={`w-3 lg:w-4 h-3 lg:h-4 ${Number(teacher.average_rating) > 0 ? 'text-warning fill-warning' : 'text-muted-foreground'}`} />
                         <span className="text-xs lg:text-sm font-medium">
-                          {teacher.avgRating > 0 ? teacher.avgRating.toFixed(1) : 'Nuevo'}
+                          {Number(teacher.average_rating) > 0 ? Number(teacher.average_rating).toFixed(1) : 'Nuevo'}
                         </span>
                       </div>
                     </div>

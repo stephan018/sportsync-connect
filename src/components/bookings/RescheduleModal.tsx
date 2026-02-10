@@ -97,26 +97,16 @@ export default function RescheduleModal({
     const dayOfWeek = getDay(date);
     const dateStr = format(date, 'yyyy-MM-dd');
 
-    console.log(`[RescheduleModal] getSlotsForDate: date=${dateStr}, dayOfWeek=${dayOfWeek}`);
-    console.log(`[RescheduleModal] All availability days:`, availability.map(a => a.day_of_week));
-
     const daySlots = availability.filter(a => a.day_of_week === dayOfWeek);
-    console.log(`[RescheduleModal] Slots for day ${dayOfWeek}:`, daySlots.length, daySlots.map(s => `${s.start_time}-${s.end_time}`));
-
-    const bookingsForDate = existingBookings.filter(b => b.booking_date === dateStr);
-    console.log(`[RescheduleModal] Bookings for ${dateStr}:`, bookingsForDate.length, bookingsForDate.map(b => `${b.start_time}-${b.end_time}`));
 
     // Filter out slots that overlap with existing bookings
     return daySlots.filter(slot => {
       const isBooked = existingBookings.some(b => {
         if (b.booking_date !== dateStr) return false;
-        // Check time overlap: slot overlaps if slot.start < booking.end AND slot.end > booking.start
         return slot.start_time < b.end_time && slot.end_time > b.start_time;
       });
-      // Also exclude the current booking's slot if same date and overlapping
       const isCurrent = dateStr === currentDate && 
         slot.start_time < currentEndTime && slot.end_time > currentStartTime;
-      console.log(`[RescheduleModal] Slot ${slot.start_time}-${slot.end_time}: isBooked=${isBooked}, isCurrent=${isCurrent}`);
       return !isBooked && !isCurrent;
     });
   };

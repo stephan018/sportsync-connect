@@ -6,6 +6,7 @@ export interface Profile {
   user_id: string;
   role: AppRole;
   full_name: string;
+  slug: string | null;
   bio: string | null;
   hourly_rate: number;
   group_hourly_rate: number | null;

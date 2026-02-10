@@ -205,7 +205,9 @@ export type Database = {
           hourly_rate: number | null
           id: string
           is_onboarded: boolean
+          latitude: number | null
           location: string | null
+          longitude: number | null
           max_students_per_session: number | null
           reschedule_window_hours: number | null
           role: Database["public"]["Enums"]["app_role"]
@@ -230,7 +232,9 @@ export type Database = {
           hourly_rate?: number | null
           id?: string
           is_onboarded?: boolean
+          latitude?: number | null
           location?: string | null
+          longitude?: number | null
           max_students_per_session?: number | null
           reschedule_window_hours?: number | null
           role: Database["public"]["Enums"]["app_role"]
@@ -255,7 +259,9 @@ export type Database = {
           hourly_rate?: number | null
           id?: string
           is_onboarded?: boolean
+          latitude?: number | null
           location?: string | null
+          longitude?: number | null
           max_students_per_session?: number | null
           reschedule_window_hours?: number | null
           role?: Database["public"]["Enums"]["app_role"]

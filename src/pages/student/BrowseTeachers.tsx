@@ -98,16 +98,37 @@ export default function BrowseTeachers() {
     }
   };
 
-  const filteredTeachers = teachers.filter((teacher) => {
-    const matchesSearch =
-      teacher.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      teacher.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      teacher.sport?.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredTeachers = useMemo(() => {
+    let result = teachers.filter((teacher) => {
+      const matchesSearch =
+        teacher.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.sport?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSport = sportFilter === 'all' || teacher.sport === sportFilter;
+      return matchesSearch && matchesSport;
+    });
 
-    const matchesSport = sportFilter === 'all' || teacher.sport === sportFilter;
+    if (sortByDistance && myLat && myLon) {
+      result = [...result].sort((a, b) => {
+        const aLat = (a as any).latitude;
+        const aLon = (a as any).longitude;
+        const bLat = (b as any).latitude;
+        const bLon = (b as any).longitude;
+        if (!aLat || !aLon) return 1;
+        if (!bLat || !bLon) return -1;
+        return getDistanceKm(myLat, myLon, aLat, aLon) - getDistanceKm(myLat, myLon, bLat, bLon);
+      });
+    }
 
-    return matchesSearch && matchesSport;
-  });
+    return result;
+  }, [teachers, searchQuery, sportFilter, sortByDistance, myLat, myLon]);
+
+  const getTeacherDistance = (teacher: TeacherWithRating) => {
+    const tLat = (teacher as any).latitude;
+    const tLon = (teacher as any).longitude;
+    if (!myLat || !myLon || !tLat || !tLon) return null;
+    return getDistanceKm(myLat, myLon, tLat, tLon);
+  };
 
   // Get image for teacher (use avatar or placeholder)
   const getTeacherImage = (teacher: TeacherWithRating, index: number) => {

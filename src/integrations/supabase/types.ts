@@ -59,6 +59,9 @@ export type Database = {
           end_time: string
           id: string
           notes: string | null
+          previous_date: string | null
+          previous_end_time: string | null
+          previous_start_time: string | null
           start_time: string
           status: Database["public"]["Enums"]["booking_status"]
           student_id: string
@@ -72,6 +75,9 @@ export type Database = {
           end_time: string
           id?: string
           notes?: string | null
+          previous_date?: string | null
+          previous_end_time?: string | null
+          previous_start_time?: string | null
           start_time: string
           status?: Database["public"]["Enums"]["booking_status"]
           student_id: string
@@ -85,6 +91,9 @@ export type Database = {
           end_time?: string
           id?: string
           notes?: string | null
+          previous_date?: string | null
+          previous_end_time?: string | null
+          previous_start_time?: string | null
           start_time?: string
           status?: Database["public"]["Enums"]["booking_status"]
           student_id?: string
@@ -198,6 +207,7 @@ export type Database = {
           is_onboarded: boolean
           location: string | null
           max_students_per_session: number | null
+          reschedule_window_hours: number | null
           role: Database["public"]["Enums"]["app_role"]
           session_duration: number | null
           skill_level: string | null
@@ -222,6 +232,7 @@ export type Database = {
           is_onboarded?: boolean
           location?: string | null
           max_students_per_session?: number | null
+          reschedule_window_hours?: number | null
           role: Database["public"]["Enums"]["app_role"]
           session_duration?: number | null
           skill_level?: string | null
@@ -246,6 +257,7 @@ export type Database = {
           is_onboarded?: boolean
           location?: string | null
           max_students_per_session?: number | null
+          reschedule_window_hours?: number | null
           role?: Database["public"]["Enums"]["app_role"]
           session_duration?: number | null
           skill_level?: string | null
@@ -320,7 +332,12 @@ export type Database = {
     }
     Enums: {
       app_role: "teacher" | "student"
-      booking_status: "pending" | "confirmed" | "cancelled" | "completed"
+      booking_status:
+        | "pending"
+        | "confirmed"
+        | "cancelled"
+        | "completed"
+        | "rescheduled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -449,7 +466,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["teacher", "student"],
-      booking_status: ["pending", "confirmed", "cancelled", "completed"],
+      booking_status: [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed",
+        "rescheduled",
+      ],
     },
   },
 } as const

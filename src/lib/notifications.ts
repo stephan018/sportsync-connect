@@ -1,6 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 
-export type BookingEventType = 'created' | 'confirmed' | 'cancelled';
+export type BookingEventType = 'created' | 'confirmed' | 'cancelled' | 'rescheduled';
 
 export async function sendBookingNotification(
   bookingId: string,

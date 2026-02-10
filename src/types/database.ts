@@ -1,5 +1,5 @@
 export type AppRole = 'teacher' | 'student';
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'rescheduled';
 
 export interface Profile {
   id: string;
@@ -12,6 +12,7 @@ export interface Profile {
   group_hourly_rate: number | null;
   max_students_per_session: number | null;
   session_duration: number | null;
+  reschedule_window_hours: number | null;
   avatar_url: string | null;
   sport: string | null;
   gallery_images: string[] | null;
@@ -46,6 +47,9 @@ export interface Booking {
   status: BookingStatus;
   total_price: number;
   notes: string | null;
+  previous_date: string | null;
+  previous_start_time: string | null;
+  previous_end_time: string | null;
   created_at: string;
   updated_at: string;
 }

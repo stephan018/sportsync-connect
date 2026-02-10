@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Booking, Profile } from '@/types/database';
 import { sendBookingNotification } from '@/lib/notifications';
+import RescheduleModal from '@/components/bookings/RescheduleModal';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +16,7 @@ import {
   Clock, 
   Star, 
   X, 
+  RefreshCw,
   MapPin, 
   CheckCircle2, 
   AlertCircle, 
@@ -68,6 +70,10 @@ export default function MyBookings() {
   const [loading, setLoading] = useState(true);
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [reviewModal, setReviewModal] = useState<{
+    open: boolean;
+    booking: BookingWithTeacher | null;
+  }>({ open: false, booking: null });
+  const [rescheduleModal, setRescheduleModal] = useState<{
     open: boolean;
     booking: BookingWithTeacher | null;
   }>({ open: false, booking: null });
@@ -220,13 +226,23 @@ export default function MyBookings() {
     }
   };
 
+  const canReschedule = (booking: BookingWithTeacher) => {
+    if (booking.status === 'cancelled' || booking.status === 'completed') return false;
+    const windowHours = booking.teacher?.reschedule_window_hours ?? 24;
+    const bookingStart = new Date(`${booking.booking_date}T${booking.start_time}`);
+    const hoursUntil = (bookingStart.getTime() - Date.now()) / (1000 * 60 * 60);
+    return hoursUntil > windowHours;
+  };
+
   const BookingCard = ({
     booking,
     showCancel = false,
+    showReschedule = false,
     showReview = false,
   }: {
     booking: BookingWithTeacher;
     showCancel?: boolean;
+    showReschedule?: boolean;
     showReview?: boolean;
   }) => {
     const statusConfig = getStatusConfig(booking.status, booking.booking_date);
@@ -334,6 +350,17 @@ export default function MyBookings() {
                     <Star className="w-3 lg:w-3.5 h-3 lg:h-3.5 fill-amber-400 text-amber-400" />
                     <span className="hidden sm:inline">Reseñado</span>
                   </Badge>
+                )}
+                {showReschedule && canReschedule(booking) && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1 h-8 lg:h-9 px-2 lg:px-3 text-xs lg:text-sm"
+                    onClick={() => setRescheduleModal({ open: true, booking })}
+                  >
+                    <RefreshCw className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
+                    <span className="hidden sm:inline">Reprogramar</span>
+                  </Button>
                 )}
                 {showCancel && booking.status !== 'cancelled' && (
                   <Button
@@ -621,7 +648,7 @@ export default function MyBookings() {
             ) : (
               <div className="space-y-4">
                 {upcomingBookings.map((booking) => (
-                  <BookingCard key={booking.id} booking={booking} showCancel />
+                  <BookingCard key={booking.id} booking={booking} showCancel showReschedule />
                 ))}
               </div>
             )}
@@ -671,6 +698,21 @@ export default function MyBookings() {
           studentId={profile.id}
           teacherName={reviewModal.booking.teacher?.full_name || 'Profesor'}
           onReviewSubmitted={fetchBookings}
+        />
+      )}
+
+      {/* Reschedule Modal */}
+      {rescheduleModal.booking && (
+        <RescheduleModal
+          open={rescheduleModal.open}
+          onOpenChange={(open) => setRescheduleModal({ ...rescheduleModal, open })}
+          bookingId={rescheduleModal.booking.id}
+          teacherId={rescheduleModal.booking.teacher_id}
+          currentDate={rescheduleModal.booking.booking_date}
+          currentStartTime={rescheduleModal.booking.start_time}
+          currentEndTime={rescheduleModal.booking.end_time}
+          totalPrice={Number(rescheduleModal.booking.total_price)}
+          onRescheduled={fetchBookings}
         />
       )}
     </DashboardLayout>

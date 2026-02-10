@@ -10,7 +10,7 @@ const corsHeaders = {
 
 interface NotificationRequest {
   bookingId: string;
-  eventType: "created" | "confirmed" | "cancelled";
+  eventType: "created" | "confirmed" | "cancelled" | "rescheduled";
 }
 
 const formatDate = (dateString: string) => {
@@ -113,6 +113,12 @@ const getEmailContent = (
   const sessionTime = `${formatTime(booking.start_time)} - ${formatTime(booking.end_time)}`;
   const calendarButtons = getCalendarButtons(booking, teacherName, studentName);
   const whatsAppButton = getWhatsAppButton(isForTeacher ? studentName : teacherName);
+
+  // Previous booking info for rescheduled events
+  const previousDate = booking.previous_date ? formatDate(booking.previous_date) : null;
+  const previousTime = booking.previous_start_time && booking.previous_end_time
+    ? `${formatTime(booking.previous_start_time)} - ${formatTime(booking.previous_end_time)}`
+    : null;
 
   const sessionDetailsBlock = `
     <div style="background: #f3f4f6; padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #10b981;">
@@ -262,6 +268,62 @@ const getEmailContent = (
             </table>
           </div>
           <p style="font-size: 16px; color: #374151;">Puedes explorar otras sesiones disponibles en nuestra plataforma.</p>
+        `),
+      },
+    },
+    rescheduled: {
+      teacher: {
+        subject: "🔄 Reserva Reprogramada",
+        html: wrapper(`
+          <div style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+            <h2 style="margin: 0 0 10px 0; font-size: 22px;">🔄 Reserva Reprogramada</h2>
+            <p style="margin: 0; opacity: 0.9; font-size: 16px;">Un estudiante ha movido su sesión</p>
+          </div>
+          <p style="font-size: 16px; color: #374151;">Hola <strong>${teacherName}</strong>,</p>
+          <p style="font-size: 16px; color: #374151;"><strong>${studentName}</strong> ha reprogramado su sesión contigo.</p>
+          ${previousDate ? `
+          <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ef4444;">
+            <p style="margin: 0; color: #991b1b; font-size: 14px;">
+              <strong>❌ Horario anterior:</strong> ${previousDate} • ${previousTime}
+            </p>
+          </div>
+          ` : ''}
+          <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #10b981;">
+            <p style="margin: 0; color: #166534; font-size: 14px;">
+              <strong>✅ Nuevo horario:</strong> ${sessionDate} • ${sessionTime}
+            </p>
+          </div>
+          ${sessionDetailsBlock}
+          ${calendarButtons}
+          ${whatsAppButton}
+          <p style="font-size: 16px; color: #374151;">La reserva está pendiente de tu confirmación.</p>
+        `),
+      },
+      student: {
+        subject: "🔄 Reserva Reprogramada Exitosamente",
+        html: wrapper(`
+          <div style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+            <h2 style="margin: 0 0 10px 0; font-size: 22px;">🔄 ¡Sesión Reprogramada!</h2>
+            <p style="margin: 0; opacity: 0.9; font-size: 16px;">Tu reserva ha sido actualizada</p>
+          </div>
+          <p style="font-size: 16px; color: #374151;">Hola <strong>${studentName}</strong>,</p>
+          <p style="font-size: 16px; color: #374151;">Tu sesión con <strong>${teacherName}</strong> ha sido reprogramada exitosamente.</p>
+          ${previousDate ? `
+          <div style="background: #fef2f2; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ef4444;">
+            <p style="margin: 0; color: #991b1b; font-size: 14px;">
+              <strong>❌ Horario anterior:</strong> ${previousDate} • ${previousTime}
+            </p>
+          </div>
+          ` : ''}
+          <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #10b981;">
+            <p style="margin: 0; color: #166534; font-size: 14px;">
+              <strong>✅ Nuevo horario:</strong> ${sessionDate} • ${sessionTime}
+            </p>
+          </div>
+          ${sessionDetailsBlock}
+          ${calendarButtons}
+          ${whatsAppButton}
+          <p style="font-size: 16px; color: #374151;">Recibirás confirmación cuando tu profesor acepte el cambio. 💪</p>
         `),
       },
     },

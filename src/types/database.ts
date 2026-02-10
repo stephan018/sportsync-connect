@@ -1,5 +1,5 @@
 export type AppRole = 'teacher' | 'student';
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'rescheduled';
 
 export interface Profile {
   id: string;

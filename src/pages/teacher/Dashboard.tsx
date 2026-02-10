@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, DollarSign, Users, TrendingUp, ArrowUpRight } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, isToday, isTomorrow, parseISO } from 'date-fns';
+import ShareProfileButton from '@/components/profile/ShareProfileButton';
 import { es } from 'date-fns/locale';
 
 interface BookingWithStudent extends Booking {

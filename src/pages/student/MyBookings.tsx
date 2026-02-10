@@ -74,6 +74,10 @@ export default function MyBookings() {
     open: boolean;
     booking: BookingWithTeacher | null;
   }>({ open: false, booking: null });
+  const [rescheduleModal, setRescheduleModal] = useState<{
+    open: boolean;
+    booking: BookingWithTeacher | null;
+  }>({ open: false, booking: null });
 
   // Week calendar data
   const weekRange = useMemo(() => ({

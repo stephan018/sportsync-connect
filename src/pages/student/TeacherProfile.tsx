@@ -336,7 +336,7 @@ export default function TeacherProfile() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 pb-24 lg:pb-12">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 pb-24 md:pb-12">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6 lg:space-y-8">
               {/* Bio Section */}

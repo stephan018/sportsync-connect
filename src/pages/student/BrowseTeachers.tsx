@@ -26,7 +26,9 @@ import {
   Heart,
   Footprints,
   SlidersHorizontal,
-  Grid3X3
+  Grid3X3,
+  MapPin,
+  Loader2
 } from 'lucide-react';
 
 type TeacherWithRating = Profile;

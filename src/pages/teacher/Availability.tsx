@@ -264,31 +264,31 @@ export default function TeacherAvailability() {
 
   return (
     <DashboardLayout>
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Disponibilidad</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Disponibilidad</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Configura tu horario semanal y tarifas
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={clearAllSlots}>
-              <Trash2 className="w-4 h-4 mr-2" />
-              Limpiar Todo
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={clearAllSlots} className="flex-1 min-w-0 sm:flex-none">
+              <Trash2 className="w-4 h-4 mr-1 sm:mr-2 shrink-0" />
+              <span className="truncate">Limpiar</span>
             </Button>
-            <Button variant="outline" onClick={() => setWizardOpen(true)}>
-              <Wand2 className="w-4 h-4 mr-2" />
-              Generar Automático
+            <Button variant="outline" size="sm" onClick={() => setWizardOpen(true)} className="flex-1 min-w-0 sm:flex-none">
+              <Wand2 className="w-4 h-4 mr-1 sm:mr-2 shrink-0" />
+              <span className="truncate">Generar</span>
             </Button>
-            <Button onClick={saveAvailability} disabled={saving} className="bg-gradient-to-r from-primary to-primary/80">
+            <Button size="sm" onClick={saveAvailability} disabled={saving} className="bg-gradient-to-r from-primary to-primary/80 flex-1 min-w-0 sm:flex-none">
               {saving ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-4 h-4 mr-1 sm:mr-2 animate-spin shrink-0" />
               ) : (
-                <Save className="w-4 h-4 mr-2" />
+                <Save className="w-4 h-4 mr-1 sm:mr-2 shrink-0" />
               )}
-              Guardar Todo
+              <span className="truncate">Guardar</span>
             </Button>
           </div>
         </div>

@@ -191,6 +191,7 @@ const App = () => (
           <BookingNotificationProvider>
             <AppRoutes />
             <InstallPrompt />
+            <SplashScreen />
             <ReviewPromptModal />
           </BookingNotificationProvider>
         </AuthProvider>

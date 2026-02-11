@@ -74,7 +74,7 @@ export default function PublicTeacherProfile() {
     setMeta('og:url', window.location.href);
     setMeta('og:type', 'profile');
 
-    return () => { document.title = 'ProffX'; };
+    return () => { document.title = 'AceX'; };
   }, [teacher]);
 
   const fetchTeacher = async () => {

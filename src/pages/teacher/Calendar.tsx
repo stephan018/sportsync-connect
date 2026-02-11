@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Booking, Profile } from '@/types/database';
 import { sendBookingNotification } from '@/lib/notifications';
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import TeacherRescheduleModal from '@/components/bookings/TeacherRescheduleModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +15,8 @@ import {
   Calendar as CalendarIcon,
   Clock,
   User,
-  Loader2
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
 import { 
   format, 
@@ -412,6 +414,7 @@ interface BookingDetailModalProps {
 
 function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor, getStatusLabel }: BookingDetailModalProps) {
   const [updating, setUpdating] = useState(false);
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
 
   const handleConfirm = async () => {
     setUpdating(true);
@@ -504,40 +507,69 @@ function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor, getSt
             </div>
           )}
 
-          <div className="flex gap-2 pt-4">
-            {booking.status === 'pending' && (
-              <>
-                <Button 
-                  className="flex-1 gradient-primary" 
-                  onClick={handleConfirm}
-                  disabled={updating}
-                >
-                  {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirmar'}
-                </Button>
+          <div className="flex flex-col gap-2 pt-4">
+            {(booking.status === 'pending' || booking.status === 'confirmed') && (
+              <Button
+                variant="outline"
+                className="w-full border-primary/30 text-primary hover:bg-primary/10"
+                onClick={() => setRescheduleOpen(true)}
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Reprogramar
+              </Button>
+            )}
+
+            <div className="flex gap-2">
+              {booking.status === 'pending' && (
+                <>
+                  <Button 
+                    className="flex-1 gradient-primary" 
+                    onClick={handleConfirm}
+                    disabled={updating}
+                  >
+                    {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirmar'}
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    className="flex-1"
+                    onClick={handleCancel}
+                    disabled={updating}
+                  >
+                    Cancelar
+                  </Button>
+                </>
+              )}
+              {booking.status === 'confirmed' && (
                 <Button 
                   variant="destructive" 
                   className="flex-1"
                   onClick={handleCancel}
                   disabled={updating}
                 >
-                  Cancelar
+                  {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Cancelar Sesión'}
                 </Button>
-              </>
-            )}
-            {booking.status === 'confirmed' && (
-              <Button 
-                variant="destructive" 
-                className="flex-1"
-                onClick={handleCancel}
-                disabled={updating}
-              >
-                {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Cancelar Sesión'}
+              )}
+              <Button variant="outline" className="flex-1" onClick={onClose}>
+                Cerrar
               </Button>
-            )}
-            <Button variant="outline" className="flex-1" onClick={onClose}>
-              Cerrar
-            </Button>
+            </div>
           </div>
+
+          <TeacherRescheduleModal
+            open={rescheduleOpen}
+            onOpenChange={setRescheduleOpen}
+            bookingId={booking.id}
+            teacherId={booking.teacher_id}
+            studentName={booking.student?.full_name || 'Alumno'}
+            currentDate={booking.booking_date}
+            currentStartTime={booking.start_time}
+            currentEndTime={booking.end_time}
+            totalPrice={Number(booking.total_price)}
+            onRescheduled={() => {
+              onRefresh();
+              onClose();
+            }}
+          />
         </CardContent>
       </Card>
     </div>

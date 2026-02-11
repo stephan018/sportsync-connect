@@ -3,9 +3,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Booking, Profile } from '@/types/database';
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import TeacherRescheduleModal from '@/components/bookings/TeacherRescheduleModal';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, DollarSign, Users, TrendingUp, ArrowUpRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Calendar, Clock, DollarSign, Users, TrendingUp, ArrowUpRight, RefreshCw } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, isToday, isTomorrow, parseISO } from 'date-fns';
 import ShareProfileButton from '@/components/profile/ShareProfileButton';
 import { es } from 'date-fns/locale';
@@ -20,6 +22,7 @@ export default function TeacherDashboard() {
   const [monthlyEarnings, setMonthlyEarnings] = useState(0);
   const [totalStudents, setTotalStudents] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [rescheduleBooking, setRescheduleBooking] = useState<BookingWithStudent | null>(null);
 
   useEffect(() => {
     if (profile?.id) {
@@ -214,7 +217,16 @@ export default function TeacherDashboard() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-4 ml-13 sm:ml-0">
+                    <div className="flex items-center justify-between sm:justify-end gap-2 lg:gap-3 ml-13 sm:ml-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-primary hover:bg-primary/10 h-8 px-2 text-xs"
+                        onClick={() => setRescheduleBooking(booking)}
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 mr-1" />
+                        Reprogramar
+                      </Button>
                       <Badge
                         variant={booking.status === 'confirmed' ? 'default' : 'secondary'}
                         className={`text-xs ${booking.status === 'confirmed' ? 'bg-primary' : ''}`}
@@ -232,6 +244,25 @@ export default function TeacherDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Reschedule Modal */}
+      {rescheduleBooking && (
+        <TeacherRescheduleModal
+          open={!!rescheduleBooking}
+          onOpenChange={(open) => { if (!open) setRescheduleBooking(null); }}
+          bookingId={rescheduleBooking.id}
+          teacherId={rescheduleBooking.teacher_id}
+          studentName={rescheduleBooking.student?.full_name || 'Alumno'}
+          currentDate={rescheduleBooking.booking_date}
+          currentStartTime={rescheduleBooking.start_time}
+          currentEndTime={rescheduleBooking.end_time}
+          totalPrice={Number(rescheduleBooking.total_price)}
+          onRescheduled={() => {
+            setRescheduleBooking(null);
+            fetchDashboardData();
+          }}
+        />
+      )}
     </DashboardLayout>
   );
 }

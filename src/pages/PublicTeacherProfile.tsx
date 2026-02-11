@@ -69,7 +69,7 @@ export default function PublicTeacherProfile() {
     };
 
     setMeta('og:title', `${teacher.full_name} - Profesor de ${teacher.sport || 'Deportes'}`);
-    setMeta('og:description', teacher.bio || `Reserva clases con ${teacher.full_name} en ProffX`);
+    setMeta('og:description', teacher.bio || `Reserva clases con ${teacher.full_name} en AceX`);
     setMeta('og:image', teacher.avatar_url || DEFAULT_HERO);
     setMeta('og:url', window.location.href);
     setMeta('og:type', 'profile');

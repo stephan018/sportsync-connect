@@ -57,8 +57,30 @@ export default function Index() {
     'Pagos seguros en línea',
   ];
 
-  return (
-    <div className="min-h-screen bg-background">
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AceX",
+      "url": window.location.origin,
+      "description": "Reserva profesores deportivos y entrena con la élite. La plataforma definitiva para deportistas de verdad.",
+      "applicationCategory": "SportsApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "category": "Sports Coaching"
+      }
+    };
+
+    return (
+    <>
+      <Helmet>
+        <title>AceX | Domina la Cancha</title>
+        <meta name="description" content="Reserva profesores deportivos y entrena con la élite. La plataforma definitiva para deportistas de verdad." />
+        <meta name="keywords" content="profesores deportivos, clases deportes, tenis, fútbol, padel, entrenamiento personal, reservar clases" />
+        <link rel="canonical" href={window.location.origin} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+      <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 gradient-dark" />

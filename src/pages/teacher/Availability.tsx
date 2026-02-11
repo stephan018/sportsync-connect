@@ -443,7 +443,7 @@ export default function TeacherAvailability() {
               
               return (
                 <Card key={day.value}>
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-6">
                     <div>
                       <div className="flex-1">
                         <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">

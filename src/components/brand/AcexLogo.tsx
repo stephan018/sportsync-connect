@@ -6,9 +6,9 @@ interface AcexLogoProps {
 }
 
 const sizeMap = {
-  sm: { icon: 'w-8 h-8', text: 'text-lg' },
-  md: { icon: 'w-10 h-10', text: 'text-xl' },
-  lg: { icon: 'w-12 h-12', text: 'text-2xl' },
+  sm: { icon: 'w-10 h-10', text: 'text-lg' },
+  md: { icon: 'w-14 h-14', text: 'text-xl' },
+  lg: { icon: 'w-16 h-16', text: 'text-3xl' },
 };
 
 export default function AcexLogo({ size = 'md', textClassName = '' }: AcexLogoProps) {

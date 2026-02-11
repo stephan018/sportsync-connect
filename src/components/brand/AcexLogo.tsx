@@ -15,8 +15,10 @@ export default function AcexLogo({ size = 'md', textClassName = '' }: AcexLogoPr
   const s = sizeMap[size];
 
   return (
-    <span className="inline-flex items-center gap-2">
-      <img src={eagleLogo} alt="AceX eagle" className={`${s.icon} object-contain`} />
+    <span className="inline-flex items-center gap-1">
+      <span className={`${s.icon} overflow-hidden flex items-center justify-center`}>
+        <img src={eagleLogo} alt="AceX eagle" className={`${s.icon} object-contain ${s.scale}`} />
+      </span>
       <span className={`font-brand font-bold uppercase tracking-wide ${s.text} ${textClassName}`}>
         AceX
       </span>

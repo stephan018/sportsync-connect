@@ -56,7 +56,7 @@ export default function PublicTeacherProfile() {
   // Set OG meta tags dynamically for client-side rendering
   useEffect(() => {
     if (!teacher) return;
-    document.title = `${teacher.full_name} - Profesor de ${teacher.sport || 'Deportes'} | ProffX`;
+    document.title = `${teacher.full_name} - Profesor de ${teacher.sport || 'Deportes'} | AceX`;
 
     const setMeta = (property: string, content: string) => {
       let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;

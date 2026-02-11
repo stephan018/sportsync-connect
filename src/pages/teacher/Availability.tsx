@@ -264,31 +264,31 @@ export default function TeacherAvailability() {
 
   return (
     <DashboardLayout>
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Disponibilidad</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Disponibilidad</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Configura tu horario semanal y tarifas
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={clearAllSlots}>
-              <Trash2 className="w-4 h-4 mr-2" />
-              Limpiar Todo
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={clearAllSlots} className="flex-1 min-w-0 sm:flex-none">
+              <Trash2 className="w-4 h-4 mr-1 sm:mr-2 shrink-0" />
+              <span className="truncate">Limpiar</span>
             </Button>
-            <Button variant="outline" onClick={() => setWizardOpen(true)}>
-              <Wand2 className="w-4 h-4 mr-2" />
-              Generar Automático
+            <Button variant="outline" size="sm" onClick={() => setWizardOpen(true)} className="flex-1 min-w-0 sm:flex-none">
+              <Wand2 className="w-4 h-4 mr-1 sm:mr-2 shrink-0" />
+              <span className="truncate">Generar</span>
             </Button>
-            <Button onClick={saveAvailability} disabled={saving} className="bg-gradient-to-r from-primary to-primary/80">
+            <Button size="sm" onClick={saveAvailability} disabled={saving} className="bg-gradient-to-r from-primary to-primary/80 flex-1 min-w-0 sm:flex-none">
               {saving ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-4 h-4 mr-1 sm:mr-2 animate-spin shrink-0" />
               ) : (
-                <Save className="w-4 h-4 mr-2" />
+                <Save className="w-4 h-4 mr-1 sm:mr-2 shrink-0" />
               )}
-              Guardar Todo
+              <span className="truncate">Guardar</span>
             </Button>
           </div>
         </div>
@@ -305,7 +305,7 @@ export default function TeacherAvailability() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {/* Individual Rate */}
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
@@ -443,18 +443,19 @@ export default function TeacherAvailability() {
               
               return (
                 <Card key={day.value}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
+                  <CardContent className="p-3 sm:p-6">
+                    <div>
                       <div className="flex-1">
-                        <div className="flex items-center gap-4 mb-4">
-                          <h3 className="text-lg font-semibold w-28">{day.label}</h3>
-                          <span className="text-sm text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
+                          <h3 className="text-base sm:text-lg font-semibold">{day.label}</h3>
+                          <span className="text-xs sm:text-sm text-muted-foreground">
                             {slots.length} {slots.length === 1 ? 'bloque' : 'bloques'}
                           </span>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => addSlot(day.value)}
+                            className="ml-auto"
                           >
                             <Plus className="w-4 h-4 mr-1" />
                             Agregar
@@ -466,7 +467,7 @@ export default function TeacherAvailability() {
                             Sin disponibilidad configurada
                           </p>
                         ) : (
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
                             {slots.map((slot, slotIndex) => {
                               const actualIndex = availability.findIndex(
                                 (s, i) => s.day_of_week === slot.day_of_week && 
@@ -476,15 +477,15 @@ export default function TeacherAvailability() {
                               return (
                                 <div
                                   key={slotIndex}
-                                  className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg"
+                                  className="flex items-center gap-1.5 sm:gap-2 p-2 sm:p-3 bg-muted/50 rounded-lg"
                                 >
-                                  <Clock className="w-4 h-4 text-muted-foreground shrink-0" />
+                                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0 hidden sm:block" />
                                   
                                   <Select
                                     value={slot.start_time}
                                     onValueChange={(value) => updateSlot(actualIndex, { start_time: value })}
                                   >
-                                    <SelectTrigger className="w-20 h-8 text-sm">
+                                    <SelectTrigger className="w-[4.5rem] sm:w-20 h-8 text-xs sm:text-sm px-2">
                                       <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -496,13 +497,13 @@ export default function TeacherAvailability() {
                                     </SelectContent>
                                   </Select>
                                   
-                                  <span className="text-muted-foreground text-sm">-</span>
+                                  <span className="text-muted-foreground text-xs sm:text-sm">-</span>
                                   
                                   <Select
                                     value={slot.end_time}
                                     onValueChange={(value) => updateSlot(actualIndex, { end_time: value })}
                                   >
-                                    <SelectTrigger className="w-20 h-8 text-sm">
+                                    <SelectTrigger className="w-[4.5rem] sm:w-20 h-8 text-xs sm:text-sm px-2">
                                       <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -523,10 +524,10 @@ export default function TeacherAvailability() {
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="text-destructive hover:text-destructive h-8 w-8"
+                                    className="text-destructive hover:text-destructive h-7 w-7 sm:h-8 sm:w-8"
                                     onClick={() => removeSlot(actualIndex)}
                                   >
-                                    <Trash2 className="w-4 h-4" />
+                                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                   </Button>
                                 </div>
                               );

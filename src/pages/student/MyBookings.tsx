@@ -619,6 +619,13 @@ export default function MyBookings() {
           </Card>
         </div>
 
+        {/* Search & Filters */}
+        <BookingFilters
+          filters={filters}
+          onFiltersChange={setFilters}
+          searchPlaceholder="Buscar profesor por nombre..."
+        />
+
         {/* Tabs */}
         <Tabs defaultValue="upcoming" className="w-full">
           <TabsList className="w-full md:w-auto grid grid-cols-3 mb-6 bg-muted/50">

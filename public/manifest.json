@@ -1,7 +1,7 @@
 {
-  "name": "ProffX - Conecta con los mejores profesores",
-  "short_name": "ProffX",
-  "description": "Plataforma para conectar estudiantes con profesores profesionales de deportes",
+  "name": "AceX | Domina la Cancha",
+  "short_name": "AceX",
+  "description": "Gestión deportiva de alto rendimiento. Reserva tu espacio.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fcfcfc",

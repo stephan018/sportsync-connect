@@ -82,10 +82,10 @@ export default function Auth() {
       
       <Card className="w-full max-w-md relative animate-slide-up bg-card/95 backdrop-blur-sm border-border/50">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
-            <Dumbbell className="w-8 h-8 text-primary-foreground" />
+          <div className="mx-auto mb-4">
+            <AcexLogo size="lg" />
           </div>
-          <CardTitle className="text-2xl font-bold">ProffX</CardTitle>
+          <CardTitle className="text-2xl font-bold sr-only">AceX</CardTitle>
           <CardDescription>Conecta con profesores de deportes o encuentra estudiantes</CardDescription>
         </CardHeader>
         

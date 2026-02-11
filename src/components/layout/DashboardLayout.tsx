@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import AcexLogo from '@/components/brand/AcexLogo';
 import { 
   Calendar, 
   Clock, 
@@ -10,12 +11,10 @@ import {
   MessageSquare, 
   Settings, 
   LogOut, 
-  Dumbbell,
   Users,
   LayoutDashboard,
   Search,
   Menu,
-  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -57,11 +56,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <>
       {/* Logo */}
       <div className="p-4 lg:p-6 border-b border-sidebar-border">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shrink-0">
-            <Dumbbell className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold text-sidebar-foreground">ProffX</span>
+        <Link to="/" className="flex items-center">
+          <AcexLogo size="md" textClassName="text-sidebar-foreground" />
         </Link>
       </div>
 
@@ -123,11 +119,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="min-h-screen bg-background">
       {/* Mobile Header */}
       <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-sidebar border-b border-sidebar-border flex items-center justify-between px-4 z-50">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
-            <Dumbbell className="w-4 h-4 text-primary-foreground" />
-          </div>
-          <span className="text-lg font-bold text-sidebar-foreground">ProffX</span>
+        <Link to="/" className="flex items-center">
+          <AcexLogo size="sm" textClassName="text-sidebar-foreground" />
         </Link>
         
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>

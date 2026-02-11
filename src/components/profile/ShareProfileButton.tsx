@@ -56,7 +56,7 @@ export default function ShareProfileButton({ slug, profileId, fullName }: ShareP
 
   const handleWhatsApp = () => {
     const url = getProfileUrl();
-    const text = encodeURIComponent(`¡Mira el perfil de ${fullName} en SportSync! ${url}`);
+    const text = encodeURIComponent(`¡Mira el perfil de ${fullName} en AceX! ${url}`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 

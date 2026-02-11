@@ -157,10 +157,7 @@ export default function PublicTeacherProfile() {
       <nav className="sticky top-0 z-50 glass border-b border-border">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-              <Dumbbell className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <span className="font-bold text-lg">ProffX</span>
+            <AcexLogo size="sm" />
           </Link>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={handleShare}>

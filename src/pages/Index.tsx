@@ -137,7 +137,7 @@ export default function Index() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background" aria-label="Características de AceX">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">¿Por qué elegir AceX?</h2>

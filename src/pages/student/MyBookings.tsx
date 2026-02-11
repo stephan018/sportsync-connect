@@ -78,6 +78,11 @@ export default function MyBookings() {
     open: boolean;
     booking: BookingWithTeacher | null;
   }>({ open: false, booking: null });
+  const [filters, setFilters] = useState<BookingFilterValues>({
+    search: '',
+    date: undefined,
+    status: 'all',
+  });
 
   // Week calendar data
   const weekRange = useMemo(() => ({

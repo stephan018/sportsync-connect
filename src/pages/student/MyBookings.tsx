@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Booking, Profile } from '@/types/database';
 import { sendBookingNotification } from '@/lib/notifications';
 import RescheduleModal from '@/components/bookings/RescheduleModal';
+import BookingFilters, { BookingFilterValues, filterBookings } from '@/components/bookings/BookingFilters';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

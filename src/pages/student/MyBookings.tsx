@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Booking, Profile } from '@/types/database';
 import { sendBookingNotification } from '@/lib/notifications';
 import RescheduleModal from '@/components/bookings/RescheduleModal';
+import BookingFilters, { BookingFilterValues, filterBookings } from '@/components/bookings/BookingFilters';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -77,6 +78,11 @@ export default function MyBookings() {
     open: boolean;
     booking: BookingWithTeacher | null;
   }>({ open: false, booking: null });
+  const [filters, setFilters] = useState<BookingFilterValues>({
+    search: '',
+    date: undefined,
+    status: 'all',
+  });
 
   // Week calendar data
   const weekRange = useMemo(() => ({
@@ -166,13 +172,18 @@ export default function MyBookings() {
   };
 
   const today = new Date();
-  const upcomingBookings = bookings.filter(
+  const allUpcoming = bookings.filter(
     (b) => isAfter(parseISO(b.booking_date), today) && b.status !== 'cancelled' && b.status !== 'completed'
   );
-  const pastBookings = bookings.filter(
+  const allPast = bookings.filter(
     (b) => !isAfter(parseISO(b.booking_date), today) || b.status === 'completed'
   );
-  const cancelledBookings = bookings.filter((b) => b.status === 'cancelled');
+  const allCancelled = bookings.filter((b) => b.status === 'cancelled');
+
+  const getTeacherName = (b: BookingWithTeacher) => b.teacher?.full_name || '';
+  const upcomingBookings = filterBookings(allUpcoming, filters, getTeacherName);
+  const pastBookings = filterBookings(allPast, filters, getTeacherName);
+  const cancelledBookings = filterBookings(allCancelled, filters, getTeacherName);
 
   const getStatusConfig = (status: string, bookingDate: string) => {
     const isToday = isSameDay(parseISO(bookingDate), today);
@@ -607,6 +618,13 @@ export default function MyBookings() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Search & Filters */}
+        <BookingFilters
+          filters={filters}
+          onFiltersChange={setFilters}
+          searchPlaceholder="Buscar profesor por nombre..."
+        />
 
         {/* Tabs */}
         <Tabs defaultValue="upcoming" className="w-full">

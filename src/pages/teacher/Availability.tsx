@@ -444,17 +444,18 @@ export default function TeacherAvailability() {
               return (
                 <Card key={day.value}>
                   <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
+                    <div>
                       <div className="flex-1">
-                        <div className="flex items-center gap-4 mb-4">
-                          <h3 className="text-lg font-semibold w-28">{day.label}</h3>
-                          <span className="text-sm text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
+                          <h3 className="text-base sm:text-lg font-semibold">{day.label}</h3>
+                          <span className="text-xs sm:text-sm text-muted-foreground">
                             {slots.length} {slots.length === 1 ? 'bloque' : 'bloques'}
                           </span>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => addSlot(day.value)}
+                            className="ml-auto"
                           >
                             <Plus className="w-4 h-4 mr-1" />
                             Agregar

@@ -12,6 +12,7 @@ import Auth from "./pages/Auth";
 import TeacherDashboard from "./pages/teacher/Dashboard";
 import TeacherAvailability from "./pages/teacher/Availability";
 import TeacherCalendar from "./pages/teacher/Calendar";
+import TeacherBookings from "./pages/teacher/Bookings";
 import TeacherEarnings from "./pages/teacher/Earnings";
 import TeacherSettings from "./pages/teacher/Settings";
 import BrowseTeachers from "./pages/student/BrowseTeachers";

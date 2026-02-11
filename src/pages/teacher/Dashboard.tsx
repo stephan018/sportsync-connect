@@ -244,6 +244,25 @@ export default function TeacherDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Reschedule Modal */}
+      {rescheduleBooking && (
+        <TeacherRescheduleModal
+          open={!!rescheduleBooking}
+          onOpenChange={(open) => { if (!open) setRescheduleBooking(null); }}
+          bookingId={rescheduleBooking.id}
+          teacherId={rescheduleBooking.teacher_id}
+          studentName={rescheduleBooking.student?.full_name || 'Alumno'}
+          currentDate={rescheduleBooking.booking_date}
+          currentStartTime={rescheduleBooking.start_time}
+          currentEndTime={rescheduleBooking.end_time}
+          totalPrice={Number(rescheduleBooking.total_price)}
+          onRescheduled={() => {
+            setRescheduleBooking(null);
+            fetchDashboardData();
+          }}
+        />
+      )}
     </DashboardLayout>
   );
 }

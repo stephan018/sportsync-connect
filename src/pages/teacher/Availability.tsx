@@ -467,7 +467,7 @@ export default function TeacherAvailability() {
                             Sin disponibilidad configurada
                           </p>
                         ) : (
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
                             {slots.map((slot, slotIndex) => {
                               const actualIndex = availability.findIndex(
                                 (s, i) => s.day_of_week === slot.day_of_week && 
@@ -477,15 +477,15 @@ export default function TeacherAvailability() {
                               return (
                                 <div
                                   key={slotIndex}
-                                  className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg"
+                                  className="flex items-center gap-1.5 sm:gap-2 p-2 sm:p-3 bg-muted/50 rounded-lg"
                                 >
-                                  <Clock className="w-4 h-4 text-muted-foreground shrink-0" />
+                                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground shrink-0 hidden sm:block" />
                                   
                                   <Select
                                     value={slot.start_time}
                                     onValueChange={(value) => updateSlot(actualIndex, { start_time: value })}
                                   >
-                                    <SelectTrigger className="w-20 h-8 text-sm">
+                                    <SelectTrigger className="w-[4.5rem] sm:w-20 h-8 text-xs sm:text-sm px-2">
                                       <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -497,13 +497,13 @@ export default function TeacherAvailability() {
                                     </SelectContent>
                                   </Select>
                                   
-                                  <span className="text-muted-foreground text-sm">-</span>
+                                  <span className="text-muted-foreground text-xs sm:text-sm">-</span>
                                   
                                   <Select
                                     value={slot.end_time}
                                     onValueChange={(value) => updateSlot(actualIndex, { end_time: value })}
                                   >
-                                    <SelectTrigger className="w-20 h-8 text-sm">
+                                    <SelectTrigger className="w-[4.5rem] sm:w-20 h-8 text-xs sm:text-sm px-2">
                                       <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -524,10 +524,10 @@ export default function TeacherAvailability() {
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="text-destructive hover:text-destructive h-8 w-8"
+                                    className="text-destructive hover:text-destructive h-7 w-7 sm:h-8 sm:w-8"
                                     onClick={() => removeSlot(actualIndex)}
                                   >
-                                    <Trash2 className="w-4 h-4" />
+                                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                   </Button>
                                 </div>
                               );

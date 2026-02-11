@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AcexLogo from '@/components/brand/AcexLogo';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';

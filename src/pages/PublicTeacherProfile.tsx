@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import AcexLogo from '@/components/brand/AcexLogo';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile, Availability } from '@/types/database';
 import { format, addDays, getDay } from 'date-fns';
@@ -152,8 +153,38 @@ export default function PublicTeacherProfile() {
     );
   }
 
+  const teacherJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": teacher.full_name,
+    "jobTitle": `Profesor de ${teacher.sport || 'Deportes'}`,
+    "description": teacher.bio || `Profesor deportivo en AceX`,
+    "image": teacher.avatar_url || undefined,
+    "url": window.location.href,
+    ...(Number(teacher.average_rating) > 0 && {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": Number(teacher.average_rating).toFixed(1),
+        "reviewCount": teacher.total_reviews,
+        "bestRating": "5"
+      }
+    }),
+    "makesOffer": {
+      "@type": "Offer",
+      "name": `Clases de ${teacher.sport || 'Deportes'}`,
+      "price": Number(teacher.hourly_rate),
+      "priceCurrency": "USD"
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{`${teacher.full_name} - Profesor de ${teacher.sport || 'Deportes'} | AceX`}</title>
+        <meta name="description" content={teacher.bio || `Reserva clases de ${teacher.sport || 'deportes'} con ${teacher.full_name} en AceX`} />
+        <link rel="canonical" href={window.location.href} />
+        <script type="application/ld+json">{JSON.stringify(teacherJsonLd)}</script>
+      </Helmet>
       {/* Top Nav */}
       <nav className="sticky top-0 z-50 glass border-b border-border">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">

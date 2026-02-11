@@ -6,9 +6,9 @@ interface AcexLogoProps {
 }
 
 const sizeMap = {
-  sm: { icon: 'w-10 h-10', text: 'text-lg', scale: 'scale-[1.8]' },
-  md: { icon: 'w-12 h-12', text: 'text-xl', scale: 'scale-[2.0]' },
-  lg: { icon: 'w-14 h-14', text: 'text-3xl', scale: 'scale-[2.2]' },
+  sm: { wrapper: 'h-7 w-12', img: 'h-[3.5rem] w-auto', text: 'text-lg' },
+  md: { wrapper: 'h-9 w-14', img: 'h-[4.5rem] w-auto', text: 'text-xl' },
+  lg: { wrapper: 'h-11 w-16', img: 'h-[5.5rem] w-auto', text: 'text-3xl' },
 };
 
 export default function AcexLogo({ size = 'md', textClassName = '' }: AcexLogoProps) {
@@ -16,8 +16,8 @@ export default function AcexLogo({ size = 'md', textClassName = '' }: AcexLogoPr
 
   return (
     <span className="inline-flex items-center gap-1">
-      <span className={`${s.icon} overflow-hidden flex items-center justify-center`}>
-        <img src={eagleLogo} alt="AceX eagle" className={`${s.icon} object-contain ${s.scale}`} />
+      <span className={`${s.wrapper} flex items-center justify-center overflow-visible shrink-0`}>
+        <img src={eagleLogo} alt="AceX eagle" className={`${s.img} max-w-none`} />
       </span>
       <span className={`font-brand font-bold uppercase tracking-wide ${s.text} ${textClassName}`}>
         AceX

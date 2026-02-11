@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import AcexLogo from '@/components/brand/AcexLogo';
+import { Helmet } from 'react-helmet-async';
 import { 
   Calendar, 
   Users, 
@@ -56,8 +57,30 @@ export default function Index() {
     'Pagos seguros en línea',
   ];
 
-  return (
-    <div className="min-h-screen bg-background">
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AceX",
+      "url": window.location.origin,
+      "description": "Reserva profesores deportivos y entrena con la élite. La plataforma definitiva para deportistas de verdad.",
+      "applicationCategory": "SportsApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "category": "Sports Coaching"
+      }
+    };
+
+    return (
+    <>
+      <Helmet>
+        <title>AceX | Domina la Cancha</title>
+        <meta name="description" content="Reserva profesores deportivos y entrena con la élite. La plataforma definitiva para deportistas de verdad." />
+        <meta name="keywords" content="profesores deportivos, clases deportes, tenis, fútbol, padel, entrenamiento personal, reservar clases" />
+        <link rel="canonical" href={window.location.origin} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+      <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 gradient-dark" />
@@ -114,7 +137,7 @@ export default function Index() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background" aria-label="Características de AceX">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">¿Por qué elegir AceX?</h2>
@@ -142,7 +165,7 @@ export default function Index() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-24 bg-muted/30" aria-label="Beneficios">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -246,10 +269,10 @@ export default function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-background border-t border-border">
+      <footer className="py-12 bg-background border-t border-border" role="contentinfo">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <Link to="/" className="flex items-center">
+            <Link to="/" className="flex items-center" aria-label="AceX - Inicio">
               <AcexLogo size="md" />
             </Link>
             <p className="text-muted-foreground text-sm">
@@ -259,5 +282,6 @@ export default function Index() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

@@ -217,7 +217,16 @@ export default function TeacherDashboard() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between sm:justify-end gap-3 lg:gap-4 ml-13 sm:ml-0">
+                    <div className="flex items-center justify-between sm:justify-end gap-2 lg:gap-3 ml-13 sm:ml-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-primary hover:bg-primary/10 h-8 px-2 text-xs"
+                        onClick={() => setRescheduleBooking(booking)}
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 mr-1" />
+                        Reprogramar
+                      </Button>
                       <Badge
                         variant={booking.status === 'confirmed' ? 'default' : 'secondary'}
                         className={`text-xs ${booking.status === 'confirmed' ? 'bg-primary' : ''}`}

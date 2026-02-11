@@ -269,10 +269,10 @@ export default function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-background border-t border-border">
+      <footer className="py-12 bg-background border-t border-border" role="contentinfo">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <Link to="/" className="flex items-center">
+            <Link to="/" className="flex items-center" aria-label="AceX - Inicio">
               <AcexLogo size="md" />
             </Link>
             <p className="text-muted-foreground text-sm">
@@ -282,5 +282,6 @@ export default function Index() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

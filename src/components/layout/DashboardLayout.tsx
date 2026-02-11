@@ -39,6 +39,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const teacherNavItems = [
     { icon: LayoutDashboard, label: 'Panel', path: '/dashboard' },
     { icon: Calendar, label: 'Calendario', path: '/dashboard/calendar' },
+    { icon: BookOpen, label: 'Reservas', path: '/dashboard/bookings' },
     { icon: Clock, label: 'Disponibilidad', path: '/dashboard/availability' },
     { icon: DollarSign, label: 'Ganancias', path: '/dashboard/earnings' },
     { icon: MessageSquare, label: 'Mensajes', path: '/dashboard/messages' },

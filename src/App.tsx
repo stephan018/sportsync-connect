@@ -113,6 +113,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/dashboard/bookings"
+        element={
+          <ProtectedRoute allowedRoles={['teacher']}>
+            <TeacherBookings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/dashboard/settings"
         element={
           <ProtectedRoute allowedRoles={['teacher']}>

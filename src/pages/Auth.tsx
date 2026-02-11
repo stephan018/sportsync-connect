@@ -8,7 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { AppRole } from '@/types/database';
-import { Dumbbell, GraduationCap, Loader2 } from 'lucide-react';
+import { GraduationCap, Loader2, Dumbbell } from 'lucide-react';
+import AcexLogo from '@/components/brand/AcexLogo';
 import { toast } from 'sonner';
 
 export default function Auth() {

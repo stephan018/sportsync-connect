@@ -58,8 +58,8 @@ export function useBookingNotifications() {
     if (Notification.permission === 'granted') {
       const notification = new Notification(title, {
         body,
-        icon: icon || '/favicon.ico',
-        badge: '/favicon.ico',
+        icon: icon || '/icons/icon-192.png',
+        badge: '/icons/icon-192.png',
         tag: 'booking-notification',
         requireInteraction: true,
       });

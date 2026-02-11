@@ -89,44 +89,47 @@ export default function Index() {
           <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-primary/10 blur-3xl animate-pulse-soft" />
         </div>
         
-        <div className="relative container mx-auto px-4 py-24 md:py-32">
-          <nav className="flex items-center justify-between mb-16">
+        <div className="relative container mx-auto px-4 py-16 sm:py-24 md:py-32">
+          <nav className="flex items-center justify-between mb-10 sm:mb-16">
             <Link to="/" className="flex items-center">
               <AcexLogo size="lg" textClassName="text-primary-foreground" />
             </Link>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10" asChild>
+            <div className="flex items-center gap-2 sm:gap-4">
+              <Button variant="ghost" className="hidden sm:inline-flex text-primary-foreground hover:bg-primary-foreground/10" asChild>
                 <Link to="/auth">Iniciar Sesión</Link>
               </Button>
-              <Button variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
+              <Button size="sm" className="sm:hidden gradient-primary" asChild>
+                <Link to="/auth">Entrar</Link>
+              </Button>
+              <Button variant="outline" className="hidden sm:inline-flex border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
                 <Link to="/auth">Comenzar</Link>
               </Button>
             </div>
           </nav>
 
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary-foreground text-sm mb-6">
-              <Star className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-primary/20 text-primary-foreground text-xs sm:text-sm mb-6">
+              <Star className="w-4 h-4 shrink-0" />
               <span>Más de 10,000 atletas confían en nosotros</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight uppercase tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-primary-foreground mb-4 sm:mb-6 leading-tight uppercase tracking-tight">
               Elevá tu{' '}
               <span className="text-gradient-primary">juego.</span>
             </h1>
             
-            <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl">
+            <p className="text-base sm:text-xl text-primary-foreground/80 mb-6 sm:mb-8 max-w-2xl">
               Reserva profesores y entrena con la élite. La plataforma definitiva para deportistas de verdad.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="gradient-primary shadow-glow text-lg h-14 px-8 uppercase tracking-wide font-semibold" asChild>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <Button size="lg" className="w-full sm:w-auto gradient-primary shadow-glow text-base sm:text-lg h-12 sm:h-14 px-6 sm:px-8 uppercase tracking-wide font-semibold" asChild>
                 <Link to="/auth">
                   Reservar Ahora
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/10 h-14 px-8" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/10 h-12 sm:h-14 px-6 sm:px-8" asChild>
                 <Link to="/auth">
                   Ser Profesor
                 </Link>

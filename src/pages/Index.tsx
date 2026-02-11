@@ -165,7 +165,7 @@ export default function Index() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-24 bg-muted/30" aria-label="Beneficios">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>

@@ -172,13 +172,18 @@ export default function MyBookings() {
   };
 
   const today = new Date();
-  const upcomingBookings = bookings.filter(
+  const allUpcoming = bookings.filter(
     (b) => isAfter(parseISO(b.booking_date), today) && b.status !== 'cancelled' && b.status !== 'completed'
   );
-  const pastBookings = bookings.filter(
+  const allPast = bookings.filter(
     (b) => !isAfter(parseISO(b.booking_date), today) || b.status === 'completed'
   );
-  const cancelledBookings = bookings.filter((b) => b.status === 'cancelled');
+  const allCancelled = bookings.filter((b) => b.status === 'cancelled');
+
+  const getTeacherName = (b: BookingWithTeacher) => b.teacher?.full_name || '';
+  const upcomingBookings = filterBookings(allUpcoming, filters, getTeacherName);
+  const pastBookings = filterBookings(allPast, filters, getTeacherName);
+  const cancelledBookings = filterBookings(allCancelled, filters, getTeacherName);
 
   const getStatusConfig = (status: string, bookingDate: string) => {
     const isToday = isSameDay(parseISO(bookingDate), today);

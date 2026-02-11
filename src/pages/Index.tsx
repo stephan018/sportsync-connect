@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
+import AcexLogo from '@/components/brand/AcexLogo';
 import { 
-  Dumbbell, 
   Calendar, 
   Users, 
   TrendingUp, 
@@ -63,22 +63,19 @@ export default function Index() {
         <div className="absolute inset-0 gradient-dark" />
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/20 blur-3xl animate-pulse-soft" />
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-accent/20 blur-3xl animate-pulse-soft" />
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-primary/10 blur-3xl animate-pulse-soft" />
         </div>
         
         <div className="relative container mx-auto px-4 py-24 md:py-32">
           <nav className="flex items-center justify-between mb-16">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
-                <Dumbbell className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <span className="text-2xl font-bold text-primary-foreground">ProffX</span>
+            <Link to="/" className="flex items-center">
+              <AcexLogo size="lg" textClassName="text-primary-foreground" />
             </Link>
             <div className="flex items-center gap-4">
               <Button variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10" asChild>
                 <Link to="/auth">Iniciar Sesión</Link>
               </Button>
-              <Button className="gradient-accent shadow-accent-glow" asChild>
+              <Button variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
                 <Link to="/auth">Comenzar</Link>
               </Button>
             </div>
@@ -90,19 +87,19 @@ export default function Index() {
               <span>Más de 10,000 atletas confían en nosotros</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-              Tu camino fitness{' '}
-              <span className="text-gradient-primary">comienza aquí</span>
+            <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight uppercase tracking-tight">
+              Elevá tu{' '}
+              <span className="text-gradient-primary">juego.</span>
             </h1>
             
             <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl">
-              Conecta con profesores profesionales de deportes, reserva sesiones recurrentes y alcanza tus metas fitness con coaching personalizado.
+              Reserva profesores y entrena con la élite. La plataforma definitiva para deportistas de verdad.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="gradient-primary shadow-glow text-lg h-14 px-8" asChild>
+              <Button size="lg" className="gradient-primary shadow-glow text-lg h-14 px-8 uppercase tracking-wide font-semibold" asChild>
                 <Link to="/auth">
-                  Empezar a Entrenar
+                  Reservar Ahora
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
@@ -120,7 +117,7 @@ export default function Index() {
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">¿Por qué elegir ProffX?</h2>
+            <h2 className="text-4xl font-bold mb-4">¿Por qué elegir AceX?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Todo lo que necesitas para conectar con el profesor ideal y alcanzar tus metas fitness.
             </p>
@@ -154,7 +151,7 @@ export default function Index() {
                 <span className="text-gradient-primary">superarte</span>
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Ya seas un estudiante buscando un profesor o un profesor queriendo hacer crecer tu negocio, ProffX te tiene cubierto.
+                Ya seas un estudiante buscando un profesor o un profesor queriendo hacer crecer tu negocio, AceX te tiene cubierto.
               </p>
               
               <div className="space-y-4">
@@ -237,9 +234,9 @@ export default function Index() {
             ¿Listo para transformar tu fitness?
           </h2>
           <p className="text-xl text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-            Únete a miles de atletas que ya entrenan con los mejores profesores en ProffX.
+            Únete a miles de atletas que ya entrenan con los mejores profesores en AceX.
           </p>
-          <Button size="lg" className="gradient-accent shadow-accent-glow text-lg h-14 px-10" asChild>
+          <Button size="lg" className="gradient-primary shadow-glow text-lg h-14 px-10 uppercase tracking-wide font-semibold" asChild>
             <Link to="/auth">
               Comenzar Ahora
               <ArrowRight className="w-5 h-5 ml-2" />
@@ -252,14 +249,11 @@ export default function Index() {
       <footer className="py-12 bg-background border-t border-border">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-                <Dumbbell className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold">ProffX</span>
-            </div>
+            <Link to="/" className="flex items-center">
+              <AcexLogo size="md" />
+            </Link>
             <p className="text-muted-foreground text-sm">
-              © 2024 ProffX. Todos los derechos reservados.
+              © {new Date().getFullYear()} AceX. Todos los derechos reservados.
             </p>
           </div>
         </div>

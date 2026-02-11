@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import AcexLogo from '@/components/brand/AcexLogo';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile, Availability } from '@/types/database';
@@ -56,7 +57,7 @@ export default function PublicTeacherProfile() {
   // Set OG meta tags dynamically for client-side rendering
   useEffect(() => {
     if (!teacher) return;
-    document.title = `${teacher.full_name} - Profesor de ${teacher.sport || 'Deportes'} | ProffX`;
+    document.title = `${teacher.full_name} - Profesor de ${teacher.sport || 'Deportes'} | AceX`;
 
     const setMeta = (property: string, content: string) => {
       let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;
@@ -69,12 +70,12 @@ export default function PublicTeacherProfile() {
     };
 
     setMeta('og:title', `${teacher.full_name} - Profesor de ${teacher.sport || 'Deportes'}`);
-    setMeta('og:description', teacher.bio || `Reserva clases con ${teacher.full_name} en ProffX`);
+    setMeta('og:description', teacher.bio || `Reserva clases con ${teacher.full_name} en AceX`);
     setMeta('og:image', teacher.avatar_url || DEFAULT_HERO);
     setMeta('og:url', window.location.href);
     setMeta('og:type', 'profile');
 
-    return () => { document.title = 'ProffX'; };
+    return () => { document.title = 'AceX'; };
   }, [teacher]);
 
   const fetchTeacher = async () => {
@@ -114,7 +115,7 @@ export default function PublicTeacherProfile() {
   const handleShare = async () => {
     const shareUrl = window.location.href;
     if (navigator.share) {
-      await navigator.share({ title: `${teacher?.full_name} en ProffX`, url: shareUrl });
+      await navigator.share({ title: `${teacher?.full_name} en AceX`, url: shareUrl });
     } else {
       await navigator.clipboard.writeText(shareUrl);
       toast({ title: '¡Enlace copiado!' });
@@ -157,10 +158,7 @@ export default function PublicTeacherProfile() {
       <nav className="sticky top-0 z-50 glass border-b border-border">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-              <Dumbbell className="w-4 h-4 text-primary-foreground" />
-            </div>
-            <span className="font-bold text-lg">ProffX</span>
+            <AcexLogo size="sm" />
           </Link>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={handleShare}>

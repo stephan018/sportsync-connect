@@ -49,7 +49,7 @@ export default function InstallPrompt() {
             <Download className="w-5 h-5 text-primary-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-semibold text-sm">Instalar ProffX</p>
+            <p className="font-semibold text-sm">Instalar AceX</p>
             <p className="text-xs text-muted-foreground mt-0.5">
               Accede más rápido desde tu pantalla de inicio
             </p>

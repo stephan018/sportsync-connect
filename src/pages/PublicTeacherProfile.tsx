@@ -114,7 +114,7 @@ export default function PublicTeacherProfile() {
   const handleShare = async () => {
     const shareUrl = window.location.href;
     if (navigator.share) {
-      await navigator.share({ title: `${teacher?.full_name} en ProffX`, url: shareUrl });
+      await navigator.share({ title: `${teacher?.full_name} en AceX`, url: shareUrl });
     } else {
       await navigator.clipboard.writeText(shareUrl);
       toast({ title: '¡Enlace copiado!' });

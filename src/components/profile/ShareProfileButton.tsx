@@ -40,8 +40,8 @@ export default function ShareProfileButton({ slug, profileId, fullName }: ShareP
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${fullName} - SportSync`,
-          text: `¡Reserva una clase con ${fullName} en SportSync!`,
+          title: `${fullName} - AceX`,
+          text: `¡Reserva una clase con ${fullName} en AceX!`,
           url,
         });
       } catch (err: any) {

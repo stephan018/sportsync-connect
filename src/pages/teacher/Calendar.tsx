@@ -414,6 +414,7 @@ interface BookingDetailModalProps {
 
 function BookingDetailModal({ booking, onClose, onRefresh, getStatusColor, getStatusLabel }: BookingDetailModalProps) {
   const [updating, setUpdating] = useState(false);
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
 
   const handleConfirm = async () => {
     setUpdating(true);

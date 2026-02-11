@@ -22,6 +22,7 @@ export default function TeacherDashboard() {
   const [monthlyEarnings, setMonthlyEarnings] = useState(0);
   const [totalStudents, setTotalStudents] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [rescheduleBooking, setRescheduleBooking] = useState<BookingWithStudent | null>(null);
 
   useEffect(() => {
     if (profile?.id) {

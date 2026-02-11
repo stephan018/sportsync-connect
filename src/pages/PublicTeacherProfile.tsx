@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import AcexLogo from '@/components/brand/AcexLogo';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile, Availability } from '@/types/database';
 import { format, addDays, getDay } from 'date-fns';

@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { ProfileImageUpload, GalleryUpload } from '@/components/profile/ProfileImageUpload';
 import { NotificationSettings } from '@/components/notifications/NotificationSettings';
+import { DeleteAccountSection } from '@/components/profile/DeleteAccountSection';
 import { useNotificationSettings } from '@/hooks/useBookingNotifications';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -253,6 +254,9 @@ export default function Settings() {
               </>
             )}
           </Button>
+
+          {/* Delete Account */}
+          <DeleteAccountSection />
         </div>
       </div>
     </DashboardLayout>

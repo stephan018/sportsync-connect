@@ -50,6 +50,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { icon: Search, label: 'Buscar Profesores', path: '/browse' },
     { icon: Calendar, label: 'Mis Reservas', path: '/bookings' },
     { icon: MessageSquare, label: 'Mensajes', path: '/messages' },
+    { icon: Settings, label: 'Configuración', path: '/settings' },
   ];
 
   const navItems = isTeacher ? teacherNavItems : studentNavItems;

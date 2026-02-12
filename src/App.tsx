@@ -20,6 +20,7 @@ import TeacherProfile from "./pages/student/TeacherProfile";
 import BookingPage from "./pages/student/BookingPage";
 import MyBookings from "./pages/student/MyBookings";
 import Messages from "./pages/Messages";
+import StudentSettings from "./pages/student/Settings";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import PublicTeacherProfile from "./pages/PublicTeacherProfile";
@@ -159,6 +160,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['student']}>
             <MyBookings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute allowedRoles={['student']}>
+            <StudentSettings />
           </ProtectedRoute>
         }
       />

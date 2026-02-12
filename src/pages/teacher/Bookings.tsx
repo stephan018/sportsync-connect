@@ -138,7 +138,7 @@ export default function TeacherBookings() {
     try {
       const { error } = await supabase
         .from('bookings')
-        .update({ status: 'cancelled' })
+        .update({ status: 'cancelled', cancelled_by: 'teacher' } as any)
         .eq('id', bookingId);
       if (error) throw error;
       sendBookingNotification(bookingId, 'cancelled');
@@ -259,6 +259,15 @@ export default function TeacherBookings() {
                 </div>
               )}
             </div>
+
+            {/* Cancellation attribution */}
+            {booking.status === 'cancelled' && (booking as any).cancelled_by && (
+              <div className="px-4 py-2 border-t bg-destructive/5 text-xs text-muted-foreground">
+                {(booking as any).cancelled_by === 'teacher'
+                  ? 'Cancelada por ti'
+                  : 'Cancelada por el alumno'}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

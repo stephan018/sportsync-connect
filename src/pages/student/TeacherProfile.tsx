@@ -435,8 +435,8 @@ export default function TeacherProfile() {
                 </CardContent>
               </Card>
               
-              {/* Mobile Fixed Bottom Bar */}
-              <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 safe-area-bottom z-50">
+              {/* Mobile Fixed Bottom Bar - above bottom nav */}
+              <div className="md:hidden fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 right-0 bg-card border-t border-border p-4 z-50">
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <p className="text-xs text-muted-foreground">Desde</p>

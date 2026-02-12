@@ -11,7 +11,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import ReviewModal from '@/components/reviews/ReviewModal';
+
 import { 
   Calendar, 
   Clock, 
@@ -152,7 +154,7 @@ export default function MyBookings() {
     try {
       const { error } = await supabase
         .from('bookings')
-        .update({ status: 'cancelled' })
+        .update({ status: 'cancelled', cancelled_by: 'student' } as any)
         .eq('id', bookingId);
 
       if (error) throw error;
@@ -164,6 +166,31 @@ export default function MyBookings() {
     } catch (error) {
       console.error('Error cancelling booking:', error);
       toast.error('Error al cancelar la reserva');
+    }
+  };
+
+  const cancelAllFutureBookings = async (teacherId: string, teacherName: string) => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    try {
+      const { data, error } = await supabase
+        .from('bookings')
+        .update({ status: 'cancelled', cancelled_by: 'student' } as any)
+        .eq('student_id', profile!.id)
+        .eq('teacher_id', teacherId)
+        .gte('booking_date', today)
+        .in('status', ['pending', 'confirmed'])
+        .select('id');
+
+      if (error) throw error;
+
+      // Send notifications for each cancelled booking (fire and forget)
+      data?.forEach(b => sendBookingNotification(b.id, 'cancelled'));
+
+      toast.success(`${data?.length || 0} sesiones futuras con ${teacherName} canceladas`);
+      fetchBookings();
+    } catch (error) {
+      console.error('Error bulk cancelling:', error);
+      toast.error('Error al cancelar las reservas');
     }
   };
 
@@ -374,18 +401,53 @@ export default function MyBookings() {
                   </Button>
                 )}
                 {showCancel && booking.status !== 'cancelled' && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 lg:h-9 px-2 lg:px-3"
-                    onClick={() => cancelBooking(booking.id)}
-                  >
-                    <X className="w-4 h-4" />
-                    <span className="hidden sm:inline ml-1">Cancelar</span>
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 lg:h-9 px-2 lg:px-3"
+                      >
+                        <X className="w-4 h-4" />
+                        <span className="hidden sm:inline ml-1">Cancelar</span>
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Cancelar reserva</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          ¿Qué deseas hacer con las sesiones con {booking.teacher?.full_name}?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                        <AlertDialogCancel>Volver</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => cancelBooking(booking.id)}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Cancelar esta sesión
+                        </AlertDialogAction>
+                        <AlertDialogAction
+                          onClick={() => cancelAllFutureBookings(booking.teacher_id, booking.teacher?.full_name || '')}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Cancelar todas las futuras
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 )}
               </div>
             </div>
+
+            {/* Cancellation attribution */}
+            {booking.status === 'cancelled' && (booking as any).cancelled_by && (
+              <div className="px-4 py-2 border-t bg-destructive/5 text-xs text-muted-foreground">
+                {(booking as any).cancelled_by === 'student'
+                  ? 'Cancelada por ti'
+                  : 'Cancelada por el profesor'}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

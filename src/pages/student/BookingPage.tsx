@@ -72,7 +72,7 @@ export default function BookingPage() {
     } else {
       setCalculatedDates([]);
     }
-  }, [startDate, selectedDays, duration]);
+  }, [startDate, selectedDays, duration, selectedTimeSlot]);
 
   const fetchTeacherData = async () => {
     try {
@@ -122,20 +122,34 @@ export default function BookingPage() {
     setCalculatedDates(dates);
 
     // Check for conflicts with existing bookings
-    if (dates.length > 0 && teacherId) {
+    // Only flag a conflict if the same date AND overlapping time slot
+    if (dates.length > 0 && teacherId && selectedTimeSlot) {
       const dateStrings = dates.map(d => format(d, 'yyyy-MM-dd'));
+      const [slotStart, slotEnd] = selectedTimeSlot.split('-');
       
       const { data: existingBookings } = await supabase
         .from('bookings')
-        .select('booking_date')
+        .select('booking_date, start_time, end_time')
         .eq('teacher_id', teacherId)
         .in('booking_date', dateStrings)
         .in('status', ['pending', 'confirmed']);
 
       if (existingBookings) {
-        const conflicts = existingBookings.map(b => new Date(b.booking_date));
+        // A slot conflicts only if times overlap (start < existingEnd AND end > existingStart)
+        const conflicts = existingBookings
+          .filter(b => {
+            const bStart = b.start_time;
+            const bEnd = b.end_time;
+            // No overlap if slot ends at or before booking starts, or slot starts at or after booking ends
+            return !(slotEnd <= bStart || slotStart >= bEnd);
+          })
+          .map(b => new Date(b.booking_date + 'T00:00:00'));
         setConflictDates(conflicts);
+      } else {
+        setConflictDates([]);
       }
+    } else {
+      setConflictDates([]);
     }
   };
 
@@ -350,7 +364,7 @@ export default function BookingPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="grid grid-cols-7 gap-2">
+                    <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
                       {DAYS_OF_WEEK_ES.map((day) => {
                         const isAvailable = availability.some(a => a.day_of_week === day.value);
                         const isSelected = selectedDays.includes(day.value);
@@ -361,16 +375,16 @@ export default function BookingPage() {
                             onClick={() => toggleDay(day.value)}
                             disabled={!isAvailable}
                             className={`
-                              p-3 rounded-lg border-2 text-center transition-all
+                              p-2 sm:p-3 rounded-lg border-2 text-center transition-all min-h-[44px] flex items-center justify-center
                               ${isSelected 
                                 ? 'border-primary bg-primary text-primary-foreground' 
                                 : isAvailable
-                                  ? 'border-border hover:border-primary/50'
+                                  ? 'border-border hover:border-primary/50 bg-card'
                                   : 'border-border bg-muted opacity-50 cursor-not-allowed'
                               }
                             `}
                           >
-                            <span className="text-sm font-medium">{day.short}</span>
+                            <span className="text-xs sm:text-sm font-medium">{day.short}</span>
                           </button>
                         );
                       })}
